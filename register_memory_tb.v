@@ -10,6 +10,12 @@ reg [31:0] wr_data;
 wire [31:0] data_out_a;
 wire [31:0] data_out_b;
 
+`define assert(signal, value, message) \
+        if (signal !== value) begin \
+            $display("ASSERTION FAILED in %m: signal != value."); \
+            $display("  Reason: %s ",message);\
+            $finish; \
+        end
 
 
 register_memory mut (
@@ -53,10 +59,8 @@ begin
     //rd_address_b=5'hA;
     $display("Should read immediately");
     #1;
-    if (data_out_b != 32'hABCDEFAB) 
-        begin 
-            $error("Reading memory, expected result to be %h but got %h.", 32'hABCDEFAB,data_out_b); $finish;
-        end
+    `assert(data_out_b,32'hABCDEFAB,"Didnt read memory immediately")
+   
     
     $display("Both reads the same value");
     #1;rd_address_a=5'hA; #1;
@@ -75,15 +79,8 @@ begin
     rd_address_a=5'h0;
     rd_address_b=5'h0;
     #1;
-    if (data_out_a != 32'h00000000)
-    begin 
-        $error("Reading memory, expected result to be %h but got %h.", 32'h00000000,data_out_a); $finish;
-    end
-    if (data_out_b != 32'h00000000)
-    begin 
-        $error("Reading memory, expected result to be %h but got %h.", 32'h00000000,data_out_b); $finish;
-    end
-
+    `assert(data_out_a,32'h0,"Should not have written on reg 0");
+    
     $display("Simulation finished");
     $finish;
 end
