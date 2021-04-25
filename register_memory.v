@@ -26,13 +26,11 @@ module register_memory (
         memory[0]=32'h00000000;
     end
 
-    always @(negedge clk)
+    always @(posedge clk)
     begin
-        if (wr_enable&wr_address!=5'd0) begin
+        if (wr_enable & wr_address!=5'd0) begin
             memory[wr_address]<=wr_data;
         end
-        
-        
     end
 
     assign data_out_a = memory[rd_address_a];
