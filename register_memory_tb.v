@@ -51,8 +51,8 @@ begin
     `assertCaseEqual(data_out_a,32'h0,"Should not write on reg 0");
     `assertCaseEqual(data_out_b,32'h0,"Should not write on reg 0");
 
-    //Writes data on clock up
-    $display("Writes data on clock down and reads it");
+    //Writes data on clock
+    $display("Writes data on clock and reads it");
     #1;sim_clk=0;
     wr_enable=1; wr_address=5'hA; wr_data=32'hABCDEFAB; rd_address_a=5'hA;rd_address_b=5'hA;
     #1; sim_clk=1;#1;wr_enable=0;
