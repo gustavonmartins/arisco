@@ -1,0 +1,12 @@
+*
+!/scripts
+!/testbenches
+!.gitignore
+!Readme
+!LICENSE
+!register_memory.v
+!register_memory_tb.v
+!alu.v
+!alu_tb.v
+!pc.v
+!pc_tb.v
