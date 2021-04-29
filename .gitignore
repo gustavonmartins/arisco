@@ -10,3 +10,4 @@
 !alu_tb.v
 !pc.v
 !pc_tb.v
+!utilities.v

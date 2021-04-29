@@ -1,4 +1,5 @@
 `default_nettype none
+`include "utilities.v"
 module program_counter_tb ();
 
 reg sim_clk;
@@ -6,12 +7,7 @@ reg [31:0] pc_in;
 reg reset;
 wire [31:0] pc_out;
 
-`define assertCaseEqual(signal, value, message) \
-        if (signal !== value) begin \
-            $display("ASSERTION FAILED in %s: %0d: signal != value.",`__FILE__, `__LINE__); \
-            $display("  Reason: %s ",message);\
-            $finish; \
-        end
+
 
 
 program_counter mut (

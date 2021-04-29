@@ -1,4 +1,5 @@
 `default_nettype none
+`include "utilities.v"
 module register_memory_tb ();
 
 reg sim_clk;
@@ -10,12 +11,7 @@ reg [31:0] wr_data;
 wire [31:0] data_out_a;
 wire [31:0] data_out_b;
 
-`define assertCaseEqual(signal, value, message) \
-        if (signal !== value) begin \
-            $display("ASSERTION FAILED in %m: signal != value."); \
-            $display("  Reason: %s ",message);\
-            $finish; \
-        end
+
 
 
 register_memory mut (
