@@ -16,3 +16,4 @@
 !multiple_instructions.v
 !consecutive_instructions_tb.v
 !commands.txt
+!instructions_i_tb.v
