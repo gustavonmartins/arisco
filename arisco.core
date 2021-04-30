@@ -39,7 +39,7 @@ targets:
     default_tool: icarus
     filesets_append:
       - tb
-    toplevel: CPUTest
+    toplevel: consecutive_instructions_tb
     tools:
       icarus:
         iverilog_options:
