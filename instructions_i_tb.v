@@ -1,6 +1,8 @@
 `default_nettype none
 `include "utilities.v"
-module instructions_i ();
+
+module instructions_i_tb ();
+
 
 reg clk;
 reg reset;
