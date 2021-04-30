@@ -16,3 +16,9 @@
 !multiple_instructions.v
 !consecutive_instructions_tb.v
 !commands.txt
+!instructions_i_tb.v
+!Pipfile
+!Pipfile.lock
+!arisco.consecutive_instructions_tb
+!fusesoc.conf
+!arisco.core
