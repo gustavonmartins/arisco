@@ -11,3 +11,8 @@
 !pc.v
 !pc_tb.v
 !utilities.v
+!single_instruction.v
+!single_instruction_tb.v
+!multiple_instructions.v
+!consecutive_instructions_tb.v
+!commands.txt
