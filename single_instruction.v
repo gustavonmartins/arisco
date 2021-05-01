@@ -27,21 +27,22 @@ module single_instruction (
         .data_out_b (data_out_b));
 
     //ALU
-    alu ALU(.opcode (opcode),.left (left),.right (right),.result (result));
+    alu ALU(.opcode (alu_opcode),.left (left),.right (right),.result (result));
 
-    //ALU -> ADDI
-    wire [2:0] opcode;
+    //ALU -> Type I Instructions
+    wire [6:0] opcode=instruction[6:0];
+    wire [2:0] funct3=instruction[14:12];
+    wire [2:0] alu_opcode;
     wire [31:0] left, right, result;
     wire [4:0] rd,rs1;
     wire [11:0] imm;
-    assign opcode=3'd0;
     assign left = {20'b0,imm}; assign imm=instruction[31:20];
     assign right = data_out_b; assign rd_address_b=instruction[19:15];
     assign wr_address = instruction[11:7];
     assign wr_data = result;
-
     
-    //imm[11:0] rs1 000 rd 0010011 I addi
 
+    //ALU Control
+    assign alu_opcode=funct3;
 
 endmodule

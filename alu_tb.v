@@ -36,11 +36,8 @@ begin
     $dumpvars(0,mut);
     $monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
 
-    enforce_result(3'd0,32'h4,32'h3,32'h7);//ADD
-    enforce_result(3'd1,32'h2,32'h1,32'h1);//SUB
-    enforce_result(3'd2,32'hA,32'hA,32'hA);//AND
-    enforce_result(3'd3,32'hB,32'h0,32'hB);//OR
-    enforce_result(3'd4,32'b0011,32'b0101,32'b0110);//XOR
+    enforce_result(3'b000,32'h4,32'h3,32'h7);//ADD
+    enforce_result(3'b111,32'b1100,32'b1010,32'b1000);//AND
     #1;
     $display("Simulation finished");
     $finish;
