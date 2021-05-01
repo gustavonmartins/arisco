@@ -15,27 +15,8 @@ begin
     $dumpvars(0,mut);
     $monitor("%2t,reset=%b,clk=%b,pc=%d,current instruction=%h, x5=%d",$time,reset,clk,mut.pc,mut.instruction,mut.single_instr.reg_mem.memory[5]);
 
-    //One ADDI instruction
-    $display("One ADDI instruction");
-    reset=1;#1;
-    mut.program_memory[0]={12'd 12, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    clk=0;#1;reset=0;
-    clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 12,"ADDI: Register 5 should contain 12");
-
-    //Two ADDI instructions
-    $display("Two ADDI instructions");
-    reset=1;#1;
-    mut.program_memory[0]={12'd 120, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    mut.program_memory[1]={12'd 200, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    clk=0;#1;reset=0;
-    clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 120,"ADDI: Register 5 should contain 120");
-    clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 200,"ADDI: Register 5 should contain 200");
-
-    //Three ADDI instructions
-    $display("Many consecutive commands");
+    //I-Type instructions
+    $display("I-Type instructions");
     reset=1;#1;
     mut.program_memory[0]={12'd120, 5'd0, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
     mut.program_memory[1]={12'd200, 5'd0, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
@@ -64,9 +45,9 @@ begin
     clk=0;#1;clk=1;#1;
     `assertCaseEqual(mut.single_instr.reg_mem.memory[29], 32'd 2,"ADDI: Register 29 should contain 2");
     clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.single_instr.reg_mem.memory[31], 32'd 5,"ADDI: Register 31 should contain 7");
+    `assertCaseEqual(mut.single_instr.reg_mem.memory[31], 32'd 5,"ADDI: Register 31 should contain 5");
     clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 7,"ADDI: Register 5 should contain 7");
+    `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 7,"ADD: Register 5 should contain 7");
 
 
     #1;
