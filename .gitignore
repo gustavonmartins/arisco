@@ -15,7 +15,6 @@
 !single_instruction_tb.v
 !multiple_instructions.v
 !consecutive_instructions_tb.v
-!commands.txt
 !instructions_i_tb.v
 !Pipfile
 !Pipfile.lock
@@ -23,3 +22,4 @@
 !fusesoc.conf
 !arisco.core
 !README.md
+!tests.sh

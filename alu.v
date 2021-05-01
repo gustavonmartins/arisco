@@ -6,14 +6,16 @@ module alu(opcode, left, right, result);
     input [31:0] right;
     output reg [31:0] result;
 
-    parameter ADD = 3'd0;
-    parameter AND = 3'b111;
+    localparam ADD = 3'd000;
+    localparam AND = 3'b111;
+    localparam OR = 3'b110;
 
     always @(opcode, left, right)
     begin
         case (opcode)
-            ADD : result <= left+right;
-            AND:result <=left&right;
+            ADD : result <= left + right;
+            AND : result <=left & right;
+            OR  : result <= left | right;
             default: result <= 32'h00000000;
         endcase
     end
