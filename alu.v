@@ -9,6 +9,7 @@ module alu(opcode, left, right, result);
     localparam ADD = 3'd000;
     localparam AND = 3'b111;
     localparam OR = 3'b110;
+    localparam SUB = 3'b100;
 
     always @(opcode, left, right)
     begin
@@ -16,7 +17,8 @@ module alu(opcode, left, right, result);
             ADD : result <= left + right;
             AND : result <=left & right;
             OR  : result <= left | right;
-            default: result <= 32'h00000000;
+            SUB : result <= left - right;
+	    default: result <= 32'h00000000;
         endcase
     end
 

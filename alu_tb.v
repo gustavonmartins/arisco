@@ -36,8 +36,11 @@ begin
     $dumpvars(0,mut);
     $monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
 
+    $info("ALU unit test");
     enforce_result(3'b000,32'h4,32'h3,32'h7);//ADD
     enforce_result(3'b111,32'b1100,32'b1010,32'b1000);//AND
+    enforce_result(3'b100,32'd 7,32'd 3,32'd 4);//AND
+
     #1;
     $display("Simulation finished");
     $finish;

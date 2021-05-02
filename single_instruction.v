@@ -30,25 +30,25 @@ module single_instruction (clk, instruction);
 
     // ALU -> General
     wire [2:0] alu_opcode;
-    wire [31:0]  left, right, result;
+    wire [31:0]  left,right, result;
 
     //ALU -> Type I Instructions
     wire [11:0] imm=instruction[31:20];
-    wire [31:0] left_i;
-    assign left_i= {20'b0,imm};
-    assign right = data_out_b; assign rd_address_b=rs1;
+    wire [31:0] right_i;
+    assign right_i= {20'b0,imm};
+    assign left = data_out_b; assign rd_address_b=rs1;
     assign wr_address = rd;
     assign wr_data = result;
 
     //ALU Control
-    assign alu_opcode=funct3;
+    assign alu_opcode=(((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 3'b 100: funct3);
 
     //ALU -> Type R Instructions
-    wire [31:0] left_r;
-    assign left_r=data_out_a; assign rd_address_a=rs2;
+    wire [31:0] right_r;
+    assign right_r=data_out_a; assign rd_address_a=rs2;
 
     // Register control
-    assign left =   (opcode === 7'b 0010011)? left_i : 
-                    ((opcode === 7'b 0110011)? left_r: 32'h 0);
+    assign right =   (opcode === 7'b 0010011)? right_i : 
+                    ((opcode === 7'b 0110011)? right_r: 32'h 0);
   
 endmodule
