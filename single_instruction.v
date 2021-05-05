@@ -5,7 +5,7 @@ module single_instruction (clk, instruction);
     input wire [31:0] instruction;
     
     // Control Unit
-    ControlUnit controlUnit(.instruction(instruction), .register_write_enable(registerWriteEnable), .aluOperationCode(alu_opcode));
+    ControlUnit controlUnit(.instruction(instruction), .register_write_enable(registerWriteEnable), .aluOperationCode(alu_opcode), .aluRightInputSourceControl (aluRightInputSourceControl));
 
     // Register memory
     wire registerWriteEnable;
@@ -18,6 +18,12 @@ module single_instruction (clk, instruction);
 
     //ALU
     alu ALU(.opcode (alu_opcode),.left (aluLeftInput),.right (aluRightInput),.result (aluResult));
+
+    //ALU multiplexer
+    ALURightInputSource aluRightInputSource(.sourceSelection(aluRightInputSourceControl), 
+    .registerSource(aluRightSourceRegister),
+    .immediateSource(aluRightSourceImmediate), 
+    .resultValue (aluRightInput));
 
     // All instructions:
     wire [6:0] opcode=instruction[6:0];
@@ -40,27 +46,41 @@ module single_instruction (clk, instruction);
     assign wr_address = rd;
     assign wr_data = aluResult;
 
-    
-
     //ALU -> Type R Instructions
     wire [31:0] aluRightSourceRegister;
     assign aluRightSourceRegister=data_out_a; assign rd_address_a=rs2;
 
-    // Register control
-    assign aluRightInput =   (opcode === 7'b 0010011)? aluRightSourceImmediate : 
-                    ((opcode === 7'b 0110011)? aluRightSourceRegister: 32'h 0);
-  
+    wire aluRightInputSourceControl;
+
 endmodule
 
 
-module ControlUnit(instruction, register_write_enable, aluOperationCode);
+module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRightInputSourceControl);
     input [31:0] instruction;
     output wire register_write_enable;
     output wire [2:0] aluOperationCode;
+    output wire aluRightInputSourceControl;
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
 
     assign register_write_enable=1'b 1;
-    //ALU Control
+    
+    //ALU Operation Control
     assign aluOperationCode=(((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 3'b 100: funct3);
+    
+    // ALU source control on right input
+    assign aluRightInputSourceControl =   (opcode === 7'b 0010011)? 1'b 0 : 
+                    ((opcode === 7'b 0110011)? 1'b 1: 32'h 0);
+
+     
+endmodule
+
+module ALURightInputSource(sourceSelection,immediateSource, registerSource, resultValue );
+    input sourceSelection;
+    input [31:0] immediateSource, registerSource;
+    output [31:0] resultValue;
+
+    // Selects source to feed ALU right input
+    assign resultValue =   (sourceSelection === 1'b 0)? immediateSource : 
+                    ((sourceSelection === 1'b 1)? registerSource: 32'h 0);
 endmodule
