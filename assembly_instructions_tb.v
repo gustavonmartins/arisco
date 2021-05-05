@@ -21,7 +21,7 @@ initial
 begin
     $dumpfile("assembly_instructions.vcd");
     $dumpvars(0,mut);
-    $monitor("%2t,reset=%b,clk=%b,pc=%d,current instruction=%h, x31=%d",$time,reset,clk,mut.pc,mut.instruction,mut.single_instr.reg_mem.memory[31]);
+    //$monitor("%2t,reset=%b,clk=%b,pc=%d,current instruction=%h, x31=%d",$time,reset,clk,mut.pc,mut.instruction,mut.single_instr.reg_mem.memory[31]);
 
     $info("Testing from assembly file. x31 is probed for pass, must always be zero!!!s");
     $readmemh("arquivo.mem", mut.program_memory,0,31);

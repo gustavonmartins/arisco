@@ -23,10 +23,10 @@ initial
 begin
     $dumpfile("pc_out.vcd");
     $dumpvars(0,mut);
-    $monitor("%2t,sim_clk=%d,reset=%b,pc_in=%h,pc_out=%h",$time,sim_clk,reset,pc_in,pc_out);
+    //$monitor("%2t,sim_clk=%d,reset=%b,pc_in=%h,pc_out=%h",$time,sim_clk,reset,pc_in,pc_out);
 
     //Program counter is zero as long as reset is pressed
-    $display("Program counter is zero as long as reset is pressed");
+    $info("Program counter is zero as long as reset is pressed");
     reset=0;sim_clk=0;pc_in=32'd4;
     #1;reset=1;#1;
     `assertCaseEqual(pc_out,0,"k Programm counter should be zero while reset is pressed");
@@ -35,7 +35,7 @@ begin
     #1;sim_clk=1;#1;sim_clk=0;#1;
 
     //Program counter updates on clock down
-    $display("Program counter updates on clock down");
+    $info("Program counter updates on clock down");
     #1;reset=0;sim_clk=0;pc_in=32'd4;#1;
     `assertCaseEqual(pc_out,32'd0,"a Program counter should not update ouside clock down");
     #1;sim_clk=1;#1;

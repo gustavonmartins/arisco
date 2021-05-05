@@ -34,7 +34,7 @@ initial
 begin
     $dumpfile("alu_out.vcd");
     $dumpvars(0,mut);
-    $monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
+    //$monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
 
     $info("ALU unit test");
     enforce_result(3'b000,32'h4,32'h3,32'h7); //ADD

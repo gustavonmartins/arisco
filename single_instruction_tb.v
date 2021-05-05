@@ -14,7 +14,7 @@ initial
 begin
     $dumpfile("single_instruction_out.vcd");
     $dumpvars(0,mut);
-    $monitor("%2t,clk=%b,instruction=%h,x5=%d,wr_address=%d",$time,clk,instruction,mut.reg_mem.memory[5],mut.wr_address);
+    //$monitor("%2t,clk=%b,instruction=%h,x5=%d,wr_address=%d",$time,clk,instruction,mut.reg_mem.memory[5],mut.wr_address);
 
     //ADDI: Puts 12 on x5
     //imm[11:0] rs1 000 rd 0010011 I addi
