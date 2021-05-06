@@ -46,7 +46,7 @@ module single_instruction (clk, instruction);
     //ALU -> Type I Instructions
     wire [11:0] imm=instruction[31:20];
     wire [31:0] aluRightSourceImmediate;
-    assign aluRightSourceImmediate= {20'b0,imm};
+    assign aluRightSourceImmediate= {{20{imm[11]}}, imm};
     assign aluLeftInput = data_out_b; assign rd_address_b=rs1;
     assign wr_address = rd;
 
