@@ -5,7 +5,11 @@ module single_instruction (clk, instruction);
     input wire [31:0] instruction;
     
     // Control Unit
-    ControlUnit controlUnit(.instruction(instruction), .register_write_enable(registerWriteEnable), .aluOperationCode(alu_opcode), .aluRightInputSourceControl (aluRightInputSourceControl));
+    ControlUnit controlUnit(.instruction(instruction), 
+    .register_write_enable(registerWriteEnable), 
+    .aluOperationCode(alu_opcode), 
+    .aluRightInputSourceControl (aluRightInputSourceControl), 
+    .registerWriteSourceControl(registerWriteSourceControl));
 
     // Register memory
     wire registerWriteEnable;
@@ -14,7 +18,8 @@ module single_instruction (clk, instruction);
     register_memory reg_mem (
         .clk (clk),
         .rd_address_a (rd_address_a), .rd_address_b (rd_address_b),
-        .wr_enable (registerWriteEnable), .wr_address (wr_address), .wr_data (wr_data), .data_out_a (data_out_a), .data_out_b (data_out_b));
+        .wr_enable (registerWriteEnable), .wr_address (wr_address), 
+        .wr_data (wr_data), .data_out_a (data_out_a), .data_out_b (data_out_b));
 
     //ALU
     alu ALU(.opcode (alu_opcode),.left (aluLeftInput),.right (aluRightInput),.result (aluResult));
@@ -44,7 +49,13 @@ module single_instruction (clk, instruction);
     assign aluRightSourceImmediate= {20'b0,imm};
     assign aluLeftInput = data_out_b; assign rd_address_b=rs1;
     assign wr_address = rd;
-    assign wr_data = aluResult;
+
+    wire [31:0] upperImmediateSignExtended = {instruction[31:12],12'h 000};
+    wire registerWriteSourceControl;
+    
+    RegisterWriteDataSource registerWriteDataSource(.sourceSelection (registerWriteSourceControl),
+    .aluResult (aluResult), .upperImmediateSignExtended (upperImmediateSignExtended), 
+    .resultValue (wr_data));
 
     //ALU -> Type R Instructions
     wire [31:0] aluRightSourceRegister;
@@ -54,16 +65,29 @@ module single_instruction (clk, instruction);
 
 endmodule
 
+module RegisterWriteDataSource(sourceSelection, aluResult, upperImmediateSignExtended, resultValue);
+	input sourceSelection;
+	input [31:0] aluResult;
+	input [31:0] upperImmediateSignExtended;
+	output [31:0] resultValue;
 
-module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRightInputSourceControl);
+	assign resultValue=( sourceSelection===1'b 0)? aluResult : upperImmediateSignExtended;
+
+endmodule
+
+module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRightInputSourceControl,
+ registerWriteSourceControl);
     input [31:0] instruction;
     output wire register_write_enable;
     output wire [2:0] aluOperationCode;
     output wire aluRightInputSourceControl;
+    output wire registerWriteSourceControl;
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
 
     assign register_write_enable=1'b 1;
+    //Check if not LUI
+    assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 0 : 1;
     
     //ALU Operation Control
     assign aluOperationCode=(((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 3'b 100: funct3);
