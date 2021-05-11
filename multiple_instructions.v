@@ -10,13 +10,43 @@ module multiple_instructions (
     
     single_instruction single_instr (.clk (clk), .instruction (instruction));
 
+    PCNext pcNext(.in (pc), .out (pc_next));
+
+    PCSource pcSource(.pcPlusFour (pc_next), .pcImmediate (pcImmediate), .pcResult (pc_in), .pcSourceControl (pcSourceControl));
+
+    PCControl pcControl(.opcode (opcode), .pcSourceControl (pcSourceControl));
+
     wire [31:0] instruction;
     wire [31:0] pc, pc_in;
 
-    assign pc_in=pc+1;
     assign instruction=program_memory[pc];
-    
-    
 
+    wire [31:0] pc_next;
+    wire [31:0] pcImmediate = {12'b 0,instruction[31:12]};
+
+    wire [6:0] opcode = instruction[31:12];
+
+    wire pcSourceControl;
+
+endmodule
+
+module PCControl(opcode, pcSourceControl);
+	input wire [6:0] opcode;
+	output wire pcSourceControl;
+	assign pcSourceControl=1'b 0;
+endmodule
+
+module PCNext(in, out);
+	input [31:0] in;
+	output [31:0] out;
+	assign out=in+1;
+endmodule
+
+module PCSource (pcPlusFour, pcImmediate, pcSourceControl, pcResult);
+	input [31:0] pcPlusFour, pcImmediate;
+	input pcSourceControl;
+	output [31:0] pcResult;
+	
+	assign pcResult=pcPlusFour;
 
 endmodule
