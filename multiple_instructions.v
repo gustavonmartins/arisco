@@ -19,12 +19,12 @@ module multiple_instructions (
     wire [31:0] instruction;
     wire [31:0] pc, pc_in;
 
-    assign instruction=program_memory[pc];
+    assign instruction=program_memory[(pc>>2)];
 
     wire [31:0] pc_next;
-    wire [31:0] pcImmediate = {12'b 0,instruction[31:12]};
+    wire [31:0] pcImmediate = {12'b 0,instruction[31:12]}+pc;
 
-    wire [6:0] opcode = instruction[31:12];
+    wire [6:0] opcode = instruction[6:0];
 
     wire pcSourceControl;
 
@@ -33,13 +33,13 @@ endmodule
 module PCControl(opcode, pcSourceControl);
 	input wire [6:0] opcode;
 	output wire pcSourceControl;
-	assign pcSourceControl=1'b 0;
+	assign pcSourceControl=(opcode === 7'b 1101111)? 1'b 1: 1'b 0;
 endmodule
 
 module PCNext(in, out);
 	input [31:0] in;
 	output [31:0] out;
-	assign out=in+1;
+	assign out=in+4;
 endmodule
 
 module PCSource (pcPlusFour, pcImmediate, pcSourceControl, pcResult);
@@ -47,6 +47,6 @@ module PCSource (pcPlusFour, pcImmediate, pcSourceControl, pcResult);
 	input pcSourceControl;
 	output [31:0] pcResult;
 	
-	assign pcResult=pcPlusFour;
+	assign pcResult=(pcSourceControl === 1'b 0)? pcPlusFour : pcImmediate;
 
 endmodule

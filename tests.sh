@@ -9,3 +9,4 @@ iverilog -Wall -o single_instruction_out single_instruction_tb.v single_instruct
 iverilog -Wall -o instructions_i_out instructions_i_tb.v multiple_instructions.v register_memory.v single_instruction.v pc.v alu.v &&  vvp instructions_i_out
 iverilog -Wall -o consecutive_instructions_out consecutive_instructions_tb.v multiple_instructions.v register_memory.v single_instruction.v pc.v alu.v &&  vvp consecutive_instructions_out
 iverilog -Wall -o assembly_instructions_out assembly_instructions_tb.v multiple_instructions.v register_memory.v single_instruction.v pc.v alu.v &&  vvp assembly_instructions_out
+iverilog -Wall -o branch_instructions_out branch_instructions_tb.v multiple_instructions.v register_memory.v single_instruction.v pc.v alu.v &&  vvp branch_instructions_out
