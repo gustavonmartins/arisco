@@ -26,3 +26,4 @@
 !test_instructions.s
 !assembly_instructions_tb.v
 !assembly_tb.v
+!branch_instructions_tb.v
