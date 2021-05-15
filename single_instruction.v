@@ -1,8 +1,9 @@
 `default_nettype none
 
-module single_instruction (clk, instruction);
+module single_instruction (clk, instruction, pcNext);
     input clk;
-    input wire [31:0] instruction;
+    input wire [31:0] instruction, pcNext;
+
     
     // Control Unit
     ControlUnit controlUnit(.instruction(instruction), 
@@ -51,10 +52,10 @@ module single_instruction (clk, instruction);
     assign wr_address = rd;
 
     wire [31:0] upperImmediateSignExtended = {instruction[31:12],12'h 000};
-    wire registerWriteSourceControl;
+    wire [1:0] registerWriteSourceControl;
     
-    RegisterWriteDataSource registerWriteDataSource(.sourceSelection (registerWriteSourceControl),
-    .aluResult (aluResult), .upperImmediateSignExtended (upperImmediateSignExtended), 
+    MuxRegisterWriteDataSource registerWriteDataSource(.sourceSelection (registerWriteSourceControl),
+    .aluResult (aluResult), .upperImmediateSignExtended (upperImmediateSignExtended), .pcNext (pcNext), 
     .resultValue (wr_data));
 
     //ALU -> Type R Instructions
@@ -65,13 +66,23 @@ module single_instruction (clk, instruction);
 
 endmodule
 
-module RegisterWriteDataSource(sourceSelection, aluResult, upperImmediateSignExtended, resultValue);
-	input sourceSelection;
-	input [31:0] aluResult;
+module MuxRegisterWriteDataSource(sourceSelection, aluResult, upperImmediateSignExtended, pcNext, resultValue);
+	input [1:0] sourceSelection;
+	input [31:0] aluResult, pcNext;
 	input [31:0] upperImmediateSignExtended;
 	output [31:0] resultValue;
+	reg [31:0] internal;
 
-	assign resultValue=( sourceSelection===1'b 0)? aluResult : upperImmediateSignExtended;
+	always @(*) begin
+		case (sourceSelection)
+			2'b 0 	: internal=aluResult;
+			2'b 1 	: internal=upperImmediateSignExtended;
+			2'b 10 	: internal=pcNext;
+			default : internal = 32'b 0; 
+		endcase
+	end
+
+	assign resultValue = internal;
 
 endmodule
 
@@ -81,13 +92,22 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     output wire register_write_enable;
     output wire [2:0] aluOperationCode;
     output wire aluRightInputSourceControl;
-    output wire registerWriteSourceControl;
+    output wire [1:0] registerWriteSourceControl;
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
+    reg [2:0] internal;
 
     assign register_write_enable=1'b 1;
     //Check if not LUI
-    assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 0 : 1;
+    //assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 2'b 0 : 2'b 1;
+    always @(*) begin 
+	    case (opcode)
+		    7'b 0110111 	: 	internal = 2'b 1;
+		    7'b 1101111 	: 	internal = 2'b 10;
+		    default 		: 	internal = 2'b 0;
+	    endcase
+    end
+    assign registerWriteSourceControl=internal;
     
     //ALU Operation Control
     assign aluOperationCode=(((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 3'b 100: funct3);

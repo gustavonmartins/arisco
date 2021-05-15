@@ -31,8 +31,8 @@ begin
     mut.program_memory[4]={12'd 203, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011}; 	//imm[11:0] rs1 000 rd 0010011 I addi
     @(negedge clk) #1; reset=0;
     @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 100,"ADDI: Register 5 should contain 100");
-    @(posedge clk) #1; //nothing expected: just jumps
-    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 203,"ADDI: Register 5 should contain 203 after jumping 3 positions (12 bytes)");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[1], 32'd 8, "JAL: Saves current PC+4 on reg 1");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 203,"JAL: Register 5 should contain 203 after jumping 3 positions (12 bytes)");
 
 
     #20;

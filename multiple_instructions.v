@@ -8,7 +8,7 @@ module multiple_instructions (
     
     program_counter ProgramCounter(.clk (clk), .pc_out (pc), .pc_in (pc_in), .reset (reset));
     
-    single_instruction single_instr (.clk (clk), .instruction (instruction));
+    single_instruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next));
 
     PCNext pcNext(.in (pc), .out (pc_next));
 
