@@ -22,7 +22,8 @@ module multiple_instructions (
     assign instruction=program_memory[(pc>>2)];
 
     wire [31:0] pc_next;
-    wire [31:0] pcImmediate = {12'b 0,instruction[31:12]}+pc;
+    wire [31:0] pcImmediate = {jal_offset}+pc;
+    wire [31:0] jal_offset = {{12{instruction[31]}},instruction[31:12]};
 
     wire [6:0] opcode = instruction[6:0];
 
