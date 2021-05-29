@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
-clang --target=riscv32 -march=rv32i tests/test_instructions.s -c -o arquivo.o && llvm-objcopy -O binary arquivo.o --only-section .text\* arquivo.bin && hexdump -ve '1/4 "%08x\n"' arquivo.bin > arquivo.mem
+clang --target=riscv32 -march=rv32i tests/test_instructions.s   -c -o arquivo.o         && llvm-objcopy -O binary arquivo.o         --only-section .text\* arquivo.bin          && hexdump -ve '1/4 "%08x\n"' arquivo.bin >         arquivo.mem
+clang --target=riscv32 -march=rv32i tests/test_memory.s         -c -o arquivo_memory.o  && llvm-objcopy -O binary arquivo_memory.o  --only-section .text\* arquivo_memory.bin   && hexdump -ve '1/4 "%08x\n"' arquivo_memory.bin >  arquivo_memory.mem
 
 iverilog -Wall -o register_memory_out tests/register_memory_tb.v  &&  vvp register_memory_out
 iverilog -Wall -o pc_out tests/pc_tb.v && vvp pc_out
@@ -11,3 +12,4 @@ iverilog -Wall -o instructions_i_out tests/instructions_i_tb.v  &&  vvp instruct
 iverilog -Wall -o consecutive_instructions_out tests/consecutive_instructions_tb.v      &&  vvp consecutive_instructions_out
 iverilog -Wall -o assembly_instructions_out tests/assembly_instructions_tb.v      &&  vvp assembly_instructions_out
 iverilog -Wall -o branch_instructions_out tests/branch_instructions_tb.v      &&  vvp branch_instructions_out
+iverilog -Wall -o assembly_instructions_memory_out tests/assembly_instructions_memory_tb.v && vvp assembly_instructions_memory_out
