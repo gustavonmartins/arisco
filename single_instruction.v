@@ -40,7 +40,7 @@ module single_instruction (clk, instruction, pcNext);
     // Main memory
     memory mainMemory (.clk (clk), .address (data_out_b), 
         .wr_data (data_out_a), .read_data (mem_read_data), 
-        .wr_enable (mem_write_enable), .write_mode (mem_write_mode));
+        .wr_enable (mem_write_enable), .write_length (mem_write_mode));
     wire [31:0] mem_address, mem_read_data;
     wire mem_write_enable;
     wire [1:0] mem_write_mode;
