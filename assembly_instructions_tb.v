@@ -31,7 +31,8 @@ begin
     @(negedge clk) #1; reset=0;
     
     for (i=0; i < 32;i=i+1) begin
-	    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[31],32'd 0, "x31 register has to be zero"); 
+	    $display("PC is ", mut.pc);
+	    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[31],32'd 0, "x31 register has to be zero");
     end
     #1;
     $display("Simulation finished");

@@ -1,5 +1,7 @@
 `default_nettype none
 
+`include "single_instruction.v"
+
 module multiple_instructions (
     clk, reset
 );

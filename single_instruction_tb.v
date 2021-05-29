@@ -1,5 +1,8 @@
 `default_nettype none
 `include "utilities.v"
+
+`include "single_instruction.v"
+
 module single_instruction_tb ();
 
 reg clk;
