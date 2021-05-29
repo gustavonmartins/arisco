@@ -19,7 +19,7 @@ memory mut (
   .wr_data (wr_data),
   .read_data (read_data),
   .wr_enable (wr_enable),
-  .write_length (write_mode)
+  .write_mode (write_length)
 );
 
 initial begin
