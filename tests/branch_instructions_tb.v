@@ -17,12 +17,12 @@ end
 
 initial
 begin
+    $info("Testing branch instructios");
     $dumpfile("branch_instructions_out.vcd");
     $dumpvars(0,mut);
 
     //J-Type instructions
     //Puts a special value on register 5, but only if jump succeeded
-    $info("Testing JAL instruction");
     reset=1;#1;
     mut.program_memory[0]={12'd 100, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011}; 	//imm[11:0] rs1 000 rd 0010011 I addi
     mut.program_memory[1]={20'd 12, 5'd 1, 7'b 1101111}; 			//imm[20|10:1|11|19:12] rd 1101111 J jal
