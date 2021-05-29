@@ -11,8 +11,8 @@ lui x1, 1               // BEGIN:   Tests LUI. 4096 is lui 1, because its the 13
 addi x2,x0,2047         //          4096 = 2047+2047+2
 addi x2,x2,2047
 addi x2,x2,2
-sub x31,x1,x2           //          Control variable: X31 has to be zero when 4096 - 4096 = 0
-addi x1,x0,2047         //          Test negative numbers on ADDI
+sub x31,x1,x2           // END:     Control variable: X31 has to be zero when 4096 - 4096 = 0
+addi x1,x0,2047         // BEGIN:   Test negative numbers on ADDI
 addi x31,x1,-2047       // END:     Control variable: X31 should be zero
 nop
 nop
