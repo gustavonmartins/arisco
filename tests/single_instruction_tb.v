@@ -1,7 +1,7 @@
 `default_nettype none
-`include "utilities.v"
+`include "rtl/utilities.v"
 
-`include "single_instruction.v"
+`include "rtl/single_instruction.v"
 
 module single_instruction_tb ();
 

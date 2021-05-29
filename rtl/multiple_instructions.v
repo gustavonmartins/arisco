@@ -1,6 +1,7 @@
 `default_nettype none
 
-`include "single_instruction.v"
+`include "rtl/single_instruction.v"
+`include "rtl/pc.v"
 
 module multiple_instructions (
     clk, reset

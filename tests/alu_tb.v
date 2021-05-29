@@ -1,4 +1,6 @@
 `default_nettype none
+`include "rtl/alu.v"
+
 module tb_alu ();
 
 reg [2:0] opcode;

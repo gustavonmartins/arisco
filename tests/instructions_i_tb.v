@@ -1,5 +1,6 @@
 `default_nettype none
-`include "utilities.v"
+`include "rtl/utilities.v"
+`include "rtl/multiple_instructions.v"
 
 module instructions_i_tb ();
 

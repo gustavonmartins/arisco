@@ -1,8 +1,8 @@
 `default_nettype none
 
-`include "memory.v"
-`include "alu.v"
-`include "register_memory.v"
+`include "rtl/memory.v"
+`include "rtl/alu.v"
+`include "rtl/register_memory.v"
 
 module single_instruction (clk, instruction, pcNext);
     input clk;

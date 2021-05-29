@@ -1,5 +1,6 @@
 `default_nettype none
-`include "utilities.v"
+`include "rtl/utilities.v"
+`include "rtl/pc.v"
 module program_counter_tb ();
 
 reg sim_clk;

@@ -1,5 +1,7 @@
 `default_nettype none
-`include "utilities.v"
+`include "rtl/utilities.v"
+`include "rtl/multiple_instructions.v"
+
 module consecutive_instructions_tb ();
 
 reg clk;

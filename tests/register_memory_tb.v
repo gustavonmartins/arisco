@@ -1,5 +1,6 @@
 `default_nettype none
-`include "utilities.v"
+`include "rtl/utilities.v"
+`include "rtl/register_memory.v"
 module register_memory_tb ();
 
 reg sim_clk;

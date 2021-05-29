@@ -1,7 +1,7 @@
 `default_nettype none
-`include "utilities.v"
+`include "rtl/utilities.v"
 
-`include "memory.v"
+`include "rtl/memory.v"
 
 module memory_tb ();
 
@@ -19,7 +19,7 @@ memory mut (
   .wr_data (wr_data),
   .read_data (read_data),
   .wr_enable (wr_enable),
-  .write_mode (write_length)
+  .write_length (write_mode)
 );
 
 initial begin
