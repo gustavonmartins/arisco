@@ -8,7 +8,7 @@ module memory (clk, address, wr_data, read_data, wr_enable, write_length);
     output wire [31:0] read_data;
     input wire wr_enable;
 
-    reg [7:0] internal [2048-1:0];
+    reg [7:0] internal [5096-1:0];
 
     always @ (posedge clk) begin
         if (wr_enable===1'b 1) begin

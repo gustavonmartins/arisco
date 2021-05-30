@@ -38,10 +38,10 @@ module single_instruction (clk, instruction, pcNext);
     .resultValue (aluRightInput));
 
     // Main memory
-    memory mainMemory (.clk (clk), .address (data_out_b), 
+    memory mainMemory (.clk (clk), .address (aluResult), 
         .wr_data (data_out_a), .read_data (mem_read_data), 
         .wr_enable (mem_write_enable), .write_length (mem_write_mode));
-    wire [31:0] mem_address, mem_read_data;
+    wire [31:0] mem_read_data;
     wire mem_write_enable;
     wire [1:0] mem_write_mode;
 
@@ -113,7 +113,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     input [31:0] instruction;
     output wire register_write_enable;
     output wire [2:0] aluOperationCode;
-    output wire aluRightInputSourceControl;
+    output reg aluRightInputSourceControl;
     output wire [1:0] registerWriteSourceControl;
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
@@ -144,8 +144,16 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     assign aluOperationCode=(((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 3'b 100: funct3);
     
     // ALU source control on right input
-    assign aluRightInputSourceControl =   (opcode === 7'b 0010011)? 1'b 0 : 
-                    ((opcode === 7'b 0110011)? 1'b 1: 32'h 0);
+    always @(*) begin
+        case (opcode)
+            7'b 0010011     :   aluRightInputSourceControl  = 1'b 0;    //I-Type. Read from immediate
+            7'b 0110011     :   aluRightInputSourceControl  = 1'b 1;    //R-type. Read from register
+            default         :   aluRightInputSourceControl  = 1'b 0;
+        endcase
+    //assign aluRightInputSourceControl =   (opcode === 7'b 0010011)? 1'b 0 : 
+    //                ((opcode === 7'b 0110011)? 1'b 1: 32'h 0);
+
+    end
 
      
 endmodule
