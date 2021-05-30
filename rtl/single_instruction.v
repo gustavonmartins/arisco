@@ -58,10 +58,12 @@ module single_instruction (clk, instruction, pcNext);
     wire [2:0] alu_opcode;
     wire [31:0]  aluLeftInput,aluRightInput, aluResult;
 
-    //ALU -> Type I Instructions
-    wire [11:0] imm=instruction[31:20];
+    ImmediateGenerator immediateGenerator(.instruction (instruction), .result (imm));
+    wire [31:0] imm;
     wire [31:0] aluRightSourceImmediate;
-    assign aluRightSourceImmediate= {{20{imm[11]}}, imm};
+    assign aluRightSourceImmediate= imm;
+    
+    //ALU -> Type I Instructions
     assign aluLeftInput = data_out_b; assign rd_address_b=rs1;
     assign wr_address = rd;
 
@@ -156,4 +158,15 @@ module ALURightInputSource(sourceSelection,immediateSource, registerSource, resu
     // Selects source to feed ALU right input
     assign resultValue =   (sourceSelection === 1'b 0)? immediateSource : 
                     ((sourceSelection === 1'b 1)? registerSource: 32'h 0);
+endmodule
+
+module ImmediateGenerator(instruction, result);
+    input [31:0] instruction;
+    output reg [31:0] result;
+    
+    always @(*) begin
+        case (instruction[6:0])
+            7'b 0010011     :   result  =   {{20{instruction[31]}},instruction[31:20]};
+        endcase
+    end
 endmodule
