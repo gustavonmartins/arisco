@@ -22,14 +22,16 @@ addi x2,x0,200
 addi x3,x0,400
 sw x1, 51(x1)           //          Saves 100 into 151 (51 uses both part of immediate)
 sw x2, 2047(x2)         //          Saves 200 into 2247
-sw x3, -331(x3)         //          Saves 300 into 69. Assigning multiple times wasnt covered on previous tests
+sw x3, -331(x3)         //          Saves 400 into 69. Assigning multiple times wasnt covered on previous tests
 addi x11,x0,148         //          Will read from 100(99+1), 200(200+0), 300(301-1). This is done to test offsetting
 addi x12,x0,200
 addi x13,x0,84
 lw x11, 3(x11)
 lw x12, 2047(x12)
-lw x13, -15(x3)
-sub x31,x1,x11           //END:
+lw x13, -15(x13)
+sub x31,x1,x11           
+sub x31,x2,x12           
+sub x31,x3,x13           //END:
 nop
 nop
 nop
