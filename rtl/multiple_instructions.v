@@ -6,8 +6,11 @@
 module multiple_instructions (
     clk, reset
 );
+
+    localparam PROGRAM_MEMORY_SIZE=64;
+
     input clk, reset;
-    reg [31:0] program_memory[31:0];
+    reg [31:0] program_memory[PROGRAM_MEMORY_SIZE-1:0];
     
     program_counter ProgramCounter(.clk (clk), .pc_out (pc), .pc_in (pc_in), .reset (reset));
     

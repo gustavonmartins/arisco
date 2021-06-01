@@ -126,7 +126,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     // Sets write mode to byte, halfword or word
     assign mem_write_mode = funct3;
 
-    assign register_write_enable=1'b 1;
+    assign register_write_enable=(((opcode !== 7'b 0100011))? 1'b 1:1'b 0);
     //Check if not LUI
     //assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 2'b 0 : 2'b 1;
     always @(*) begin 
@@ -141,7 +141,11 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
    
 
     //ALU Operation Control
-    assign aluOperationCode=(((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 3'b 100: funct3);
+    assign aluOperationCode=
+        (((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 
+        3'b 100:
+        (((opcode===7'b 0100011) || (opcode===7'b 0000011))? 3'd 0:funct3)
+        );
     
     // ALU source control on right input
     always @(*) begin
@@ -174,7 +178,10 @@ module ImmediateGenerator(instruction, result);
     
     always @(*) begin
         case (instruction[6:0])
-            7'b 0010011     :   result  =   {{20{instruction[31]}},instruction[31:20]};
+            7'b 0010011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
+            7'b 0100011     :   result  =   {{20{instruction[31]}}, instruction[31:25],instruction[11:7]};
+            7'b 0000011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
+            default         :   result  =   32'b 0;
         endcase
     end
 endmodule
