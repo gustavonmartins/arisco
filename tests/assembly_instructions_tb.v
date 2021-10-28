@@ -33,7 +33,7 @@ begin
     @(negedge clk) #1; reset=0;
     
     for (i=0; i < 32;i=i+1) begin
-	    $display("PC is ", mut.pc);
+	    $display("PC is %d, instruction: %h", mut.pc, mut.instruction);
 	    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[31],32'd 0, "x31 register has to be zero");
     end
     #1;
