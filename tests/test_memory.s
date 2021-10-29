@@ -31,23 +31,21 @@ lw x12, 2047(x12)
 lw x13, -15(x13)
 sub x31,x1,x11           
 sub x31,x2,x12           
-sub x31,x3,x13           //END:
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
+sub x31,x3,x13          // END:
+lui x1, 703711          // BEGIN:   SB: Will test Store Byte, by using SB 4 times to fill a word
+addi x1, x1, -119       //          Adds 0xABCDEF89 into x1
+lui x2, 982235          //          Adds 0xEFCDAB12 into x2
+addi x2, x2, -1262
+lui    x3, 704251       //          Adds 0xABEFABEF into x3, which should be the combination of first bytes of x1,x2,x1,x2
+addi    x3, x3, -1041
+addi x11,x0,49          //          Will save byte in positions 100 (49+51), 101 (151-50), 102 and 103, which will be checked by reading word at 100
+addi x12,x0,151
+sb x1, 51(x1)           //          Store bytes 4 times, to make a full word
+sb x2, -50(x12)
+sb x1, 53(x11)
+sb x2, -48(x12)
+lw x20, 51(x1)          //          Reads the word formed
+sub x31,x3,x20          // END:     Control varible
 nop
 nop
 nop
