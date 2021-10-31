@@ -9,6 +9,7 @@ reg [4:0] rd_address_b;
 reg wr_enable;
 reg [4:0] wr_address;
 reg [31:0] wr_data;
+reg [2:0] write_pattern;
 wire [31:0] data_out_a;
 wire [31:0] data_out_b;
 
@@ -23,7 +24,8 @@ register_memory mut (
     .wr_address (wr_address),
     .wr_data (wr_data),
     .data_out_a (data_out_a),
-    .data_out_b (data_out_b)
+    .data_out_b (data_out_b),
+    .write_pattern (write_pattern)
 );
 
 
@@ -53,7 +55,14 @@ begin
     wr_enable=1; wr_address=5'hA; wr_data=32'hABCDEFAB; rd_address_a=5'hA;rd_address_b=5'hA;
     #1; sim_clk=1;#1;wr_enable=0;
     `assertCaseEqual(data_out_b,32'hABCDEFAB,"Didnt read memory immediately");
-    `assertCaseEqual(data_out_a, 32'hABCDEFAB, "Didnt read memory immediately"); 
+    `assertCaseEqual(data_out_a, 32'hABCDEFAB, "Didnt read memory immediately");
+
+    //Writes byte, not word on clock, as unsigned (used for LBU instruction)
+    #1;sim_clk=0;
+    wr_enable=1; wr_address=5'hF; wr_data=32'hABCDEFFA; rd_address_a=5'hF;rd_address_b=5'hF;write_pattern=3'b 100;
+    #1; sim_clk=1;#1;wr_enable=0;
+    `assertCaseEqual(data_out_b,32'h 000000FA,"Didnt read memory immediately after saving unsigned byte");
+    `assertCaseEqual(data_out_a, 32'h 000000FA, "Didnt read memory immediately after saving unsigned byte"); 
     
     
     #1;

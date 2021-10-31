@@ -8,7 +8,8 @@ module register_memory (
     wr_address,
     wr_data,
     data_out_a,
-    data_out_b
+    data_out_b,
+    write_pattern
 );
     input clk;
 
@@ -19,6 +20,7 @@ module register_memory (
     output wire [31:0] data_out_b;
     input [4:0] rd_address_a;
     input [4:0] rd_address_b;
+    input [2:0] write_pattern; // Used for LB/LBU instructions
 
     reg [31:0] memory[31:0];
 
@@ -28,8 +30,13 @@ module register_memory (
 
     always @(posedge clk)
     begin
-        if (wr_enable & wr_address!=5'd0) begin
-            memory[wr_address]<=wr_data;
+        if (wr_enable & wr_address!=5'd 0) begin
+            if (write_pattern === 3'b 100) begin 
+                // LBU: Saves first byte, with no sign extension
+                memory[wr_address]<={24'h 000000,wr_data[7:0]};
+            end else begin
+                memory[wr_address]<=wr_data;
+            end
         end
     end
 

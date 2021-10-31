@@ -16,17 +16,20 @@ module single_instruction (clk, instruction, pcNext);
     .aluRightInputSourceControl (aluRightInputSourceControl), 
     .registerWriteSourceControl(registerWriteSourceControl),
     .mem_write(mem_write_enable),
-    .mem_write_mode(mem_write_mode));
+    .mem_write_mode(mem_write_mode),
+    .register_write_pattern(register_write_pattern));
 
     // Register memory
     wire registerWriteEnable;
     wire [4:0] rd_address_a,rd_address_b,wr_address;
     wire [31:0] wr_data,data_out_a,data_out_b;
+    wire [2:0] register_write_pattern;
     register_memory reg_mem (
         .clk (clk),
         .rd_address_a (rd_address_a), .rd_address_b (rd_address_b),
         .wr_enable (registerWriteEnable), .wr_address (wr_address), 
-        .wr_data (wr_data), .data_out_a (data_out_a), .data_out_b (data_out_b));
+        .wr_data (wr_data), .data_out_a (data_out_a), .data_out_b (data_out_b),
+        .write_pattern (register_write_pattern));
 
     //ALU
     alu ALU(.opcode (alu_opcode),.left (aluLeftInput),.right (aluRightInput),.result (aluResult));
@@ -109,9 +112,10 @@ endmodule
 
 module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRightInputSourceControl,
     registerWriteSourceControl, 
-    mem_write, mem_write_mode);
+    mem_write, mem_write_mode,register_write_pattern);
     input [31:0] instruction;
     output wire register_write_enable;
+    output wire [2:0] register_write_pattern;
     output wire [2:0] aluOperationCode;
     output reg aluRightInputSourceControl;
     output wire [1:0] registerWriteSourceControl;
@@ -126,7 +130,10 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     // Sets write mode to byte, halfword or word
     assign mem_write_mode = funct3;
 
+    // Register control
     assign register_write_enable=(((opcode !== 7'b 0100011))? 1'b 1:1'b 0);
+    assign register_write_pattern=((opcode===7'b 0000011)? instruction[14:12] : 3'b 010); // Load Byte (LB) decides here
+
     //Check if not LUI
     //assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 2'b 0 : 2'b 1;
     always @(*) begin 
