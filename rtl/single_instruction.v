@@ -43,7 +43,7 @@ module single_instruction (clk, instruction, pcNext);
         .wr_enable (mem_write_enable), .write_length (mem_write_mode));
     wire [31:0] mem_read_data;
     wire mem_write_enable;
-    wire [1:0] mem_write_mode;
+    wire [2:0] mem_write_mode;
 
     // All instructions:
     wire [6:0] opcode=instruction[6:0];
@@ -121,7 +121,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     
     // Memory control
     output wire mem_write;
-    output wire [1:0] mem_write_mode;
+    output wire [2:0] mem_write_mode;
     assign mem_write = (opcode === 7'b 0100011)? 1 : 0;
     // Sets write mode to byte, halfword or word
     assign mem_write_mode = funct3;

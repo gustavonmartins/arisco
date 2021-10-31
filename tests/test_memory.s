@@ -31,9 +31,7 @@ lw x12, 2047(x12)
 lw x13, -15(x13)
 sub x31,x1,x11           
 sub x31,x2,x12           
-sub x31,x3,x13           //END:
-nop
-nop
+sub x31,x3,x13          // END:
 nop
 nop
 nop
