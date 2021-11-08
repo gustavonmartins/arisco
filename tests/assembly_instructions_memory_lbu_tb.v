@@ -25,12 +25,12 @@ integer i;
 
 initial
 begin
-    $info("Testing memory behaviour for LBU from assembly file. x31 is probed for pass, must always be zero!!!");
-    $dumpfile("assembly_instructions_memory_lbu.vcd");
+    $info("Testing memory behaviour from assembly file. x31 is probed for pass, must always be zero!!!");
+    $dumpfile(`VCDFILEPATH);
     $dumpvars(0,mut);
     //$monitor("%2t,reset=%b,clk=%b,pc=%d,current instruction=%h, x1=%h, x10=%h,x11=%h, x31=%h",$time,reset,clk,mut.pc,mut.instruction,mut.single_instr.reg_mem.memory[1],mut.single_instr.reg_mem.memory[10],mut.single_instr.reg_mem.memory[11],mut.single_instr.reg_mem.memory[31]);
 
-    $readmemh("arquivo_memory_lbu.mem", mut.program_memory,0,PROGRAM_MEMORY_SIZE-1);
+    $readmemh(`MEMFILEPATH, mut.program_memory,0,PROGRAM_MEMORY_SIZE-1);
 
     reset=1;#20;
 

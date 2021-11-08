@@ -14,4 +14,4 @@ iverilog -Wall -o consecutive_instructions_out              tests/consecutive_in
 iverilog -Wall -o assembly_instructions_out                 tests/assembly_instructions_tb.v            &&  vvp assembly_instructions_out
 iverilog -Wall -o branch_instructions_out                   tests/branch_instructions_tb.v              &&  vvp branch_instructions_out
 iverilog -Wall -o assembly_instructions_memory_out          tests/assembly_instructions_memory_tb.v     && vvp assembly_instructions_memory_out
-iverilog -Wall -o assembly_instructions_memory_lbu_out      tests/assembly_instructions_memory_lbu_tb.v && vvp assembly_instructions_memory_lbu_out
+iverilog -Wall -o assembly_instructions_memory_lbu_out      -DMEMFILEPATH=\"arquivo_memory_lbu.mem\"    -DVCDFILEPATH=\"assembly_instructions_memory_lbu.vcd\"      tests/assembly_instructions_memory_lbu_tb.v && vvp assembly_instructions_memory_lbu_out
