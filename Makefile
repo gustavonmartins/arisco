@@ -1,8 +1,10 @@
 SHELL=/bin/bash -euo pipefail
 
-VLOG=iverilog -Wall
+VLOG=iverilog -Wall -g2012
 
 CC=clang --target=riscv32 -march=rv32i
+
+SOURCES       := $(shell find . -name '*.v' -not -name '*_tb.v')
 
 test: verilog_test assembly_test
 
@@ -29,6 +31,9 @@ assembly_test:
 
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
+lint: 
+	verilator --lint-only -Wall $(SOURCES)
+
 .PHONY : clean
 clean:
-	rm -f *.vcd *.bin *.o *.vvp *.mem
+	rm -rf *.vcd *.bin *.o *.vvp *.mem build
