@@ -25,7 +25,7 @@ task enforce_result;
   endtask
 
 
-alu mut (
+ALU mut (
     .opcode (opcode),
     .left (left),
     .right (right),

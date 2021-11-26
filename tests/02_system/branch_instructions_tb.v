@@ -7,7 +7,7 @@ module branch_instructions_tb ();
 reg clk;
 reg reset;
 
-multiple_instructions mut (
+MultipleInstructions mut (
     .clk (clk), .reset (reset)
 );
 initial begin

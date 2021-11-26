@@ -4,7 +4,7 @@
 `include "rtl/alu.v"
 `include "rtl/register_memory.v"
 
-module single_instruction (clk, instruction, pcNext);
+module SingleInstruction (clk, instruction, pcNext);
     input clk;
     input wire [31:0] instruction, pcNext;
 
@@ -24,7 +24,7 @@ module single_instruction (clk, instruction, pcNext);
     wire [4:0] rd_address_a,rd_address_b,wr_address;
     wire [31:0] wr_data,data_out_a,data_out_b;
     wire [2:0] register_write_pattern;
-    register_memory reg_mem (
+    RegisterMemory reg_mem (
         .clk (clk),
         .rd_address_a (rd_address_a), .rd_address_b (rd_address_b),
         .wr_enable (registerWriteEnable), .wr_address (wr_address), 
@@ -32,7 +32,7 @@ module single_instruction (clk, instruction, pcNext);
         .write_pattern (register_write_pattern));
 
     //ALU
-    alu ALU(.opcode (alu_opcode),.left (aluLeftInput),.right (aluRightInput),.result (aluResult));
+    ALU ALU(.opcode (alu_opcode),.left (aluLeftInput),.right (aluRightInput),.result (aluResult));
 
     //ALU multiplexer
     ALURightInputSource aluRightInputSource(.sourceSelection(aluRightInputSourceControl), 
@@ -41,7 +41,7 @@ module single_instruction (clk, instruction, pcNext);
     .resultValue (aluRightInput));
 
     // Main memory
-    memory mainMemory (.clk (clk), .address (aluResult), 
+    Memory mainMemory (.clk (clk), .address (aluResult), 
         .wr_data (data_out_a), .read_data (mem_read_data), 
         .wr_enable (mem_write_enable), .write_length (mem_write_mode));
     wire [31:0] mem_read_data;

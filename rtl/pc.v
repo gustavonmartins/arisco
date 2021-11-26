@@ -1,6 +1,6 @@
 `default_nettype none
 
-module program_counter (
+module ProgramCounter (
     clk,
     reset,
     pc_in,

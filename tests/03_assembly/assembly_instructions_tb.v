@@ -16,7 +16,7 @@ module assembly_instructions_memory_lbu_tb ();
 reg clk;
 reg reset;
 
-multiple_instructions mut (
+MultipleInstructions mut (
     .clk (clk), .reset (reset)
 );
 initial begin

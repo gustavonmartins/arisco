@@ -1,6 +1,6 @@
 `default_nettype none
 
-module memory (clk, address, wr_data, read_data, wr_enable, write_length);
+module Memory (clk, address, wr_data, read_data, wr_enable, write_length);
     input wire clk;
     input [31:0] address;
     input [31:0] wr_data;

@@ -13,7 +13,7 @@ module memory_tb ();
 
 
 
-memory mut (
+Memory mut (
   .clk (clk),
   .address (address),
   .wr_data (wr_data),

@@ -8,7 +8,7 @@ module instructions_i_tb ();
 reg clk;
 reg reset;
 
-multiple_instructions mut (
+MultipleInstructions mut (
     .clk (clk), .reset (reset)
 );
 

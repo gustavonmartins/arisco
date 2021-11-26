@@ -4,7 +4,7 @@
 `include "rtl/pc.v"
 `include "rtl/parameters.vh"
 
-module multiple_instructions (
+module MultipleInstructions (
     clk, reset
 );
 
@@ -13,9 +13,9 @@ module multiple_instructions (
     input clk, reset;
     reg [31:0] program_memory[PROGRAM_MEMORY_SIZE-1:0];
     
-    program_counter ProgramCounter(.clk (clk), .pc_out (pc), .pc_in (pc_in), .reset (reset));
+    ProgramCounter ProgramCounter(.clk (clk), .pc_out (pc), .pc_in (pc_in), .reset (reset));
     
-    single_instruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next));
+    SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next));
 
     PCNext pcNext(.in (pc), .out (pc_next));
 

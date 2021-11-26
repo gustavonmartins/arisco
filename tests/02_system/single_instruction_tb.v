@@ -8,7 +8,7 @@ module single_instruction_tb ();
 reg clk;
 reg [31:0] instruction;
 
-single_instruction mut (
+SingleInstruction mut (
     .clk (clk),
     .instruction (instruction)
 );

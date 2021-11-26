@@ -11,7 +11,7 @@ wire [31:0] pc_out;
 
 
 
-program_counter mut (
+ProgramCounter mut (
     .clk (sim_clk),
     .reset (reset),
     .pc_in (pc_in),

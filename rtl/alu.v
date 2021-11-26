@@ -1,6 +1,6 @@
 `default_nettype none
 
-module alu(opcode, left, right, result);
+module ALU(opcode, left, right, result);
     input [2:0] opcode;
     input [31:0] left;
     input [31:0] right;

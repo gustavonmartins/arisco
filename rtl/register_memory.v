@@ -1,6 +1,6 @@
 `default_nettype none
 
-module register_memory (
+module RegisterMemory (
     clk,
     rd_address_a ,
     rd_address_b,

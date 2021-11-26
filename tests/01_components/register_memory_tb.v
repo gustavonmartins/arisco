@@ -16,7 +16,7 @@ wire [31:0] data_out_b;
 
 
 
-register_memory mut (
+RegisterMemory mut (
     .clk (sim_clk),
     .rd_address_a (rd_address_a),
     .rd_address_b (rd_address_b),
