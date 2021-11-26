@@ -6,8 +6,10 @@ CC=clang --target=riscv32 -march=rv32i
 
 SOURCES       := $(shell find . -name '*.v' -not -name '*_tb.v')
 
+.PHONY: test
 test: verilog_component_test verilog_system_test assembly_test
 
+.PHONY: verilog_component_test
 verilog_component_test:
 	@echo 	================ VERILOG COMPONENT TESTS ================
 	$(VLOG) -o register_memory_out.o                       tests/01_components/register_memory_tb.v       	&&    vvp register_memory_out.o
@@ -16,6 +18,7 @@ verilog_component_test:
 	$(VLOG) -o mem_out.o                                   tests/01_components/memory_tb.v                	&&    vvp mem_out.o
 	
 
+.PHONY: verilog_system_test
 verilog_system_test:
 	@echo 	================ VERILOG SYSTEM TESTS ================
 	$(VLOG) -o single_instruction_out.o                    tests/02_system/single_instruction_tb.v        	&&    vvp single_instruction_out.o
@@ -23,6 +26,7 @@ verilog_system_test:
 	$(VLOG) -o consecutive_instructions_out.o              tests/02_system/consecutive_instructions_tb.v	&&    vvp consecutive_instructions_out.o
 	$(VLOG) -o branch_instructions_out.o                   tests/02_system/branch_instructions_tb.v			&&    vvp branch_instructions_out.o
 
+.PHONY: assembly_test
 assembly_test:
 	@echo 	================ ASSEMBLY TESTS ================
 	$(CC) tests/03_assembly/test_addi.s						-c -o test_addi.o       && llvm-objcopy -O binary test_addi.o	--only-section .text\* test_addi.bin	&& hexdump -ve '1/4 "%08x\n"' test_addi.bin		>   test_addi.mem
@@ -35,7 +39,8 @@ assembly_test:
 
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
-lint: 
+.PHONY: lint
+lint:
 	verilator --lint-only -Wall $(SOURCES)
 
 .PHONY : clean

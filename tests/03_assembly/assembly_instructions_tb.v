@@ -1,12 +1,17 @@
 `default_nettype none
 `include "rtl/utilities.v"
 `include "rtl/multiple_instructions.v"
+`include "rtl/parameters.vh"
 
 module assembly_instructions_memory_lbu_tb ();
 //Tests memory behaviour. Is separated from rest because on the future 
 //it might spend more than one cycle to coplete each instruction
 
-localparam PROGRAM_MEMORY_SIZE=64;
+//localparam PROGRAM_MEMORY_SIZE=100;
+//
+//x31 register: Checks if expected and as-is inputs are equal by checking if
+//their difference is 0, via reg x31
+//x1 register: The number of the current test in file (helpful for debugging)
 
 reg clk;
 reg reset;
@@ -22,6 +27,8 @@ always begin
 end
 
 integer i;
+integer current_test=-1;
+integer last_test=-1;
 
 initial
 begin
@@ -35,10 +42,19 @@ begin
     reset=1;#20;
 
     @(negedge clk) #1; reset=0;
-    
-    for (i=0; i < PROGRAM_MEMORY_SIZE;i=i+1) begin
+    i=0;
+    while (i < PROGRAM_MEMORY_SIZE &&  !(mut.instruction === 32'h xxxxxxxx)) begin // Stops on invalid instruction or end of memory
+
+        current_test=mut.single_instr.reg_mem.memory[1];
+        if(current_test!==last_test) begin
+            last_test=current_test;
+        $display("Running sub-test number: %d",current_test);
+        end
+
 	    $display("PC is %d, instruction: %h", mut.pc, mut.instruction);
 	    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[31],32'd 0, {"x31 register has to be zero"});
+
+        i+=1;
     end
     #1;
     $display("Simulation finished");

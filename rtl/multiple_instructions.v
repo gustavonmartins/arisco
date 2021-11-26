@@ -2,12 +2,13 @@
 
 `include "rtl/single_instruction.v"
 `include "rtl/pc.v"
+`include "rtl/parameters.vh"
 
 module multiple_instructions (
     clk, reset
 );
 
-    localparam PROGRAM_MEMORY_SIZE=64;
+    //localparam PROGRAM_MEMORY_SIZE=64;
 
     input clk, reset;
     reg [31:0] program_memory[PROGRAM_MEMORY_SIZE-1:0];
