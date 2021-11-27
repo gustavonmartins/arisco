@@ -37,13 +37,13 @@ begin
     $dumpvars(0,mut);
     //$monitor("%2t,reset=%b,clk=%b,pc=%d,current instruction=%h, x1=%h, x10=%h,x11=%h, x31=%h",$time,reset,clk,mut.pc,mut.instruction,mut.single_instr.reg_mem.memory[1],mut.single_instr.reg_mem.memory[10],mut.single_instr.reg_mem.memory[11],mut.single_instr.reg_mem.memory[31]);
 
-    $readmemh(`MEMFILEPATH, mut.program_memory,0,PROGRAM_MEMORY_SIZE-1);
+    $readmemh(`MEMFILEPATH, mut.program_memory,0,PROGRAM_MEMORY_SIZE_WORDS-1);
 
     reset=1;#20;
 
     @(negedge clk) #1; reset=0;
     i=0;
-    while (i < PROGRAM_MEMORY_SIZE &&  !(mut.instruction === 32'h xxxxxxxx)) begin // Stops on invalid instruction or end of memory
+    while (i < PROGRAM_MEMORY_SIZE_WORDS &&  !(mut.instruction === 32'h xxxxxxxx)) begin // Stops on invalid instruction or end of memory
 
         current_test=mut.single_instr.reg_mem.memory[1];
         if(current_test!==last_test) begin

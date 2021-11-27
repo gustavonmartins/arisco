@@ -1,4 +1,5 @@
 `default_nettype none
+`include "rtl/parameters.vh"
 
 module Memory (clk, address, wr_data, read_data, wr_enable, write_length);
     input wire clk;
@@ -8,7 +9,7 @@ module Memory (clk, address, wr_data, read_data, wr_enable, write_length);
     output wire [31:0] read_data;
     input wire wr_enable;
 
-    reg [7:0] internal [0:4096-1];
+    reg [7:0] internal [0:MEMORY_SIZE_BYTES-1];
 
     always @ (posedge clk) begin
         if (wr_enable===1'b 1) begin
