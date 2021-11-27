@@ -13,7 +13,7 @@ module MultipleInstructions (
     input clk, reset;
     reg [31:0] program_memory[PROGRAM_MEMORY_SIZE-1:0];
     
-    ProgramCounter ProgramCounter(.clk (clk), .pc_out (pc), .pc_in (pc_in), .reset (reset));
+    ProgramCounter programCounter(.clk (clk), .pc_out (pc), .pc_in (pc_in), .reset (reset));
     
     SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next));
 

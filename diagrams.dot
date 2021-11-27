@@ -1,0 +1,52 @@
+digraph SingleInstruction {
+    rankdir=LR;
+    //splines=polyline;
+    graph [pad=".75", ranksep="1", nodesep="0.5"];
+    node [shape=record, fontsize=10, fontname=Arial];
+
+    Memory [label="{{<clk>clk|<address>address|<wr_data>wr_data|<write_length>write_length|<wr_enable>wr_enable}
+    |\N
+    |{<read_data>read_data}}",style=filled, fillcolor=purple];
+    RegisterMemory[label="{{<clk>clk|<wr_data>wr_data|<wr_address>wr_address|<wr_enable>wr_enable|<rd_address_a>rd_address_a|<rd_address_b>rd_address_b|<write_pattern>write_pattern}
+    |\N
+    |{<data_out_a> data_out_a | <data_out_b>data_out_b }}",style=filled, fillcolor=purple];
+    MuxRegisterWriteDataSource[label="{{<sourceSelection>sourceSelection|<aluResult>aluResult|<upperImmediateSignExtended>upperImmediateSignExtended|<pcNext>pcNext|<mainMemory>mainMemory}
+    |\N|{<resultValue>resultValue}}"]
+    Instruction[label="{<instruction>\N
+    |{<rs2>rs2|<rs1>rs1}}"]
+    ALU[label="{{<opcode>opcode|<left>left|<right>right}
+    |\N
+    |{<result>result}}",style=filled, fillcolor=purple]
+
+    ProgramCounter[label="{{<clk>clk|<pc_in>pc_in|<reset>reset}|\N|{<pc_out>pc_out}}",style=filled, fillcolor=purple];
+
+    ControlUnit[label="{\N|{<mem_write_mode>mem_write_mode|<register_write_enable>register_write_enable|<register_write_pattern>register_write_pattern|<aluOperationCode>aluOperationCode|<aluRightInputSourceControl>aluRightInputSourceControl|<registerWriteSourceControl>registerWriteSourceControl|<mem_write>mem_write|<mem_write_mode>mem_write_mode|<register_write_pattern>register_write_pattern}}"]
+    
+    ALURightInputSource[label="{{<sourceSelection>sourceSelection|<immediateSource>immediateSource|<registerSource>registerSource}|\N|{<resultValue>resultValue}}"];
+
+    ImmediateExtractor[label="{{<instruction>instruction}|\N|{<result>result}}"];
+
+
+    Instruction:rs2 -> RegisterMemory:rd_address_a ;
+    Instruction:rs1 -> RegisterMemory:rd_address_b;
+     
+    ALU:result->Memory:address;
+    ALU:result->MuxRegisterWriteDataSource:aluResult;
+    Instruction:instruction->ControlUnit:instruction;
+    Instruction:instruction->ImmediateExtractor:instruction;
+
+    ControlUnit:mem_write_mode->Memory:write_length;
+
+    RegisterMemory:data_out_a->Memory:wr_data;
+
+    RegisterMemory:data_out_b->ALU:left;
+
+    ALURightInputSource:resultValue->ALU:right;
+
+    ImmediateExtractor:result->ALURightInputSource:immediateSource;
+
+    ControlUnit:aluRightInputSourceControl->ALURightInputSource:sourceSelection;
+    MuxRegisterWriteDataSource:resultValue->RegisterMemory:wr_data;
+
+    }
+    

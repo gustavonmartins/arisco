@@ -61,7 +61,7 @@ module SingleInstruction (clk, instruction, pcNext);
     wire [2:0] alu_opcode;
     wire [31:0]  aluLeftInput,aluRightInput, aluResult;
 
-    ImmediateGenerator immediateGenerator(.instruction (instruction), .result (imm));
+    ImmediateExtractor immediateExtractor(.instruction (instruction), .result (imm));
     wire [31:0] imm;
     wire [31:0] aluRightSourceImmediate;
     assign aluRightSourceImmediate= imm;
@@ -179,7 +179,7 @@ module ALURightInputSource(sourceSelection,immediateSource, registerSource, resu
                     ((sourceSelection === 1'b 1)? registerSource: 32'h 0);
 endmodule
 
-module ImmediateGenerator(instruction, result);
+module ImmediateExtractor(instruction, result);
     input [31:0] instruction;
     output reg [31:0] result;
     
