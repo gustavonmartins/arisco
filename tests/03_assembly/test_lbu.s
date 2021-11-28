@@ -27,9 +27,9 @@ sub x31,x6,x21
 //Tests offset of LBU. As immediate are 12 bits long and sign extend, its important to test boundaries for posive and negative.
 //Positive is 2047
 add     x1,x1,1                // Sub-test id
-//Stores base number at memory pos 3000
+//Stores base number at memory pos 4000
 li x5, 0xFB0E0AB9
-li x10, 4000 // 3000
+li x10, 4000 // 4000
 sw x5,0(x10)   //Will store it at memory position 10
 // Value that LBU is supposed to read
 li x6, 0xB9
