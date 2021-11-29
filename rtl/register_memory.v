@@ -35,8 +35,9 @@ module RegisterMemory (
             if (write_pattern === REGISTER_WRITE_BYTE_UNSIGNED) begin 
                 // LBU: Saves first byte, with no sign extension
                 memory[wr_address]<={24'h 000000,wr_data[7:0]};
-            end else begin
-                memory[wr_address]<=wr_data;
+            end else if (write_pattern === REGISTER_WRITE_WORD) begin 
+                // LW: Saves entire word
+                memory[wr_address]<=wr_data[31:0];
             end
         end
     end
