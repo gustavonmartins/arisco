@@ -132,7 +132,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
 
     // Register control
     assign register_write_enable=(((opcode !== 7'b 0100011))? 1'b 1:1'b 0);
-    assign register_write_pattern=((opcode===7'b 0000011)? instruction[14:12] : 3'b 010); // Load Byte (LB) decides here
+    assign register_write_pattern=((opcode===7'b 0000011)? instruction[14:12] : REGISTER_WRITE_WORD); // Load Byte (LB) decides here
 
     //Check if not LUI
     //assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 2'b 0 : 2'b 1;

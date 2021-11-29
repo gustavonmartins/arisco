@@ -1,4 +1,5 @@
 `default_nettype none
+`include "rtl/parameters.vh"
 
 module RegisterMemory (
     clk,
@@ -31,7 +32,7 @@ module RegisterMemory (
     always @(posedge clk)
     begin
         if (wr_enable & wr_address!=5'd 0) begin
-            if (write_pattern === 3'b 100) begin 
+            if (write_pattern === REGISTER_WRITE_BYTE_UNSIGNED) begin 
                 // LBU: Saves first byte, with no sign extension
                 memory[wr_address]<={24'h 000000,wr_data[7:0]};
             end else begin
