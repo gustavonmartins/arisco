@@ -135,6 +135,8 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     assign register_write_pattern = (
         (opcode === 7'b 0000011 && funct3 === 3'b 100)? 
         REGISTER_WRITE_BYTE_UNSIGNED : 
+        (opcode === 7'b 0000011 && funct3 === 3'b 000)? 
+        REGISTER_WRITE_BYTE_SIGNED : 
         REGISTER_WRITE_WORD); // Load Byte (LB) decides here
 
     //Check if not LUI
