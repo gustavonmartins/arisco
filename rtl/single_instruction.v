@@ -49,13 +49,13 @@ module SingleInstruction (clk, instruction, pcNext);
     wire [2:0] mem_write_mode;
 
     // All instructions:
-    wire [6:0] opcode=instruction[6:0];
+    wire [6:0] opcode;
 
     // Most of the instructions:
     wire [4:0] rd,rs1, rs2;
-    assign rd = instruction[11:7];
-    assign rs1 = instruction[19:15];
-    assign rs2 = instruction[24:20];
+    wire [6:0] funct7;
+    wire [2:0] funct3;
+    assign {funct7,rs2,rs1,funct3,rd,opcode}=instruction;
 
     // ALU -> General
     wire [2:0] alu_opcode;
@@ -98,10 +98,10 @@ module MuxRegisterWriteDataSource(sourceSelection, aluResult, upperImmediateSign
 
 	always @(*) begin
 		case (sourceSelection)
-			2'd 0 	: internal=aluResult;
-			2'd 1 	: internal=upperImmediateSignExtended;
-			2'd 2 	: internal=pcNext;
-            2'd 3   : internal = mainMemory;
+			REGISTER_SOURCE_ALU_RESULT 	: internal=aluResult;
+			REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED	: internal=upperImmediateSignExtended;
+			REGISTER_SOURCE_PC_NEXT 	: internal=pcNext;
+            REGISTER_SOURCE_MAIN_MEMORY  : internal = mainMemory;
 			default : internal = 32'b 0; 
 		endcase
 	end
@@ -130,6 +130,9 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     // Sets write mode to byte, halfword or word
     assign mem_write_mode = funct3;
 
+    logic [2:0] control;
+    assign {aluRightInputSourceControl, registerWriteSourceControl} = control;
+
     // Register control
     assign register_write_enable=(((opcode !== 7'b 0100011))? 1'b 1:1'b 0);
     assign register_write_pattern = (
@@ -143,13 +146,14 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     //assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 2'b 0 : 2'b 1;
     always @(*) begin 
 	    case (opcode)
-		    7'b 0110111 	: 	internal = 2'd 1;
-		    7'b 1101111 	: 	internal = 2'd 2;
-            7'b 0000011     :   internal = 2'd 3;   // Source is main memory
-		    default 		: 	internal = 2'd 0;
+		    7'b 0110111 	: 	control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED};
+		    7'b 1101111 	: 	control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_PC_NEXT};
+            7'b 0000011     :   control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_MAIN_MEMORY};   // Source is main memory
+            7'b 0010011     :   control = {ALU_SOURCE_IMMEDIATE,REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
+            7'b 0110011     :   control = {ALU_SOURCE_REGISTER, REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
+		    default 		: 	control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_ALU_RESULT};
 	    endcase
     end
-    assign registerWriteSourceControl=internal;
    
 
     //ALU Operation Control
@@ -160,16 +164,16 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
         );
     
     // ALU source control on right input
-    always @(*) begin
-        case (opcode)
-            7'b 0010011     :   aluRightInputSourceControl  = 1'b 0;    //I-Type. Read from immediate
-            7'b 0110011     :   aluRightInputSourceControl  = 1'b 1;    //R-type. Read from register
-            default         :   aluRightInputSourceControl  = 1'b 0;
-        endcase
+   // always @(*) begin
+    //    case (opcode)
+            
+     //       
+     //       default         :   aluRightInputSourceControl  = 1'b 0;
+     //   endcase
     //assign aluRightInputSourceControl =   (opcode === 7'b 0010011)? 1'b 0 : 
     //                ((opcode === 7'b 0110011)? 1'b 1: 32'h 0);
 
-    end
+    //end
 
      
 endmodule
@@ -180,8 +184,8 @@ module ALURightInputSource(sourceSelection,immediateSource, registerSource, resu
     output [31:0] resultValue;
 
     // Selects source to feed ALU right input
-    assign resultValue =   (sourceSelection === 1'b 0)? immediateSource : 
-                    ((sourceSelection === 1'b 1)? registerSource: 32'h 0);
+    assign resultValue =   (sourceSelection === ALU_SOURCE_IMMEDIATE)? immediateSource : 
+                    ((sourceSelection === ALU_SOURCE_REGISTER)? registerSource: 32'h 0);
 endmodule
 
 module ImmediateExtractor(instruction, result);
