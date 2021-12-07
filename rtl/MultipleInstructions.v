@@ -1,7 +1,7 @@
 `default_nettype none
 
-`include "rtl/single_instruction.v"
-`include "rtl/pc.v"
+`include "rtl/SingleInstruction.v"
+`include "rtl/ProgramCounter.v"
 `include "rtl/parameters.vh"
 
 module MultipleInstructions (

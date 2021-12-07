@@ -14,11 +14,11 @@ module ALU(opcode, left, right, result);
     always @(opcode, left, right)
     begin
         case (opcode)
-            ADD : result <= left + right;
-            AND : result <=left & right;
-            OR  : result <= left | right;
-            SUB : result <= left - right;
-	    default: result <= 32'h00000000;
+            ADD : result    = left + right;
+            AND : result    = left & right;
+            OR  : result    = left | right;
+            SUB : result    = left - right;
+	    default: result     = 32'h00000000;
         endcase
     end
 

@@ -46,3 +46,5 @@ lint:
 .PHONY : clean
 clean:
 	rm -rf *.vcd *.bin *.o *.vvp *.mem build
+
+#yosys -p "read_verilog -sv *.v ; synth_ecp5 -json top.json -top Toplevel"

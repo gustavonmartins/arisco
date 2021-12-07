@@ -1,6 +1,6 @@
 `default_nettype none
 `include "rtl/utilities.v"
-`include "rtl/register_memory.v"
+`include "rtl/RegisterMemory.v"
 `include "rtl/parameters.vh"
 
 module register_memory_tb ();

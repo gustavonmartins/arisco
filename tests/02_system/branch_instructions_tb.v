@@ -1,6 +1,6 @@
 `default_nettype none
 `include "rtl/utilities.v"
-`include "rtl/multiple_instructions.v"
+`include "rtl/MultipleInstructions.v"
 
 module branch_instructions_tb ();
 

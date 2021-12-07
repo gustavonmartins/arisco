@@ -1,5 +1,5 @@
 `default_nettype none
-`include "rtl/alu.v"
+`include "rtl/ALU.v"
 
 module tb_alu ();
 

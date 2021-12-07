@@ -1,7 +1,7 @@
 `default_nettype none
 `include "rtl/utilities.v"
 
-`include "rtl/memory.v"
+`include "rtl/Memory.v"
 
 module memory_tb ();
 

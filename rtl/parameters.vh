@@ -11,7 +11,6 @@
     localparam REGISTER_WRITE_BYTE_UNSIGNED = 3'b 100;
     localparam REGISTER_WRITE_BYTE_SIGNED = 3'b 101;
     localparam REGISTER_WRITE_WORD = 3'b 010;
-    localparam REGISTER_WRITE_NA=3'b 111;
 
     // ALU's control parameters
     localparam ALU_SOURCE_IMMEDIATE=1'b 0;

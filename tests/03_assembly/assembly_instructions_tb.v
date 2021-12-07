@@ -1,6 +1,6 @@
 `default_nettype none
 `include "rtl/utilities.v"
-`include "rtl/multiple_instructions.v"
+`include "rtl/MultipleInstructions.v"
 `include "rtl/parameters.vh"
 
 module assembly_instructions_memory_lbu_tb ();
