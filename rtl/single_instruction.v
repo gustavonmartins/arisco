@@ -70,7 +70,7 @@ module SingleInstruction (clk, instruction, pcNext);
     assign aluLeftInput = data_out_b; assign rd_address_b=rs1;
     assign wr_address = rd;
 
-    wire [31:0] upperImmediateSignExtended = {instruction[31:12],12'h 000};
+    wire [31:0] upperImmediateSignExtended = {instruction[31:12],12'h 000}; //Used only for U instructions
     wire [1:0] registerWriteSourceControl;
     
     MuxRegisterWriteDataSource registerWriteDataSource(.sourceSelection (registerWriteSourceControl),
@@ -122,59 +122,37 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
     reg [1:0] internal;
+    wire [6:0] funct7;
+    assign funct7=instruction[31:25];
     
     // Memory control
     output wire mem_write;
     output wire [2:0] mem_write_mode;
-    assign mem_write = (opcode === 7'b 0100011)? 1 : 0;
-    // Sets write mode to byte, halfword or word
-    assign mem_write_mode = funct3;
 
-    logic [2:0] control;
-    assign {aluRightInputSourceControl, registerWriteSourceControl} = control;
+    logic [10:0] control;
+    assign {mem_write, mem_write_mode,register_write_pattern,register_write_enable,aluRightInputSourceControl, registerWriteSourceControl} = control;
 
-    // Register control
-    assign register_write_enable=(((opcode !== 7'b 0100011))? 1'b 1:1'b 0);
-    assign register_write_pattern = (
-        (opcode === 7'b 0000011 && funct3 === 3'b 100)? 
-        REGISTER_WRITE_BYTE_UNSIGNED : 
-        (opcode === 7'b 0000011 && funct3 === 3'b 000)? 
-        REGISTER_WRITE_BYTE_SIGNED : 
-        REGISTER_WRITE_WORD); // Load Byte (LB) decides here
-
-    //Check if not LUI
-    //assign registerWriteSourceControl=(opcode !== 7'b 0110111)? 2'b 0 : 2'b 1;
     always @(*) begin 
-	    case (opcode)
-		    7'b 0110111 	: 	control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED};
-		    7'b 1101111 	: 	control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_PC_NEXT};
-            7'b 0000011     :   control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_MAIN_MEMORY};   // Source is main memory
-            7'b 0010011     :   control = {ALU_SOURCE_IMMEDIATE,REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
-            7'b 0110011     :   control = {ALU_SOURCE_REGISTER, REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
-		    default 		: 	control = {ALU_SOURCE_IMMEDIATE, REGISTER_SOURCE_ALU_RESULT};
+	    casez ({funct3,opcode})
+		    10'b ???_0110111 	: 	control = {1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED};
+		    10'b ???_1101111 	: 	control = {1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_PC_NEXT};
+            10'b 100_0000011    :   control = {1'b 0, funct3, REGISTER_WRITE_BYTE_UNSIGNED,    REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LBU
+            10'b 000_0000011    :   control = {1'b 0, funct3, REGISTER_WRITE_BYTE_SIGNED,      REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LB
+            10'b ???_0000011    :   control = {1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // 
+            10'b ???_0010011    :   control = {1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
+            10'b ???_0110011    :   control = {1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
+		    10'b ???_0100011    :   control = {1'b 1, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_OFF,1'b 0                  , 2'b 0};
+            default 		    : 	control = {1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};
 	    endcase
     end
    
 
     //ALU Operation Control
     assign aluOperationCode=
-        (((opcode===7'b 0110011) & (instruction[31:25]=== 7'b 0100000))? 
+        (((opcode===7'b 0110011) & (funct7=== 7'b 0100000))? 
         3'b 100:
         (((opcode===7'b 0100011) || (opcode===7'b 0000011))? 3'd 0:funct3)
         );
-    
-    // ALU source control on right input
-   // always @(*) begin
-    //    case (opcode)
-            
-     //       
-     //       default         :   aluRightInputSourceControl  = 1'b 0;
-     //   endcase
-    //assign aluRightInputSourceControl =   (opcode === 7'b 0010011)? 1'b 0 : 
-    //                ((opcode === 7'b 0110011)? 1'b 1: 32'h 0);
-
-    //end
-
      
 endmodule
 
