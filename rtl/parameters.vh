@@ -26,7 +26,8 @@
     localparam ALU_OP_ADD = 3'd 000;
     localparam ALU_OP_AND = 3'b 111;
     localparam ALU_OP_OR = 3'b 110;
-    localparam ALU_OP_SUB = 3'b 100;
+    localparam ALU_OP_SUB = 3'b 101;
+    localparam ALU_OP_XOR = 3'b 100;
 
 
 `endif
