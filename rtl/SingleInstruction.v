@@ -60,7 +60,7 @@ module SingleInstruction (clk, instruction, pcNext);
     assign {funct7,rs2,rs1,funct3,rd,opcode}=instruction;
 
     // ALU -> General
-    wire [2:0] alu_opcode;
+    wire [ALU_OP_LENGTH-1:0] alu_opcode;
     wire [31:0]  aluLeftInput,aluRightInput, aluResult;
 
     ImmediateExtractor immediateExtractor(.instruction (instruction), .result (imm));
@@ -118,7 +118,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     input [31:0] instruction;
     output wire register_write_enable;
     output wire [2:0] register_write_pattern;
-    output wire [2:0] aluOperationCode;
+    output wire [ALU_OP_LENGTH-1:0] aluOperationCode;
     output reg aluRightInputSourceControl;
     output wire [1:0] registerWriteSourceControl;
     wire [6:0] opcode=instruction[6:0];
@@ -136,18 +136,18 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
 
     always @(*) begin 
 	    casez ({funct7,funct3,opcode})
-		    17'b ???????_???_0110111 	: 	control = {funct3,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED};
-		    17'b ???????_???_1101111 	: 	control = {funct3,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_PC_NEXT};
-            17'b ???????_100_0000011    :   control = {ALU_OP_ADD,  1'b 0, funct3, REGISTER_WRITE_BYTE_UNSIGNED,    REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LBU
-            17'b ???????_000_0000011    :   control = {ALU_OP_ADD,  1'b 0, funct3, REGISTER_WRITE_BYTE_SIGNED,      REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LB
-            17'b ???????_???_0000011    :   control = {ALU_OP_ADD,  1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // 
-            17'b ???????_???_0010011    :   control = {funct3,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
-            17'b 0100000_???_0110011    :   control = {ALU_OP_SUB,  1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
-            17'b 0000000_001_0110011    :   control = {ALU_OP_SLL,  1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
-            17'b 0000000_011_0110011    :   control = {ALU_OP_SLTU, 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
-            17'b ???????_???_0110011    :   control = {funct3,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
-		    17'b ???????_???_0100011    :   control = {ALU_OP_ADD,  1'b 1, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_OFF,1'b 0                  , 2'b 0};
-            default 		            : 	control = {funct3,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};
+		    17'b ???????_???_0110111 	: 	control = {{1'b 0, funct3}, 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED};
+		    17'b ???????_???_1101111 	: 	control = {{1'b 0, funct3}, 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_PC_NEXT};
+            17'b ???????_100_0000011    :   control = {ALU_OP_ADD,      1'b 0, funct3, REGISTER_WRITE_BYTE_UNSIGNED,    REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LBU
+            17'b ???????_000_0000011    :   control = {ALU_OP_ADD,      1'b 0, funct3, REGISTER_WRITE_BYTE_SIGNED,      REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LB
+            17'b ???????_???_0000011    :   control = {ALU_OP_ADD,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // 
+            17'b ???????_???_0010011    :   control = {{1'b 0, funct3}, 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
+            17'b 0100000_000_0110011    :   control = {ALU_OP_SUB,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
+            17'b 0000000_001_0110011    :   control = {ALU_OP_SLL,      1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
+            17'b 0000000_011_0110011    :   control = {ALU_OP_SLTU,     1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
+            17'b ???????_???_0110011    :   control = {{1'b 0, funct3}, 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
+		    17'b ???????_???_0100011    :   control = {ALU_OP_ADD,      1'b 1, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_OFF,1'b 0                  , 2'b 0};
+            default 		            : 	control = {{1'b 0, funct3}, 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};
 	    endcase
     end
 endmodule

@@ -5,13 +5,13 @@
 
 module tb_alu ();
 
-reg [2:0] opcode;
+reg [ALU_OP_LENGTH-1:0] opcode;
 reg [31:0] left;
 reg [31:0] right;
 wire [31:0] result;
 
 task enforce_result;
-    input [2:0] opcode_;
+    input [ALU_OP_LENGTH-1:0] opcode_;
     input [31:0] left_, right_, result_should;
      
     begin

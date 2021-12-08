@@ -23,12 +23,13 @@
     localparam REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED=2'd 1;
 
     // ALU operation codes
-    localparam ALU_OP_ADD = 3'd 000;
-    localparam ALU_OP_AND = 3'b 111;
-    localparam ALU_OP_OR = 3'b 110;
-    localparam ALU_OP_SUB = 3'b 101;
-    localparam ALU_OP_XOR = 3'b 100;
-    localparam ALU_OP_SLL = 3'b 001;
-    localparam ALU_OP_SLT = 3'b 010;
-    localparam ALU_OP_SLTU = 3'b 011;
+    localparam ALU_OP_LENGTH    = 4;
+    localparam ALU_OP_ADD       = 4'd 0000;
+    localparam ALU_OP_AND       = 4'b 0111;
+    localparam ALU_OP_OR        = 4'b 0110;
+    localparam ALU_OP_SUB       = 4'b 0101;
+    localparam ALU_OP_XOR       = 4'b 0100;
+    localparam ALU_OP_SLL       = 4'b 0001;
+    localparam ALU_OP_SLT       = 4'b 0010;
+    localparam ALU_OP_SLTU      = 4'b 0011;
 `endif

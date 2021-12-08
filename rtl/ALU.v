@@ -2,7 +2,7 @@
 `include "rtl/parameters.vh" 
 
 module ALU(opcode, left, right, result);
-    input [2:0] opcode;
+    input [ALU_OP_LENGTH-1:0] opcode;
     input [31:0] left;
     input [31:0] right;
     output reg [31:0] result;
