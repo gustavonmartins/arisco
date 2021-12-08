@@ -28,6 +28,6 @@
     localparam ALU_OP_OR = 3'b 110;
     localparam ALU_OP_SUB = 3'b 101;
     localparam ALU_OP_XOR = 3'b 100;
-
+    localparam ALU_OP_SLL = 3'b 001;
 
 `endif

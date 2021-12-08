@@ -15,6 +15,7 @@ module ALU(opcode, left, right, result);
             ALU_OP_OR   : result    = left | right;
             ALU_OP_SUB  : result    = left - right;
             ALU_OP_XOR  : result    = left ^ right;
+            ALU_OP_SLL  : result    = left << right;
 	    default: result     = 32'h00000000;
         endcase
     end
