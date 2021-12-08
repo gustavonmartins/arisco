@@ -22,7 +22,11 @@ task enforce_result;
       opcode=opcode_;
 
       #1;
-      if (result != result_should) $error("For opcode %d, expected result to be %d but got %d.", opcode,result_should,result);
+      if (result != result_should) begin
+        $display("%c[1;31m",27);
+        $error("For opcode %d, expected result to be %d but got %d.", opcode,result_should,result);
+        $display("%c[0m",27);
+      end
     end
   endtask
 
