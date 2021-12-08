@@ -1,4 +1,5 @@
 `default_nettype none
+`include "rtl/parameters.vh" 
 
 module ALU(opcode, left, right, result);
     input [2:0] opcode;
@@ -6,18 +7,13 @@ module ALU(opcode, left, right, result);
     input [31:0] right;
     output reg [31:0] result;
 
-    localparam ADD = 3'd000;
-    localparam AND = 3'b111;
-    localparam OR = 3'b110;
-    localparam SUB = 3'b100;
-
     always @(opcode, left, right)
     begin
         case (opcode)
-            ADD : result    = left + right;
-            AND : result    = left & right;
-            OR  : result    = left | right;
-            SUB : result    = left - right;
+            ALU_OP_ADD : result    = left + right;
+            ALU_OP_AND : result    = left & right;
+            ALU_OP_OR  : result    = left | right;
+            ALU_OP_SUB : result    = left - right;
 	    default: result     = 32'h00000000;
         endcase
     end

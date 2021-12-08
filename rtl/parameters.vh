@@ -21,4 +21,12 @@
     localparam REGISTER_SOURCE_PC_NEXT=2'd 2;
     localparam REGISTER_SOURCE_MAIN_MEMORY=2'd 3 ;
     localparam REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED=2'd 1;
+
+    // ALU operation codes
+    localparam ALU_OP_ADD = 3'd 000;
+    localparam ALU_OP_AND = 3'b 111;
+    localparam ALU_OP_OR = 3'b 110;
+    localparam ALU_OP_SUB = 3'b 100;
+
+
 `endif

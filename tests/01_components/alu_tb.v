@@ -1,6 +1,8 @@
 `default_nettype none
 `include "rtl/ALU.v"
 
+`include "rtl/parameters.vh"
+
 module tb_alu ();
 
 reg [2:0] opcode;
@@ -39,9 +41,9 @@ begin
     //$monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
 
     $info("ALU unit test");
-    enforce_result(3'b000,32'h4,32'h3,32'h7); //ADD
-    enforce_result(3'b111,32'b1100,32'b1010,32'b1000); //AND
-    enforce_result(3'b100,32'd 7,32'd 3,32'd 4); //SUB
+    enforce_result(ALU_OP_ADD,32'h4,32'h3,32'h7); //ADD
+    enforce_result(ALU_OP_AND,32'b1100,32'b1010,32'b1000); //AND
+    enforce_result(ALU_OP_SUB,32'd 7,32'd 3,32'd 4); //SUB
 
     #1;
     $display("Simulation finished");
