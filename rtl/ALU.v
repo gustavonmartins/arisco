@@ -17,6 +17,7 @@ module ALU(opcode, left, right, result);
             ALU_OP_XOR  : result    = left          ^   right;
             ALU_OP_SLL  : result    = left          <<  right;
             ALU_OP_SLT  : result    = $signed(left) <   $signed(right); 
+            ALU_OP_SLTU : result    = $unsigned(left) <   $unsigned(right); 
 	    default: result     = 32'h00000000;
         endcase
     end

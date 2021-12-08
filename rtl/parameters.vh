@@ -2,7 +2,7 @@
     `define _parameters_h
 
     // Program memory's control parameter
-    localparam PROGRAM_MEMORY_SIZE_WORDS = 100;
+    localparam PROGRAM_MEMORY_SIZE_WORDS = 1000;
 
     // Registers' control parameters
     localparam REGISTER_WRITE_ENABLE_ON=1'b 1;
@@ -30,5 +30,5 @@
     localparam ALU_OP_XOR = 3'b 100;
     localparam ALU_OP_SLL = 3'b 001;
     localparam ALU_OP_SLT = 3'b 010;
-
+    localparam ALU_OP_SLTU = 3'b 011;
 `endif
