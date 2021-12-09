@@ -16,7 +16,7 @@ TEST_R(8    , SLT   , 10    , -100  , 0);
 TEST_R(9    , SLT   , -10   , -100  , 0);
 TEST_R(10   , SLT   , -10   , -1    , 1);
 
-TEST_R(11   , SLT   , 0xFFFFFFFF    , 0xFFFFFFFF    , 0);
-TEST_R(12   , SLT   , 0xFFFFFFF1    , 0xFFFFFFF2    , 1);
-TEST_R(13   , SLT   , 0x0FFFFFFF    , 0x0FFFFFFE    , 0);
+TEST_R(11   , SLTU   , 0xFFFFFFFF    , 0xFFFFFFFF    , 0);
+TEST_R(12   , SLTU   , 0xFFFFFFF1    , 0xFFFFFFF2    , 1);
+TEST_R(13   , SLTU   , 0x0FFFFFFF    , 0x0FFFFFFE    , 0);
 
