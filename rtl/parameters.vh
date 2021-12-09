@@ -25,11 +25,13 @@
     // ALU operation codes
     localparam ALU_OP_LENGTH    = 4;
     localparam ALU_OP_ADD       = 4'd 0000;
-    localparam ALU_OP_AND       = 4'b 0111;
-    localparam ALU_OP_OR        = 4'b 0110;
-    localparam ALU_OP_SUB       = 4'b 0101;
-    localparam ALU_OP_XOR       = 4'b 0100;
+    localparam ALU_OP_SUB       = 4'b 1000;
     localparam ALU_OP_SLL       = 4'b 0001;
     localparam ALU_OP_SLT       = 4'b 0010;
     localparam ALU_OP_SLTU      = 4'b 0011;
+    localparam ALU_OP_XOR       = 4'b 0100;
+    localparam ALU_OP_SRL       = 4'b 0101;
+    localparam ALU_OP_SRA       = 4'b 1101;
+    localparam ALU_OP_OR        = 4'b 0110;
+    localparam ALU_OP_AND       = 4'b 0111;
 `endif
