@@ -16,7 +16,12 @@ TEST_R(8    , SLT   , 10    , -100  , 0);
 TEST_R(9    , SLT   , -10   , -100  , 0);
 TEST_R(10   , SLT   , -10   , -1    , 1);
 
-TEST_R(11   , SLTU   , 0xFFFFFFFF    , 0xFFFFFFFF    , 0);
-TEST_R(12   , SLTU   , 0xFFFFFFF1    , 0xFFFFFFF2    , 1);
-TEST_R(13   , SLTU   , 0x0FFFFFFF    , 0x0FFFFFFE    , 0);
+TEST_R(11   , SLTU   , 0xFFFFFFFF    , 0xFFFFFFFF   , 0);
+TEST_R(12   , SLTU   , 0xFFFFFFF1    , 0xFFFFFFF2   , 1);
+TEST_R(13   , SLTU   , 0x0FFFFFFF    , 0x0FFFFFFE   , 0);
+
+TEST_R(14   , SRL   , 0xABCDEF09    , 4             , 0x0ABCDEF0);
+TEST_R(15   , SRL   , 0xFFFFFFFF    , 31            , 0x1);
+TEST_R(16   , SRL   , 0xFFFFFFFF    , 32            , 0x0);
+TEST_R(17   , SRL   , 0xFFFFFFFF    , 33            , 0x0);
 
