@@ -25,3 +25,6 @@ TEST_R(15   , SRL   , 0xFFFFFFFF    , 31            , 0x1);
 TEST_R(16   , SRL   , 0xFFFFFFFF    , 32            , 0x0);
 TEST_R(17   , SRL   , 0xFFFFFFFF    , 33            , 0x0);
 
+TEST_R(18   , SRA   , 32            , 2             , 8);
+TEST_R(19   , SRA   , 0x800000E0    , 4             , 0xF800000E );
+TEST_R(20   , SRA   , -128          , 5             , -4);
