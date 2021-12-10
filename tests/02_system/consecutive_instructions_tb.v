@@ -27,17 +27,17 @@ begin
     //I-Type instructions
     //$info("Testing I-Type instructions");
     reset=1;#1;
-    mut.program_memory[0]={12'd120, 5'd0, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    mut.program_memory[1]={12'd200, 5'd0, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    mut.program_memory[2]={12'd2000, 5'd5, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    mut.program_memory[3]={12'b111111111111, 5'd0, 3'b111, 5'd5, 7'b0010011};// imm[11:0] rs1 111 rd 0010011 I andi
-    mut.program_memory[4]={12'b1010,5'd0,3'b110,5'd5,7'b0010011}; // imm[11:0] rs1 110 rd 0010011 I ori
+    mut.program_memory[0]={12'd 120, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};//imm[11:0] rs1 000 rd 0010011 I addi
+    mut.program_memory[1]={12'd 200, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};//imm[11:0] rs1 000 rd 0010011 I addi
+    mut.program_memory[2]={12'd 2000, 5'd 5, 3'b 000, 5'd 5, 7'b 0010011};//imm[11:0] rs1 000 rd 0010011 I addi
+    mut.program_memory[3]={12'b 111111111111, 5'd 0, 3'b 111, 5'd5, 7'b 0010011};// imm[11:0] rs1 111 rd 0010011 I andi
+    mut.program_memory[4]={12'b 1010,5'd 0,3'b 110,5'd 5,7'b 0010011}; // imm[11:0] rs1 110 rd 0010011 I ori
     @(negedge clk) #1; reset=0;
-    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd120,"ADDI: Register 5 should contain 120");
-    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd200,"ADDI: Register 5 should contain 200");
-    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd2200,"ADDI: Register 5 should contain 2200");
-    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'b0,"ANDI: Register 5 should contain all zeroes");
-    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'b1010,"ORI: Register 5 should end with 1010");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 120,"ADDI: Register 5 should contain 120");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 200,"ADDI: Register 5 should contain 200");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'd 2200,"ADDI: Register 5 should contain 2200");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'b 0,"ANDI: Register 5 should contain all zeroes");
+    @(posedge clk) #1; `assertCaseEqual(mut.single_instr.reg_mem.memory[5], 32'b 1010,"ORI: Register 5 should end with 1010");
 
     //R-Type instructions
     //$info("Testing R-Type instructions");
