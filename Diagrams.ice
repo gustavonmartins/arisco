@@ -12,40 +12,6 @@
     "graph": {
       "blocks": [
         {
-          "id": "bde4c5b6-335d-49cb-bca6-e75774ec8a8b",
-          "type": "basic.code",
-          "data": {
-            "code": "ALU\nRight\nInputSource",
-            "params": [],
-            "ports": {
-              "in": [
-                {
-                  "name": "sourceSelection"
-                },
-                {
-                  "name": "immediateSource"
-                },
-                {
-                  "name": "registerSource"
-                }
-              ],
-              "out": [
-                {
-                  "name": "resultValue"
-                }
-              ]
-            }
-          },
-          "position": {
-            "x": -184,
-            "y": 504
-          },
-          "size": {
-            "width": 280,
-            "height": 136
-          }
-        },
-        {
           "id": "be77d1c8-be91-44c8-b691-aae511590ccc",
           "type": "basic.code",
           "data": {
@@ -71,86 +37,6 @@
           "size": {
             "width": 248,
             "height": 136
-          }
-        },
-        {
-          "id": "3efc3b79-af25-412c-8183-e72e8b33c8be",
-          "type": "basic.code",
-          "data": {
-            "code": "ALU",
-            "params": [],
-            "ports": {
-              "in": [
-                {
-                  "name": "opcode"
-                },
-                {
-                  "name": "left"
-                },
-                {
-                  "name": "right"
-                }
-              ],
-              "out": [
-                {
-                  "name": "result",
-                  "range": "[31:0]",
-                  "size": 32
-                }
-              ]
-            }
-          },
-          "position": {
-            "x": 216,
-            "y": 240
-          },
-          "size": {
-            "width": 192,
-            "height": 128
-          }
-        },
-        {
-          "id": "d6320930-d6ed-4c52-942a-d85a7407ddc6",
-          "type": "basic.code",
-          "data": {
-            "code": "Memory",
-            "params": [],
-            "ports": {
-              "in": [
-                {
-                  "name": "clk"
-                },
-                {
-                  "name": "address",
-                  "range": "[31:0]",
-                  "size": 32
-                },
-                {
-                  "name": "wr_data"
-                },
-                {
-                  "name": "write_length"
-                },
-                {
-                  "name": "wr_enable"
-                }
-              ],
-              "out": [
-                {
-                  "name": "read_data",
-                  "range": "[31:0]",
-                  "size": 32
-                }
-              ]
-            }
-          },
-          "position": {
-            "x": 608,
-            "y": 296
-          },
-          "size": {
-            "width": 200,
-            "height": 224
           }
         },
         {
@@ -206,6 +92,48 @@
           }
         },
         {
+          "id": "3efc3b79-af25-412c-8183-e72e8b33c8be",
+          "type": "basic.code",
+          "data": {
+            "code": "ALU",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "opcode",
+                  "range": "[3:0]",
+                  "size": 4
+                },
+                {
+                  "name": "left",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "right",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ],
+              "out": [
+                {
+                  "name": "result",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": 304,
+            "y": 248
+          },
+          "size": {
+            "width": 192,
+            "height": 128
+          }
+        },
+        {
           "id": "cec87b83-6bf5-4965-b77a-1be1b4e8397c",
           "type": "basic.code",
           "data": {
@@ -230,7 +158,9 @@
                   "size": 3
                 },
                 {
-                  "name": "aluOperationCode"
+                  "name": "aluOperationCode",
+                  "range": "[3:0]",
+                  "size": 4
                 },
                 {
                   "name": "aluRightInputSourceControl"
@@ -257,6 +187,42 @@
           "size": {
             "width": 192,
             "height": 328
+          }
+        },
+        {
+          "id": "bde4c5b6-335d-49cb-bca6-e75774ec8a8b",
+          "type": "basic.code",
+          "data": {
+            "code": "ALU\nRight\nInputSource",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "sourceSelection"
+                },
+                {
+                  "name": "immediateSource"
+                },
+                {
+                  "name": "registerSource"
+                }
+              ],
+              "out": [
+                {
+                  "name": "resultValue",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": -184,
+            "y": 504
+          },
+          "size": {
+            "width": 280,
+            "height": 136
           }
         },
         {
@@ -295,10 +261,14 @@
               ],
               "out": [
                 {
-                  "name": "data_out_a"
+                  "name": "data_out_a",
+                  "range": "[31:0]",
+                  "size": 32
                 },
                 {
-                  "name": "data_out_b"
+                  "name": "data_out_b",
+                  "range": "[31:0]",
+                  "size": 32
                 }
               ]
             }
@@ -311,29 +281,55 @@
             "width": 216,
             "height": 208
           }
+        },
+        {
+          "id": "d6320930-d6ed-4c52-942a-d85a7407ddc6",
+          "type": "basic.code",
+          "data": {
+            "code": "Memory",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "clk"
+                },
+                {
+                  "name": "address",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "wr_data",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "write_length"
+                },
+                {
+                  "name": "wr_enable"
+                }
+              ],
+              "out": [
+                {
+                  "name": "read_data",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": 608,
+            "y": 296
+          },
+          "size": {
+            "width": 200,
+            "height": 224
+          }
         }
       ],
       "wires": [
-        {
-          "source": {
-            "block": "7d2f6364-28c8-4b7f-916f-146d59be46c2",
-            "port": "data_out_b"
-          },
-          "target": {
-            "block": "3efc3b79-af25-412c-8183-e72e8b33c8be",
-            "port": "left"
-          }
-        },
-        {
-          "source": {
-            "block": "bde4c5b6-335d-49cb-bca6-e75774ec8a8b",
-            "port": "resultValue"
-          },
-          "target": {
-            "block": "3efc3b79-af25-412c-8183-e72e8b33c8be",
-            "port": "right"
-          }
-        },
         {
           "source": {
             "block": "cec87b83-6bf5-4965-b77a-1be1b4e8397c",
@@ -357,22 +353,6 @@
             {
               "x": 376,
               "y": 672
-            }
-          ]
-        },
-        {
-          "source": {
-            "block": "7d2f6364-28c8-4b7f-916f-146d59be46c2",
-            "port": "data_out_a"
-          },
-          "target": {
-            "block": "d6320930-d6ed-4c52-942a-d85a7407ddc6",
-            "port": "wr_data"
-          },
-          "vertices": [
-            {
-              "x": 128,
-              "y": 312
             }
           ]
         },
@@ -472,6 +452,68 @@
             }
           ],
           "size": 3
+        },
+        {
+          "source": {
+            "block": "cec87b83-6bf5-4965-b77a-1be1b4e8397c",
+            "port": "aluOperationCode"
+          },
+          "target": {
+            "block": "3efc3b79-af25-412c-8183-e72e8b33c8be",
+            "port": "opcode"
+          },
+          "size": 4
+        },
+        {
+          "source": {
+            "block": "bde4c5b6-335d-49cb-bca6-e75774ec8a8b",
+            "port": "resultValue"
+          },
+          "target": {
+            "block": "3efc3b79-af25-412c-8183-e72e8b33c8be",
+            "port": "right"
+          },
+          "vertices": [
+            {
+              "x": 160,
+              "y": 568
+            }
+          ],
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "7d2f6364-28c8-4b7f-916f-146d59be46c2",
+            "port": "data_out_b"
+          },
+          "target": {
+            "block": "3efc3b79-af25-412c-8183-e72e8b33c8be",
+            "port": "left"
+          },
+          "vertices": [
+            {
+              "x": 104,
+              "y": 392
+            }
+          ],
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "7d2f6364-28c8-4b7f-916f-146d59be46c2",
+            "port": "data_out_a"
+          },
+          "target": {
+            "block": "d6320930-d6ed-4c52-942a-d85a7407ddc6",
+            "port": "wr_data"
+          },
+          "vertices": [
+            {
+              "x": 360,
+              "y": 432
+            }
+          ],
+          "size": 32
         }
       ]
     }
