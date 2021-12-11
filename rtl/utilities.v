@@ -5,7 +5,7 @@
                 $display("ASSERTION FAILED assertCaseEqual in %s: %0d: signal !== value. signal is: %d (decimal), %h (hexa)",`__FILE__, `__LINE__,signal,signal); \
                 $display("  Reason: %s ",message);\
                 $display("%c[0m",27);\
-                $finish; \
+                $fatal(); \
             end
 `endif
 
@@ -16,6 +16,6 @@
                 $display("ASSERTION FAILED assertCaseNotEqual in %s: %0d: signal === value. signal is: %d (decimal), %h (hexa)",`__FILE__, `__LINE__,signal,signal); \
                 $display("  Reason: %s ",message);\
                 $display("%c[0m",27);\
-                $finish; \
+                $fatal(); \
             end
 `endif

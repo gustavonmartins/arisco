@@ -1,6 +1,9 @@
 `ifndef _parameters_h
     `define _parameters_h
 
+    // Restrict legal words to desired Verilog version
+    `begin_keywords "1800-2005"
+
     // Program memory's control parameter
     localparam PROGRAM_MEMORY_SIZE_WORDS = 1000;
 
