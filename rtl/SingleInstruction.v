@@ -141,6 +141,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
             17'b ???????_100_0000011    :   control = {ALU_OP_ADD           , 1'b 0, funct3, REGISTER_WRITE_BYTE_UNSIGNED,    REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LBU
             17'b ???????_000_0000011    :   control = {ALU_OP_ADD           , 1'b 0, funct3, REGISTER_WRITE_BYTE_SIGNED,      REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LB
             17'b ???????_???_0000011    :   control = {ALU_OP_ADD           , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // 
+            17'b ?1?????_101_0010011    :   control = {{1'b 1, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
             17'b ???????_???_0010011    :   control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
             17'b ???????_???_0110011    :   control = {{funct7[5], funct3}  , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
 		    17'b ???????_???_0100011    :   control = {ALU_OP_ADD           , 1'b 1, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_OFF,1'b 0                  , 2'b 0};
@@ -162,12 +163,17 @@ endmodule
 module ImmediateExtractor(instruction, result);
     input [31:0] instruction;
     output reg [31:0] result;
+
+    wire[6:0] opcode = instruction[6:0];
+    wire[4:0] shamt = instruction[24:20];
+    wire[6:0] funct7 = instruction[31:25];
     
     always @(*) begin
-        case (instruction[6:0])
-            7'b 0010011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
-            7'b 0100011     :   result  =   {{20{instruction[31]}}, instruction[31:25],instruction[11:7]};
-            7'b 0000011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
+        casez ({funct7,opcode})
+            14'b 0100000_0010011     :   result  =   {27'b 0,shamt};
+            14'b ???????_0010011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
+            14'b ???????_0100011     :   result  =   {{20{instruction[31]}}, instruction[31:25],instruction[11:7]};
+            14'b ???????_0000011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
             default         :   result  =   32'b 0;
         endcase
     end
