@@ -51,4 +51,4 @@ lint:
 clean:
 	rm -rf *.vcd *.bin *.o *.vvp *.mem build
 
-#yosys -p "read_verilog -sv *.v ; synth_ecp5 -json top.json -top Toplevel"
+#yosys -p "read_verilog -sv rtl/MultipleInstructions.v ; synth_ecp5 -json top.json -top MultipleInstructions"
