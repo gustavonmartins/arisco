@@ -1,19 +1,5 @@
 This is an educational project implementing a subset of RISC V 32 I in Verilog.
 
-Supported instructions until now:
-
-- Type I:
-  - ADDI, ANDI, LW
-- Type R:
-  - ADD, SUB
-- Type U:
-  - LUI
-- Type J:
-  - JAL
-- Type B:
-  - TODO
-- Type S:
-  - SW
 
 For testing:
 
