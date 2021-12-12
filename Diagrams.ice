@@ -327,6 +327,108 @@
             "width": 200,
             "height": 224
           }
+        },
+        {
+          "id": "d4b90617-521a-40a8-a7c9-5100f85e4755",
+          "type": "basic.code",
+          "data": {
+            "code": "PCControl",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "opcode",
+                  "range": "[6:0]",
+                  "size": 7
+                }
+              ],
+              "out": [
+                {
+                  "name": "pcSourceControl"
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": -1672,
+            "y": 864
+          },
+          "size": {
+            "width": 192,
+            "height": 128
+          }
+        },
+        {
+          "id": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+          "type": "basic.code",
+          "data": {
+            "code": "PCSource",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "pcPlusFour",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "pcImmediate",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "pcSourceControl"
+                }
+              ],
+              "out": [
+                {
+                  "name": "pcResult",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": -1304,
+            "y": 616
+          },
+          "size": {
+            "width": 192,
+            "height": 128
+          }
+        },
+        {
+          "id": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+          "type": "basic.code",
+          "data": {
+            "code": "PCNext",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "in",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ],
+              "out": [
+                {
+                  "name": "out",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": -1760,
+            "y": 576
+          },
+          "size": {
+            "width": 192,
+            "height": 128
+          }
         }
       ],
       "wires": [
@@ -514,6 +616,49 @@
             }
           ],
           "size": 32
+        },
+        {
+          "source": {
+            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+            "port": "pcResult"
+          },
+          "target": {
+            "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+            "port": "in"
+          },
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+            "port": "out"
+          },
+          "target": {
+            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+            "port": "pcPlusFour"
+          },
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+            "port": "out"
+          },
+          "target": {
+            "block": "0bf3aff4-1795-4430-a72d-c5b657a82729",
+            "port": "pcNext"
+          },
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "d4b90617-521a-40a8-a7c9-5100f85e4755",
+            "port": "pcSourceControl"
+          },
+          "target": {
+            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+            "port": "pcSourceControl"
+          }
         }
       ]
     }

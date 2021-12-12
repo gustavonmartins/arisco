@@ -19,7 +19,7 @@ module MultipleInstructions (
 
     PCNext pcNext(.in (pc), .out (pc_next));
 
-    PCSource pcSource(.pcPlusFour (pc_next), .pcImmediate (pcImmediate), .pcResult (pc_in), .pcSourceControl (pcSourceControl));
+    PCSource pcSource(.pcPlusFour (pc_next), .pcImmediate (pcImmediate),  .pcSourceControl (pcSourceControl), .pcResult (pc_in));
 
     PCControl pcControl(.opcode (opcode), .pcSourceControl (pcSourceControl));
 
