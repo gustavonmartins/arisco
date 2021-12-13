@@ -6,9 +6,10 @@
 
 `include "rtl/parameters.vh"
 
-module SingleInstruction (clk, instruction, pcNext);
+module SingleInstruction (clk, instruction, pcNext,aluResult);
     input clk;
     input wire [31:0] instruction, pcNext;
+    output wire [31:0] aluResult;
 
     
     // Control Unit
@@ -61,7 +62,7 @@ module SingleInstruction (clk, instruction, pcNext);
 
     // ALU -> General
     wire [ALU_OP_LENGTH-1:0] alu_opcode;
-    wire [31:0]  aluLeftInput,aluRightInput, aluResult;
+    wire [31:0]  aluLeftInput,aluRightInput;
 
     ImmediateExtractor immediateExtractor(.instruction (instruction), .result (imm));
     wire [31:0] imm;
@@ -145,6 +146,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
             17'b ???????_???_0010011    :   control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
             17'b ???????_???_0110011    :   control = {{funct7[5], funct3}  , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
 		    17'b ???????_???_0100011    :   control = {ALU_OP_ADD           , 1'b 1, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_OFF,1'b 0                  , 2'b 0};
+            17'b ???????_000_1100011    :   control = {ALU_OP_EQ            , 1'b 0, funct3, REGISTER_WRITE_NA,               REGISTER_WRITE_ENABLE_OFF,ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT}; // BEQ
             default 		            : 	control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};
 	    endcase
     end

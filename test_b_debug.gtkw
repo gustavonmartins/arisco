@@ -1,0 +1,24 @@
+[*]
+[*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
+[*] Sun Dec 12 17:31:00 2021
+[*]
+[dumpfile] "/home/gus_new/Documents/programming/verilog/arisco/test_b_inst.vcd"
+[dumpfile_mtime] "Sun Dec 12 17:29:56 2021"
+[dumpfile_size] 9204
+[savefile] "/home/gus_new/Documents/programming/verilog/arisco/test_b_debug.gtkw"
+[timestart] 0
+[size] 1600 874
+[pos] -1 -1
+*-5.286667 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] assembly_instructions_memory_lbu_tb.
+[treeopen] assembly_instructions_memory_lbu_tb.mut.
+[sst_width] 207
+[signals_width] 217
+[sst_expanded] 1
+[sst_vpaned_height] 241
+@22
+assembly_instructions_memory_lbu_tb.mut.pcControl.opcode[6:0]
+@25
+assembly_instructions_memory_lbu_tb.mut.pcControl.pcSourceControl[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

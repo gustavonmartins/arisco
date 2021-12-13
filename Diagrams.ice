@@ -12,6 +12,24 @@
     "graph": {
       "blocks": [
         {
+          "id": "983709ba-7116-4092-bed7-f4e6860191da",
+          "type": "basic.memory",
+          "data": {
+            "name": "program_memory",
+            "list": "",
+            "local": false,
+            "format": 10
+          },
+          "position": {
+            "x": -2504,
+            "y": 488
+          },
+          "size": {
+            "width": 152,
+            "height": 192
+          }
+        },
+        {
           "id": "be77d1c8-be91-44c8-b691-aae511590ccc",
           "type": "basic.code",
           "data": {
@@ -350,8 +368,8 @@
             }
           },
           "position": {
-            "x": -1672,
-            "y": 864
+            "x": -2000,
+            "y": 808
           },
           "size": {
             "width": 192,
@@ -359,10 +377,48 @@
           }
         },
         {
+          "id": "728f9210-bc5b-4baa-89ff-e8e598a42547",
+          "type": "basic.code",
+          "data": {
+            "code": "ProgramCounter",
+            "params": [],
+            "ports": {
+              "in": [
+                {
+                  "name": "clk"
+                },
+                {
+                  "name": "reset"
+                },
+                {
+                  "name": "pc_in",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ],
+              "out": [
+                {
+                  "name": "pc_out",
+                  "range": "[31:0]",
+                  "size": 32
+                }
+              ]
+            }
+          },
+          "position": {
+            "x": -1248,
+            "y": 928
+          },
+          "size": {
+            "width": 248,
+            "height": 136
+          }
+        },
+        {
           "id": "11e471c1-bfeb-49ae-bbde-01c44de63759",
           "type": "basic.code",
           "data": {
-            "code": "PCSource",
+            "code": "PCSourceassign pcResult=(pcSourceControl === PC_SOURCE_PC_PLUS_FOUR)? pcPlusFour : pcImmediate;",
             "params": [],
             "ports": {
               "in": [
@@ -372,7 +428,12 @@
                   "size": 32
                 },
                 {
-                  "name": "pcImmediate",
+                  "name": "pcPlusJal",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "pcPlusBOffset",
                   "range": "[31:0]",
                   "size": 32
                 },
@@ -390,12 +451,12 @@
             }
           },
           "position": {
-            "x": -1304,
+            "x": -1680,
             "y": 616
           },
           "size": {
-            "width": 192,
-            "height": 128
+            "width": 336,
+            "height": 312
           }
         },
         {
@@ -410,11 +471,26 @@
                   "name": "in",
                   "range": "[31:0]",
                   "size": 32
+                },
+                {
+                  "name": "regDiff",
+                  "range": "[31:0]",
+                  "size": 32
                 }
               ],
               "out": [
                 {
-                  "name": "out",
+                  "name": "pc_plus_four",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "pcPlusJal",
+                  "range": "[31:0]",
+                  "size": 32
+                },
+                {
+                  "name": "pcPlusBOffset",
                   "range": "[31:0]",
                   "size": 32
                 }
@@ -422,8 +498,8 @@
             }
           },
           "position": {
-            "x": -1760,
-            "y": 576
+            "x": -2240,
+            "y": 504
           },
           "size": {
             "width": 192,
@@ -619,19 +695,61 @@
         },
         {
           "source": {
+            "block": "d4b90617-521a-40a8-a7c9-5100f85e4755",
+            "port": "pcSourceControl"
+          },
+          "target": {
+            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+            "port": "pcSourceControl"
+          }
+        },
+        {
+          "source": {
             "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
             "port": "pcResult"
           },
           "target": {
+            "block": "728f9210-bc5b-4baa-89ff-e8e598a42547",
+            "port": "pc_in"
+          },
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "728f9210-bc5b-4baa-89ff-e8e598a42547",
+            "port": "pc_out"
+          },
+          "target": {
             "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
             "port": "in"
+          },
+          "vertices": [
+            {
+              "x": -1064,
+              "y": 1144
+            },
+            {
+              "x": -2328,
+              "y": 688
+            }
+          ],
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+            "port": "pc_plus_four"
+          },
+          "target": {
+            "block": "0bf3aff4-1795-4430-a72d-c5b657a82729",
+            "port": "pcNext"
           },
           "size": 32
         },
         {
           "source": {
             "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
-            "port": "out"
+            "port": "pc_plus_four"
           },
           "target": {
             "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
@@ -642,23 +760,47 @@
         {
           "source": {
             "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
-            "port": "out"
+            "port": "pcPlusJal"
           },
           "target": {
-            "block": "0bf3aff4-1795-4430-a72d-c5b657a82729",
-            "port": "pcNext"
+            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+            "port": "pcPlusJal"
+          },
+          "vertices": [
+            {
+              "x": -1824,
+              "y": 712
+            }
+          ],
+          "size": 32
+        },
+        {
+          "source": {
+            "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+            "port": "pcPlusBOffset"
+          },
+          "target": {
+            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
+            "port": "pcPlusBOffset"
           },
           "size": 32
         },
         {
           "source": {
-            "block": "d4b90617-521a-40a8-a7c9-5100f85e4755",
-            "port": "pcSourceControl"
+            "block": "3efc3b79-af25-412c-8183-e72e8b33c8be",
+            "port": "result"
           },
           "target": {
-            "block": "11e471c1-bfeb-49ae-bbde-01c44de63759",
-            "port": "pcSourceControl"
-          }
+            "block": "1851b0c1-5a98-4b83-a540-1bb1415c0891",
+            "port": "regDiff"
+          },
+          "vertices": [
+            {
+              "x": -1736,
+              "y": 32
+            }
+          ],
+          "size": 32
         }
       ]
     }
