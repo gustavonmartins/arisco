@@ -21,7 +21,7 @@ module MultipleInstructions (
 
     PCSource pcSource(.pcPlusFour (pc_next), .pcPlusJal (pcPlusJal),.pcPlusBOffset(pcPlusBOffset),  .pcSourceControl (pcSourceControl), .pcResult (pc_in));
 
-    PCControl pcControl(.opcode (opcode), .pcSourceControl (pcSourceControl));
+    PCControl pcControl(.opcode (opcode), .instruction(instruction),.aluResult(aluResult), .pcSourceControl (pcSourceControl));
 
     wire [31:0] instruction;
     wire [31:0] pc, pc_in;
@@ -38,14 +38,19 @@ module MultipleInstructions (
 
 endmodule
 
-module PCControl(opcode, pcSourceControl);
+module PCControl(opcode, instruction, aluResult,pcSourceControl);
 	input wire [6:0] opcode;
+    input wire [31:0] instruction;
+    input wire [31:0] aluResult;
 	output reg [PC_SOURCE_LENGHT-1:0] pcSourceControl;
+
+    wire [2:0] funct3=instruction[14:12];
 	//assign pcSourceControl=(opcode === 7'b 1101111)? PC_SOURCE_JAL: PC_SOURCE_PC_PLUS_FOUR;
     always @(*) begin
-        casez (opcode)
-            7'b 1101111           :   pcSourceControl = PC_SOURCE_JAL;
-            7'b 1100011      :   pcSourceControl    =   PC_SOURCE_B_OFFSET;
+        casez ({opcode,funct3,aluResult[0]})
+            11'b 1101111_???_?           :   pcSourceControl = PC_SOURCE_JAL;
+            11'b 1100011_000_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET;
+            11'b 1100011_001_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET;
             default  :   pcSourceControl=PC_SOURCE_PC_PLUS_FOUR;
 
         endcase
@@ -64,7 +69,7 @@ module PCNext(in,instruction,aluRes, pc_next, pcPlusJal, pcPlusBOffset, debugB);
 	assign pc_next=in+4;
     assign pcPlusJal =      {{12{instruction[31]}},instruction[31:12]}+in;
     assign debugB={{20{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
-    assign pcPlusBOffset=   (aluRes===32'b 1)? debugB+pc_next: pc_next;
+    assign pcPlusBOffset=   debugB+pc_next;
     
 endmodule
 

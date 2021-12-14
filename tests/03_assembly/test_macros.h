@@ -52,7 +52,7 @@ i7: if reaches this instead of jumping back, fail.
     addi x3, zero, reg_2_content;                                                   \
     instruction x2, x3, 8;                                                          \
     addi x31, zero, test_id;                                                        \
-    instruction x0, x0, 8;                                                          \
+    beq x0, x0, 8;                                                                  \
     addi x29, zero, 1;                                                              \
     instruction x2, x3, -16;                                                        \
     addi x31, zero, test_id;

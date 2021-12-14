@@ -29,6 +29,5 @@ addi x31,zero,1             //i7. Fail if reaches here, END OF TEST
 
 TEST_B(2, beq, 2047, -2048, 0)
 TEST_B(3, beq, -2048, -2048, 1)
-
-
-
+TEST_B(4, bne, -1024, 2047, 1)
+TEST_B(5, bne, -2048, -2048, 0)
