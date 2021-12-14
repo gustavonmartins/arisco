@@ -49,8 +49,10 @@ module PCControl(opcode, instruction, aluResult,pcSourceControl);
     always @(*) begin
         casez ({opcode,funct3,aluResult[0]})
             11'b 1101111_???_?           :   pcSourceControl = PC_SOURCE_JAL;
-            11'b 1100011_000_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET;
-            11'b 1100011_001_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET;
+            11'b 1100011_000_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BEQ
+            11'b 1100011_001_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BNE
+            11'b 1100011_100_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BLT
+            11'b 1100011_101_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BGE
             default  :   pcSourceControl=PC_SOURCE_PC_PLUS_FOUR;
 
         endcase
