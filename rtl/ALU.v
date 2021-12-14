@@ -9,6 +9,12 @@ module ALU(opcode, left, right, result);
 
     always @(opcode, left, right)
     begin
+        /***
+        Warning: The ALU functions are being used by B insutrctions.
+        Because R/I instructions has all combinations of edge cases of ALU ops, B instructions has less extreme edge cases.
+        In case you take you stop using this ALU for B instructions, more tests are needed on B side, otherwise 
+        it might brake silently
+        **/
         case (opcode)
             ALU_OP_ADD  : result    = left              +   right;
             ALU_OP_AND  : result    = left              &   right;

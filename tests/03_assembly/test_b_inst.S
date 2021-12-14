@@ -29,10 +29,25 @@ addi x31,zero,1             //i7. Fail if reaches here, END OF TEST
 
 TEST_B(2, beq, 2047, -2048, 0)
 TEST_B(3, beq, -2048, -2048, 1)
+
 TEST_B(4, bne, -1024, 2047, 1)
 TEST_B(5, bne, -2048, -2048, 0)
+
 TEST_B(6, blt, -512, 32, 1)
 TEST_B(7, blt, -512, -512, 0)
+
 TEST_B(8, bge, -512, -1024, 1)
 TEST_B(9, bge, -512, -512, 1)
 TEST_B(10, bge, -512, 32, 0)
+
+TEST_B(11, bltu, -1, 32, 0)
+TEST_B(12, bltu, 32, -1, 1)
+TEST_B(13, bltu, -10, -1, 1)
+TEST_B(14, bltu, -1, -10, 0)
+TEST_B(15, bltu, 1, -1, 1)
+TEST_B(16, bltu, -1, 1, 0)
+
+TEST_B(17, bgeu, 100, 10, 1)
+TEST_B(18, bgeu, 0, 100, 0)
+TEST_B(19, bgeu, -1, 10, 1)
+TEST_B(20, bgeu, 10, -1, 0)

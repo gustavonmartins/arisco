@@ -53,6 +53,8 @@ module PCControl(opcode, instruction, aluResult,pcSourceControl);
             11'b 1100011_001_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BNE
             11'b 1100011_100_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BLT
             11'b 1100011_101_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BGE
+            11'b 1100011_110_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BLTU
+            11'b 1100011_111_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BGEU
             default  :   pcSourceControl=PC_SOURCE_PC_PLUS_FOUR;
 
         endcase
