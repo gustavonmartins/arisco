@@ -73,7 +73,7 @@ module PCNext(in,instruction,aluRes, pc_next, pcPlusJal, pcPlusBOffset, debugB);
 	assign pc_next=in+4;
     assign pcPlusJal =      {{12{instruction[31]}},instruction[31:12]}+in;
     assign debugB={{20{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
-    assign pcPlusBOffset=   debugB+pc_next;
+    assign pcPlusBOffset=   debugB+in;
     
 endmodule
 

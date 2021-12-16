@@ -20,12 +20,12 @@ addi x29,zero, 7            //system gets invalid proof code by default
 addi x2,zero, 11            //numbers to compare
 addi x3,zero, 11            //numbers to compare
 
-beq x2, x3, 8               //i2. jump to m1
-addi x31,zero,1             //i4=m3. Final pass or fail
-beq x0,x0,8                 //i5 jumps to test end
-addi x29,zero,3             //m1. Gets proof to show to i4=m3
-beq x2,x3,-16               //i6. jump to i4
-addi x31,zero,1             //i7. Fail if reaches here, END OF TEST
+beq x2, x3, 8
+addi x31,zero,1
+addi x29,zero,3
+addi x31,zero,1
+
+//https://inst.eecs.berkeley.edu/~cs61c/fa20/pdfs/lectures/lec12-bw.pdf
 
 TEST_B(2, beq, 2047, -2048, 0)
 TEST_B(3, beq, -2048, -2048, 1)

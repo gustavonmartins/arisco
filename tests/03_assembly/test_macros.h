@@ -50,11 +50,11 @@ i7: if reaches this instead of jumping back, fail.
     addi x29, zero, 0;                                                              \
     addi x2, zero, reg_1_content;                                                   \
     addi x3, zero, reg_2_content;                                                   \
-    instruction x2, x3, 8;                                                          \
+    instruction x2, x3, 12;                                                         \
     addi x31, zero, test_id;                                                        \
-    beq x0, x0, 8;                                                                  \
+    beq x0, x0, 12;                                                                 \
     addi x29, zero, 1;                                                              \
-    instruction x2, x3, -16;                                                        \
+    instruction x2, x3, -12;                                                        \
     addi x31, zero, test_id;
 
 #endif
