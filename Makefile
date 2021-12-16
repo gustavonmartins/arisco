@@ -2,7 +2,7 @@ SHELL=/bin/bash -euo pipefail
 
 VLOG=iverilog -Wall -g2012
 
-CC=clang --target=riscv32 -march=rv32i
+CC=clang --target=riscv32 -march=rv32i -Wall
 
 SOURCES       := $(shell find . -name '*.v' -not -name '*_tb.v')
 
