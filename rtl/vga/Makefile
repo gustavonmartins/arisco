@@ -15,3 +15,6 @@ test: VGA.test.o
 
 clean:
 	rm -rf *.o *.vcd
+
+lint:
+	verilator --lint-only -Wall $(SOURCES)
