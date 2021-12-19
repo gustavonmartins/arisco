@@ -16,6 +16,8 @@ always begin
 end
 
 always @(posedge clk) begin
+    //always@(posedge clk) hcount <= (reset==1 || hcount!=799) ? 0 : hcount+1; //This would be better than on initial
+
     if (test_hcount >= 0 && test_hcount < 96 &&  mut.hSync !== 0 ) begin
             $display("%c[1;31m",27);
             $display("Hsync should be low for 96 cycles after reset is released");
