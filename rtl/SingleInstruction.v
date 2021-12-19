@@ -6,10 +6,19 @@
 
 `include "rtl/parameters.vh"
 
-module SingleInstruction (clk, instruction, pcNext,aluResult);
+module SingleInstruction (clk, instruction, pcNext,aluResult, 
+bus_address,bus_wr_data,bus_read_data,bus_write_length,bus_wr_enable);
     input clk;
     input wire [31:0] instruction, pcNext;
     output wire [31:0] aluResult;
+
+    output wire [31:0]  bus_address;
+    output wire [31:0]  bus_wr_data;
+    input wire [31:0]   bus_read_data;
+    output wire [2:0]   bus_write_length;
+    output wire         bus_wr_enable;
+
+    
 
     
     // Control Unit
@@ -43,10 +52,14 @@ module SingleInstruction (clk, instruction, pcNext,aluResult);
     .immediateSource(aluRightSourceImmediate), 
     .resultValue (aluRightInput));
 
-    // Main memory
-    Memory mainMemory (.clk (clk), .address (aluResult), 
-        .wr_data (data_out_a), .read_data (mem_read_data), 
-        .wr_enable (mem_write_enable), .write_length (mem_write_mode));
+    
+
+    assign bus_address =aluResult;
+    assign bus_wr_data = data_out_a;
+    assign  mem_read_data=bus_read_data;
+    assign bus_wr_enable = mem_write_enable;
+    assign bus_write_length = mem_write_mode;
+    
     wire [31:0] mem_read_data;
     wire mem_write_enable;
     wire [2:0] mem_write_mode;

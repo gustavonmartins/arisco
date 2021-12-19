@@ -4,9 +4,15 @@
 `include "rtl/ProgramCounter.v"
 `include "rtl/parameters.vh"
 
-module MultipleInstructions (
-    clk, reset
-);
+module CPU (
+    clk, reset,
+    bus_address,bus_wr_data,bus_read_data,bus_write_length,bus_wr_enable);
+
+    output wire [31:0]  bus_address;
+    output wire [31:0]  bus_wr_data;
+    input wire [31:0]   bus_read_data;
+    output wire [2:0]   bus_write_length;
+    output wire         bus_wr_enable;
 
     //localparam PROGRAM_MEMORY_SIZE=64;
 
@@ -15,7 +21,8 @@ module MultipleInstructions (
     
     ProgramCounter programCounter(.clk (clk), .pc_in (pc_in), .pc_out (pc), .reset (reset));
     
-    SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult));
+    SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
+    .bus_address(bus_address),.bus_wr_data(bus_wr_data),.bus_read_data(bus_read_data),.bus_write_length(bus_write_length),.bus_wr_enable(bus_wr_enable));
 
     PCNext pcNext(.in (pc),.instruction(instruction),.aluRes(aluResult), .pc_next (pc_next),.pcPlusJal(pcPlusJal),.pcPlusBOffset(pcPlusBOffset));
 
@@ -35,6 +42,13 @@ module MultipleInstructions (
     wire [6:0] opcode = instruction[6:0];
 
     wire [PC_SOURCE_LENGHT-1:0] pcSourceControl;
+
+    //CPU cpu(.clk,.bus_address,.bus_wr_data,.bus_read_data,.bus_write_length,.bus_wr_enable);
+
+ 
+    
+
+  
 
 endmodule
 

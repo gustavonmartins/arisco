@@ -2,7 +2,7 @@
     `define assertCaseEqual(signal, value, message) \
             if (signal !== value) begin \
                 $display("%c[1;31m",27);\
-                $display("ASSERTION FAILED assertCaseEqual in %s: %0d: signal !== value. signal is: %d (decimal), %h (hexa)",`__FILE__, `__LINE__,signal,signal); \
+                $display("ASSERTION FAILED assertCaseEqual in %s: %0d: signal !== value. signal is: %d (decimal), %h (hexa), should be %h(hexa)",`__FILE__, `__LINE__,signal,signal,value); \
                 $display("  Reason: %s ",message);\
                 $display("%c[0m",27);\
                 $fatal(); \
