@@ -145,7 +145,7 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     output wire mem_write;
     output wire [2:0] mem_write_mode;
 
-    logic [10+ALU_OP_LENGTH:0] control;
+    reg [10+ALU_OP_LENGTH:0] control;
     assign {aluOperationCode, mem_write, mem_write_mode,register_write_pattern,register_write_enable,aluRightInputSourceControl, registerWriteSourceControl} = control;
 
     always @(*) begin 

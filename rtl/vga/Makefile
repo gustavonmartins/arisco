@@ -18,3 +18,6 @@ clean:
 
 lint:
 	verilator --lint-only -Wall $(SOURCES)
+
+synth: test
+	yosys -p "read_verilog VGA.v ; synth_ice40 -json top.json -top VGA"
