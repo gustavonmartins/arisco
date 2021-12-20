@@ -9,3 +9,4 @@ cpu/*
 testdata/*
 *.o
 *_out
+*.json
