@@ -137,7 +137,6 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     output wire [1:0] registerWriteSourceControl;
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
-    reg [1:0] internal;
     wire [6:0] funct7;
     assign funct7=instruction[31:25];
     

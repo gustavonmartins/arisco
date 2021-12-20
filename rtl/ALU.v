@@ -22,13 +22,13 @@ module ALU(opcode, left, right, result);
             ALU_OP_SUB  : result    = left              -   right;
             ALU_OP_XOR  : result    = left              ^   right;
             ALU_OP_SLL  : result    = left              <<  right;
-            ALU_OP_SLT  : result    = $signed(left)     <   $signed(right); 
-            ALU_OP_SLTU : result    = $unsigned(left)   <   $unsigned(right); 
+            ALU_OP_SLT  : result    = {{31{1'b 0}},$signed(left)     <   $signed(right)}; 
+            ALU_OP_SLTU : result    = {{31{1'b 0}},$unsigned(left)   <   $unsigned(right)}; 
             ALU_OP_SRL  : result    = left              >>  right;
             ALU_OP_SRA  : result    = $signed(left)     >>> right;
 
             //For B instructions
-            ALU_OP_EQ   : result    = left === right; //Actually this could be a SUB.
+            ALU_OP_EQ   : result    = {{31{1'b 0}},left === right}; //Actually this could be a SUB.
 
 	    default: result     = 32'h00000000;
         endcase

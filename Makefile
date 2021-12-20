@@ -47,7 +47,7 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
 .PHONY: lint
 lint:
-	verilator --lint-only -Wall $(SOURCES)
+	verilator --lint-only -Wall $(SOURCES) -Wno-MODDUP -Wno-DECLFILENAME
 
 .PHONY : clean
 clean:

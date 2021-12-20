@@ -15,14 +15,14 @@ module VGA(input clk25175KHz, input reset,
     always @(posedge clk25175KHz) begin
         casez (reset)
             1'b 1 : begin 
-                    hSync=0; hcount=0;
-                    vSync=0; vcount=0; 
+                    hSync<=0; hcount<=0;
+                    vSync<=0; vcount<=0; 
                 end
             1'b 0 : begin 
-                    hSync= (hcount < 96)? 0: 1;
-                    vSync=(vcount < 2)? 0: 1;
-                    hcount=(hcount == 799)? 0 :hcount+1;
-                    vcount=(hcount == 0)? ((vcount === 524)? 0 :vcount+1) : vcount;
+                    hSync<= (hcount < 96)? 0: 1;
+                    vSync<=(vcount < 2)? 0: 1;
+                    hcount<=(hcount == 799)? 0 :hcount+1;
+                    vcount<=(hcount == 0)? ((vcount === 524)? 0 :vcount+1) : vcount;
                 end
         endcase
     end

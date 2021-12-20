@@ -24,7 +24,7 @@ module CPU (
     SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
     .bus_address(bus_address),.bus_wr_data(bus_wr_data),.bus_read_data(bus_read_data),.bus_write_length(bus_write_length),.bus_wr_enable(bus_wr_enable));
 
-    PCNext pcNext(.in (pc),.instruction(instruction),.aluRes(aluResult), .pc_next (pc_next),.pcPlusJal(pcPlusJal),.pcPlusBOffset(pcPlusBOffset));
+    PCNext pcNext(.in (pc),.instruction(instruction), .pc_next (pc_next),.pcPlusJal(pcPlusJal),.pcPlusBOffset(pcPlusBOffset));
 
     PCSource pcSource(.pcPlusFour (pc_next), .pcPlusJal (pcPlusJal),.pcPlusBOffset(pcPlusBOffset),  .pcSourceControl (pcSourceControl), .pcResult (pc_in));
 
@@ -75,19 +75,16 @@ module PCControl(opcode, instruction, aluResult,pcSourceControl);
     end
 endmodule
 
-module PCNext(in,instruction,aluRes, pc_next, pcPlusJal, pcPlusBOffset, debugB);
+module PCNext(in,instruction, pc_next, pcPlusJal, pcPlusBOffset);
 	input [31:0] in;
     input [31:0] instruction;
-    input [31:0] aluRes;
 	output [31:0] pc_next;
     output [31:0] pcPlusJal;
     output [31:0] pcPlusBOffset;
-    output  [31:0] debugB;
 
 	assign pc_next=in+4;
     assign pcPlusJal =      {{12{instruction[31]}},instruction[31:12]}+in;
-    assign debugB={{20{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
-    assign pcPlusBOffset=   debugB+in;
+    assign pcPlusBOffset=in+{{19{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
     
 endmodule
 
