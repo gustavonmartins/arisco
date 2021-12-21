@@ -33,7 +33,7 @@ end
 initial
 begin
     $info("Memory test");
-    $dumpfile("memory.vcd");
+    $dumpfile("Memory.vcd");
     $dumpvars(0,mut);
     #1; wr_enable=0; address=32'd 0; wr_data=32'h 89ABCDEF; write_mode=3'd 1;
     @(posedge clk) `assertCaseNotEqual(mut.read_data, 32'h 89ABCDEF, "Memory should not write");

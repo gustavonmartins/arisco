@@ -35,7 +35,7 @@ RegisterMemory mut (
 initial
 begin
     $info("Register unit tests");
-    $dumpfile("reg_memo_out.vcd");
+    $dumpfile("RegisterMemory.vcd");
     $dumpvars(0,mut);
     //$monitor("%2t,sim_clk=%d,wr_enable=%b,wr_address=%h,wr_data=%h,rd_address_a=%h,rd_address_b=%h,data_out_a=%h,data_out_b=%hs",$time,sim_clk,wr_enable,wr_address,wr_data,rd_address_a,rd_address_b,data_out_a,data_out_b);
 

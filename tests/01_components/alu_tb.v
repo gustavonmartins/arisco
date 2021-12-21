@@ -40,7 +40,7 @@ ALU mut (
 
 initial
 begin
-    $dumpfile("alu_out.vcd");
+    $dumpfile("ALU.vcd");
     $dumpvars(0,mut);
     //$monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
 
