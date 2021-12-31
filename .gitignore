@@ -10,3 +10,5 @@ testdata/*
 *.o
 *_out
 *.json
+
+node_modules/
