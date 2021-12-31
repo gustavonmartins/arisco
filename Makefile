@@ -29,9 +29,9 @@ verilog_system_test:
 .PHONY: assembly_test
 assembly_test:
 	@echo 	================ ASSEMBLY TESTS ================
-	$(CC) tests/03_assembly/test_addi.s						-c -o test_addi.o       && llvm-objcopy -O binary test_addi.o	--only-section .text\* test_addi.bin	&& hexdump -ve '1/4 "%08x\n"' test_addi.bin		>   test_addi.mem
-	$(CC) tests/03_assembly/test_sw_lw.s					-c -o test_sw_lw.o      && llvm-objcopy -O binary test_sw_lw.o	--only-section .text\* test_sw_lw.bin	&& hexdump -ve '1/4 "%08x\n"' test_sw_lw.bin	>   test_sw_lw.mem
-	$(CC) tests/03_assembly/test_lbu.s						-c -o test_lbu.o		&& llvm-objcopy -O binary test_lbu.o	--only-section .text\* test_lbu.bin		&& hexdump -ve '1/4 "%08x\n"' test_lbu.bin		>   test_lbu.mem
+	$(CC) tests/03_assembly/test_addi.S						-c -o test_addi.o       && llvm-objcopy -O binary test_addi.o	--only-section .text\* test_addi.bin	&& hexdump -ve '1/4 "%08x\n"' test_addi.bin		>   test_addi.mem
+	$(CC) tests/03_assembly/test_sw_lw.S					-c -o test_sw_lw.o      && llvm-objcopy -O binary test_sw_lw.o	--only-section .text\* test_sw_lw.bin	&& hexdump -ve '1/4 "%08x\n"' test_sw_lw.bin	>   test_sw_lw.mem
+	$(CC) tests/03_assembly/test_lbu.S						-c -o test_lbu.o		&& llvm-objcopy -O binary test_lbu.o	--only-section .text\* test_lbu.bin		&& hexdump -ve '1/4 "%08x\n"' test_lbu.bin		>   test_lbu.mem
 	$(CC) tests/03_assembly/test_r_inst.S					-c -o test_r_inst.o		&& llvm-objcopy -O binary test_r_inst.o	--only-section .text\* test_r_inst.bin	&& hexdump -ve '1/4 "%08x\n"' test_r_inst.bin	>   test_r_inst.mem
 	$(CC) tests/03_assembly/test_i_inst.S					-c -o test_i_inst.o		&& llvm-objcopy -O binary test_i_inst.o	--only-section .text\* test_i_inst.bin	&& hexdump -ve '1/4 "%08x\n"' test_i_inst.bin	>   test_i_inst.mem
 	$(CC) tests/03_assembly/test_b_inst.S					-c -o test_b_inst.o		&& llvm-objcopy -O binary test_b_inst.o	--only-section .text\* test_b_inst.bin	&& hexdump -ve '1/4 "%08x\n"' test_b_inst.bin	>   test_b_inst.mem

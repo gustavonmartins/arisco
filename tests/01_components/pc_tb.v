@@ -23,7 +23,7 @@ ProgramCounter mut (
 initial
 begin
     $info("PC unit tests");
-    $dumpfile("pc_out.vcd");
+    $dumpfile("ProgramCounter.vcd");
     $dumpvars(0,mut);
     //$monitor("%2t,sim_clk=%d,reset=%b,pc_in=%h,pc_out=%h",$time,sim_clk,reset,pc_in,pc_out);
 
