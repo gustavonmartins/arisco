@@ -56,6 +56,6 @@ lint: $(SOURCES)
 
 .PHONY : clean
 clean:
-	rm -rf *.vcd *.bin *.o *.vvp *.mem build
+	rm -rf *.vcd *.bin *.o *.vvp *.mem *.asc build
 
 #yosys -p "read_verilog -sv rtl/MultipleInstructions.v ; synth_ecp5 -json top.json -top MultipleInstructions"

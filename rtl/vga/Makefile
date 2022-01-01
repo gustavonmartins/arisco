@@ -4,10 +4,11 @@ VLOG = iverilog -Wall -g2012
 
 CC = clang --target=riscv32 -march=rv32i -Wall
 
-SOURCES := $(shell find . -name '*.v')
+SOURCES 		:= $(shell find . -name '*.v' -not -name '*_tb.v')
+TEST_SOURCES 	:= $(shell find . -name '*_tb.v')
 
 VGA.test.o: $(SOURCES)
-	$(VLOG) tests/VGA_tb.v -I VGA.v -DVCDFILEPATH=\"VGA.vcd\"	-o VGA.test.o 
+	$(VLOG)  $(SOURCES) $(TEST_SOURCES) -DVCDFILEPATH=\"VGA.vcd\"	-o VGA.test.o 
 
 %.json: $(SOURCES)
 	yosys -p "read_verilog -sv $*.v ; synth_ice40 -json $*.json -top $*"
