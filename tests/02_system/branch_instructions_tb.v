@@ -1,6 +1,5 @@
 `default_nettype none
 `include "rtl/utilities.v"
-`include "rtl/SoC.v"
 
 module branch_instructions_tb ();
 

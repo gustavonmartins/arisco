@@ -1,6 +1,5 @@
 `default_nettype none
 `include "rtl/utilities.v"
-`include "rtl/SoC.v"
 `include "rtl/parameters.vh"
 
 module assembly_instructions_memory_lbu_new_tb ();

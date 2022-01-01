@@ -1,5 +1,5 @@
 `default_nettype none
-`include "VGA.v"
+
 module VGA_tb ();
 
     VGA mut(.clk25175KHz(clk));

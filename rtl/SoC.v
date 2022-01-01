@@ -1,7 +1,6 @@
 `default_nettype none
 
 `include "rtl/parameters.vh"
-`include "rtl/CPU.v"
 
 module SoC (
     clk, reset

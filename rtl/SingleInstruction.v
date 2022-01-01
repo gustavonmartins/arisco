@@ -1,9 +1,5 @@
 `default_nettype none
 
-`include "rtl/Memory.v"
-`include "rtl/ALU.v"
-`include "rtl/RegisterMemory.v"
-
 `include "rtl/parameters.vh"
 
 module SingleInstruction (clk, instruction, pcNext,aluResult, 

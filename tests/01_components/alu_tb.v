@@ -1,5 +1,4 @@
 `default_nettype none
-`include "rtl/ALU.v"
 
 `include "rtl/parameters.vh"
 

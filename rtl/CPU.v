@@ -1,7 +1,5 @@
 `default_nettype none
 
-`include "rtl/SingleInstruction.v"
-`include "rtl/ProgramCounter.v"
 `include "rtl/parameters.vh"
 
 module CPU (

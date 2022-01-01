@@ -1,6 +1,5 @@
 `default_nettype none
 `include "rtl/utilities.v"
-`include "rtl/SoC.v"
 
 module instructions_i_tb ();
 

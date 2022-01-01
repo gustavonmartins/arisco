@@ -1,8 +1,6 @@
 `default_nettype none
 `include "rtl/utilities.v"
 
-`include "rtl/Memory.v"
-
 module memory_tb ();
 
   reg clk;
