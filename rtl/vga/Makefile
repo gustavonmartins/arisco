@@ -10,10 +10,12 @@ VGA.test.o: $(SOURCES)
 	$(VLOG) tests/VGA_tb.v -I VGA.v -DVCDFILEPATH=\"VGA.vcd\"	-o VGA.test.o 
 
 %.json: $(SOURCES)
-	yosys -p "read_verilog -sv VGA.v ; synth_ice40 -json top.json -top VGA"
+	yosys -p "read_verilog -sv $*.v ; synth_ice40 -json $*.json -top $*"
+#	yosys -p "prep -top VGA -flatten; write_json VGA.json" VGA.v    This is for a diagram with netlistsvg
+# 	npx netlistsvg VGA.json -o VGA.svg
 
 %.asc: %.json pins.pcf
-	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf-allow-unconstrained --pcf pins.pcf --asc $*.asc
+	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf pins.pcf --asc $*.asc
 	icetime -mit $*.asc -d up5k
 
 test: VGA.test.o

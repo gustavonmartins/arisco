@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "netlistsvg": "^1.0.2",
+    "yosys2digitaljs": "^0.5.0"
+  }
+}
