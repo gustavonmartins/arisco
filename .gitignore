@@ -10,6 +10,8 @@ testdata/*
 *.o
 *_out
 *.json
+*.asc
+*.log
 
 node_modules/
 
