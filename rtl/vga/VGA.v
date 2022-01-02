@@ -1,16 +1,15 @@
 `default_nettype none
 
 
-module VGA(input clk25175KHz, 
-   
-    output wire hSync, output wire vSync);
+module VGA
+    #(parameter PIXELS_PER_LINE=800, parameter LINES_PER_FRAME=525)
+    
+    (input clk25175KHz,output wire hSync, output wire vSync);
 
-    reg [9:0] hcount;
-    reg [18:0] framecount;
-
-    localparam PIXELS_PER_LINE=800;
-    localparam LINES_PER_FRAME=525;
     localparam PIXELS_PER_FRAME = LINES_PER_FRAME*PIXELS_PER_LINE;
+
+    reg [$clog2(PIXELS_PER_LINE)-1:0] hcount;
+    reg [$clog2(PIXELS_PER_FRAME)-1:0] framecount;
 
     //int hcount;
     initial begin
