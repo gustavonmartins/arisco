@@ -50,12 +50,24 @@ assembly_test:
 
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
+%.json: $(SOURCES)
+	yosys -p "synth_ice40 -json $*.json -top $*" $(SOURCES)
+
+%.asc: %.json rtl/vga/pins.pcf
+	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf rtl/vga/pins.pcf --freq 48 --opt-timing --asc $*.asc
+	icetime -mit $*.asc -d up5k
+
+%.svg: $(SOURCES)
+	yosys -p "prep -top $*; write_json $*.diagram.json" $(SOURCES)
+	npx netlistsvg $*.diagram.json -o $*.svg
+	
+
 .PHONY: lint
 lint: $(SOURCES)
 	verilator --lint-only -Wall $(SOURCES) 
 
 .PHONY : clean
 clean:
-	rm -rf *.vcd *.bin *.o *.vvp *.mem *.asc build
+	rm -rf *.vcd *.bin *.o *.vvp *.mem *.asc *.svg build *.json
 
 #yosys -p "read_verilog -sv rtl/MultipleInstructions.v ; synth_ecp5 -json top.json -top MultipleInstructions"

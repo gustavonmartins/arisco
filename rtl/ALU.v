@@ -7,7 +7,7 @@ module ALU(opcode, left, right, result);
     input [31:0] right;
     output reg [31:0] result;
 
-    always @(opcode, left, right)
+    always @(*)
     begin
         /***
         Warning: The ALU functions are being used by B insutrctions.

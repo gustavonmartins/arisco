@@ -26,23 +26,18 @@ module RegisterMemory (
     reg [31:0] memory[31:0];
 
     initial begin
-        memory[0]=32'h00000000;
+        memory[0]<=32'h00000000;
     end
 
-    always @(posedge clk)
-    begin
-        if (wr_enable & wr_address!=5'd 0) begin
-            if (write_pattern === REGISTER_WRITE_BYTE_UNSIGNED) begin 
-                // LBU: Saves first byte, with no sign extension
-                memory[wr_address]<={24'h 000000,wr_data[7:0]};
-            end else if (write_pattern === REGISTER_WRITE_BYTE_SIGNED) begin 
-                // LB: Saves first byte with sign extension
-                memory[wr_address]<={{24{wr_data[7]}},wr_data[7:0]};
-            end else if (write_pattern === REGISTER_WRITE_WORD) begin 
-                // LW: Saves entire word
-                memory[wr_address]<=wr_data[31:0];
-            end
-        end
+    always @(posedge clk) begin
+        casez ({wr_enable,wr_address,write_pattern})
+            {1'b 0, 5'd ?, 3'b ?}                           : memory[0]<=32'h00000000;
+            {1'b ?, 5'd 0, 3'b ?}                           : memory[0]<=32'h00000000;
+            {1'b 1, 5'd ?, REGISTER_WRITE_BYTE_UNSIGNED}    : memory[wr_address]<={24'h 000000,wr_data[7:0]};
+            {1'b 1, 5'd ?, REGISTER_WRITE_BYTE_SIGNED}      : memory[wr_address]<={{24{wr_data[7]}},wr_data[7:0]};
+            {1'b 1, 5'd ?, REGISTER_WRITE_WORD}             : memory[wr_address]<=wr_data[31:0];
+        endcase
+        
     end
 
     assign data_out_a = memory[rd_address_a];
