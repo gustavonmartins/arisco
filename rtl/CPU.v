@@ -98,6 +98,7 @@ module PCSource (pcPlusFour, pcPlusJal,pcPlusBOffset, pcSourceControl, pcResult)
             PC_SOURCE_PC_PLUS_FOUR  :   pcResult=pcPlusFour;
             PC_SOURCE_JAL           :   pcResult = pcPlusJal;
             PC_SOURCE_B_OFFSET      :   pcResult    =   pcPlusBOffset;
+            default                 :   pcResult  = 32'd 0;
 
         endcase
     end
