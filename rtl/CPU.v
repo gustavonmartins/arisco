@@ -3,24 +3,24 @@
 `include "rtl/parameters.vh"
 
 module CPU (
-    clk, reset,
-    bus_address,bus_wr_data,bus_read_data,bus_write_length,bus_wr_enable);
+    clk, i_reset,
+    o_bus_address,o_bus_wr_data,i_bus_read_data,o_bus_write_length,o_bus_wr_enable);
 
-    output wire [31:0]  bus_address;
-    output wire [31:0]  bus_wr_data;
-    input wire [31:0]   bus_read_data;
-    output wire [2:0]   bus_write_length;
-    output wire         bus_wr_enable;
+    output wire [31:0]  o_bus_address;
+    output wire [31:0]  o_bus_wr_data;
+    input wire [31:0]   i_bus_read_data;
+    output wire [2:0]   o_bus_write_length;
+    output wire         o_bus_wr_enable;
 
     //localparam PROGRAM_MEMORY_SIZE=64;
 
-    input clk, reset;
+    input clk, i_reset;
     reg [31:0] program_memory[PROGRAM_MEMORY_SIZE_WORDS-1:0];
     
-    ProgramCounter programCounter(.clk (clk), .pc_in (pc_in), .pc_out (pc), .reset (reset));
+    ProgramCounter programCounter(.clk (clk), .pc_in (pc_in), .pc_out (pc), .reset (i_reset));
     
     SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
-    .bus_address(bus_address),.bus_wr_data(bus_wr_data),.bus_read_data(bus_read_data),.bus_write_length(bus_write_length),.bus_wr_enable(bus_wr_enable));
+    .bus_address(o_bus_address),.bus_wr_data(o_bus_wr_data),.bus_read_data(i_bus_read_data),.bus_write_length(o_bus_write_length),.bus_wr_enable(o_bus_wr_enable));
 
     PCNext pcNext(.in (pc),.instruction(instruction), .pc_next (pc_next),.pcPlusJal(pcPlusJal),.pcPlusBOffset(pcPlusBOffset));
 
