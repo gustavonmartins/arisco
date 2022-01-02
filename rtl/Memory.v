@@ -14,15 +14,14 @@ module Memory
     reg [7:0] internal [0:MEMORY_SIZE_BYTES-1];
 
     always @ (posedge clk) begin
-        if (wr_enable===1'b 1) begin
-            case (write_length)
-                3'd 0   :   internal[address]       <= wr_data[7:0];  //Write byte
-                3'd 1   :   begin                                       
+            casez ({wr_enable, write_length})
+                {1'd 1, 3'd 0}   :   internal[address]       <= wr_data[7:0];  //Write byte
+                {1'd 1, 3'd 1}   :   begin                                       
                             // Write half word, following the goal of SH instruction (read ISA SPEC!). Little-indian
                                 internal[address+1] <= wr_data[15:8]; 
                                 internal[address+0] <= wr_data[7:0]; 
                             end
-                3'd 2   :   begin                                       
+                {1'd 1, 3'd 2}   :   begin                                       
                             // Write word 
                                 internal[address+3] <= wr_data[31:24];
                                 internal[address+2] <= wr_data[23:16];
@@ -30,9 +29,8 @@ module Memory
                                 internal[address+0] <= wr_data[7:0];
                             end
 
-                default :   internal[address]       <= 8'h 00;
+                {1'd 1, 3'd ?} :   internal[address]       <= 8'h 00;
             endcase
-        end
     end
 
     assign read_data = {internal[address+3], internal[address+2], internal[address+1], internal[address+0]};
