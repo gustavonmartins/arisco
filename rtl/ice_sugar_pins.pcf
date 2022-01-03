@@ -40,17 +40,17 @@ set_io VGAMOD_R[1] 43
 set_io VGAMOD_R[2] 38
 set_io VGAMOD_R[3] 36
 
-set_io VGAMOD_B[4] 46
-set_io VGAMOD_B[5] 44
-set_io VGAMOD_B[6] 42
-set_io VGAMOD_B[7] 37
+set_io VGAMOD_B[0] 46
+set_io VGAMOD_B[1] 44
+set_io VGAMOD_B[2] 42
+set_io VGAMOD_B[3] 37
 
 set_io VGAMOD_G[0] 32
 set_io VGAMOD_G[1] 28
 set_io VGAMOD_G[2] 26
 set_io VGAMOD_G[3] 23
 
-set_io VGAMOD_VS[4] 34
-set_io VGAMOD_HS[5] 31
-set_io VGAMOD_NC[6] 27
-set_io VGAMOD_NC[7] 25
+set_io VGAMOD_VS   34
+set_io VGAMOD_HS   31
+set_io VGAMOD_NC   27
+set_io VGAMOD_NC   25

@@ -52,7 +52,7 @@ assembly_test:
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
 %.json: $(SOURCES)
-	yosys -p "synth_ice40 -json $*.json -top $*" $(SOURCES)
+	yosys -p "synth_ice40 -json $*.json -top $*" -q $(SOURCES)
 
 %.bin: %.asc 
 	icepack $*.asc $*.bin
@@ -62,7 +62,7 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 	icetime -mit $*.asc -d up5k
 
 %.svg: $(SOURCES)
-	yosys -p "prep -top $*; write_json $*.diagram.json" $(SOURCES)
+	yosys -p "prep -top $*; write_json $*.diagram.json" -q $(SOURCES)
 	npx netlistsvg $*.diagram.json -o $*.svg
 	
 
