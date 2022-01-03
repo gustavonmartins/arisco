@@ -13,3 +13,9 @@ in some register, then store the difference into x31. If its zero, it passes. Ot
 Useful resources:
 http://tice.sea.eseo.fr/riscv/
 https://godbolt.org/z/cv9Yq6nW9
+
+
+For making ICE40 run at 48Mhz:
+
+ https://github.com/smunaut/ice40-playground/blob/master/projects/riscv_doom/rtl/sysmgr.v
+ https://github.com/smunaut/ice40-playground/blob/master/projects/riscv_doom/rtl/top.v#L460-L466

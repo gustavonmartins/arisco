@@ -9,6 +9,7 @@ COMP_TEST_SOURCES       := $(shell find tests/01_components -name '*.v')
 SYSTEM_TEST_SOURCES		:= $(shell find tests/02_system -name '*.v')
 ASM_TEST_SOURCES       	:= $(shell find tests/03_assembly -name '*.v')
 INCLUDES       			:= $(shell find rtl/ -name '*.vh')
+PCF_FILE				:= $(shell find rtl/ -name '*.pcf')
 
 .PHONY: test
 test: verilog_component_test verilog_system_test assembly_test
@@ -53,8 +54,11 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 %.json: $(SOURCES)
 	yosys -p "synth_ice40 -json $*.json -top $*" $(SOURCES)
 
-%.asc: %.json rtl/vga/pins.pcf
-	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf rtl/vga/pins.pcf --freq 48 --opt-timing --asc $*.asc
+%.bin: %.asc 
+	icepack $*.asc $*.bin
+
+%.asc: %.json $(PCF_FILE)
+	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf $(PCF_FILE) --freq 48 --opt-timing --asc $*.asc
 	icetime -mit $*.asc -d up5k
 
 %.svg: $(SOURCES)
@@ -64,7 +68,7 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
 .PHONY: lint
 lint: $(SOURCES)
-	verilator --lint-only -Wall $(SOURCES) 
+	verilator --lint-only -Wall -Wno-EOFNEWLINE $(SOURCES) 
 
 .PHONY : clean
 clean:
