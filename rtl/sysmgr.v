@@ -11,11 +11,11 @@
 
 module sysmgr (
 	input  wire clk_in,
-	output wire clk_24Mhz,
-	output wire rst
+	output wire clk_25125KHz
 );
 
 	wire pll_lock;
+	wire g_clock_int;
 
 	SB_PLL40_2F_PAD #(
 		.FEEDBACK_PATH("SIMPLE"),
@@ -32,9 +32,12 @@ module sysmgr (
 		.PACKAGEPIN    (clk_in),
 		.DYNAMICDELAY  (8'h0),
 		.PLLOUTGLOBALA (),
-		.PLLOUTGLOBALB (clk_24Mhz),
+		.PLLOUTGLOBALB (g_clock_int),
 		.RESETB        (1'b1),
 		.LOCK          (pll_lock)
 	);
+
+	SB_GB sbGlobalBuffer_inst(.USER_SIGNAL_TO_GLOBAL_BUFFER(g_clock_int),
+		.GLOBAL_BUFFER_OUTPUT(clk_25125KHz));
 
 endmodule

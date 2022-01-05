@@ -1,3 +1,4 @@
+set_frequency clk 12
 set_io clk 35
 
 

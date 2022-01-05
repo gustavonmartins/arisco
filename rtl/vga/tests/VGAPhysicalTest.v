@@ -13,10 +13,10 @@ module VGAPhysicalTest (
 	);
 	
 	//Gets 24Mhz using PLL
-	wire clk_24Mhz;
+	wire clk_25125KHz;
 	sysmgr sys_mgr_I (
 		.clk_in  (clk),
-		.clk_24Mhz  (clk_24Mhz)
+		.clk_25125KHz  (clk_25125KHz)
 	);
 
 
@@ -25,7 +25,7 @@ module VGAPhysicalTest (
 	wire hSync, vSync;
 	wire [9:0] HPos;
 	wire [9:0] VPos;
-	VGA vga(.clk25175KHz(clk_24Mhz),.o_HPos(HPos),.o_VPos(VPos), .hSync(hSync), .vSync(vSync));
+	VGA vga(.clk_25125KHz(clk_25125KHz),.o_HPos(HPos),.o_VPos(VPos), .hSync(hSync), .vSync(vSync));
 	
 	/**
 	//Physical test using LEDS.
@@ -43,7 +43,7 @@ module VGAPhysicalTest (
 	// Should blink at 1Hz in real circuit
 	reg hSync_FF; 							// This is the 1-cycle delayed hS signal
 	reg [15-1:0] debug_hcounter;
-	always @(posedge clk_24Mhz) begin 		//Do not use posedge sync here, because I tried and glitches make you crazy
+	always @(posedge clk_25125KHz) begin 		//Do not use posedge sync here, because I tried and glitches make you crazy
 		hSync_FF <= hSync; 					//Gets a delayed sync value
 		if(hSync_FF==1 && hSync==0) begin 	// Detects if there was a pos edge
 			case (debug_hcounter) 
@@ -60,7 +60,7 @@ module VGAPhysicalTest (
 	// Should blink at 1Hz in real circuit
 	reg vSync_FF; 							// This is the 1-cycle delayed vS signal
 	reg [6-1:0] debug_vcounter;
-	always @(posedge clk_24Mhz) begin		//Do not use posedge sync here, because I tried and glitches make you crazy
+	always @(posedge clk_25125KHz) begin		//Do not use posedge sync here, because I tried and glitches make you crazy
 		vSync_FF <= vSync; 					//Gets a delayed sync value
 		if(vSync_FF==1 && vSync==0) begin 	// Detects if there was a pos edge
 			case (debug_vcounter) 
@@ -83,7 +83,7 @@ module VGAPhysicalTest (
 	
 	reg [3:0] red, green, blue;
 
-	always @(posedge clk_24Mhz) begin
+	always @(posedge clk_25125KHz) begin
 		if ((HPos> 200) && (HPos<300)) begin
 			red<=4'b 1100;
 		end else begin

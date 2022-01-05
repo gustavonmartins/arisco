@@ -3,7 +3,7 @@ module OneSecondBlink (
 	output wire [7:0] PMOD2_D
 );
 
-//24 Mhz maximum
+//25_125 Mhz maximum
 
 reg [26-1:0] timecounter;
 reg LED;
@@ -69,28 +69,28 @@ module TestClocks (
 	output wire VGAMOD_HS
 );
 
-reg LED_24Mhz;
-reg [26-1:0] timecounter_24mhz;
+reg LED;
+reg [26-1:0] timecounter_25125KHz;
 
-// Tests clocks of 12Mhz and 24 Mhz
-wire clk_24Mhz;
+// Tests clocks of 12Mhz and 25_125 Mhz
+wire clk_25125KHz;
 	sysmgr sys_mgr_I (
 		.clk_in  (clk),
-		.clk_24Mhz  (clk_24Mhz)
+		.clk_25125KHz  (clk_25125KHz)
 	);
 
-// Will blink at 1Hz if clk_24Mhz is really 24 Mhz, at icesugar PMOD3, LED D0
-always @(posedge clk_24Mhz) begin : proc_
-	case (timecounter_24mhz)
-		24_000_000-1: begin 
-			timecounter_24mhz <= 0;
-			LED_24Mhz <= ~ LED_24Mhz;
+// Will blink at 1Hz if clk_25125KHz is really 25_125 Mhz, at icesugar PMOD3
+always @(posedge clk_25125KHz) begin : proc_
+	case (timecounter_25125KHz)
+		25_125_000-1: begin 
+			timecounter_25125KHz <= 0;
+			LED <= ~ LED;
 		end
-		default: timecounter_24mhz <=timecounter_24mhz+1;
+		default: timecounter_25125KHz <=timecounter_25125KHz+1;
 	endcase
 end
 
-assign VGAMOD_VS = LED_24Mhz;
-assign VGAMOD_HS = LED_24Mhz;
+assign VGAMOD_VS = LED;
+assign VGAMOD_HS = LED;
 
 endmodule : TestClocks

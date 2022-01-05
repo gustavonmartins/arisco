@@ -2,10 +2,10 @@
 
 
 module VGA
-    #(parameter PIXELS_PER_LINE=762, parameter LINES_PER_FRAME=525)
+    #(parameter PIXELS_PER_LINE=800, parameter LINES_PER_FRAME=525)
     //762 gives the best error with 24Mhz clock 
     
-    (input clk25175KHz,output wire hSync, output wire vSync,
+    (input clk_25125KHz,output wire hSync, output wire vSync,
         output wire [$clog2(PIXELS_PER_LINE)-1:0] o_HPos,output wire [$clog2(LINES_PER_FRAME)-1:0] o_VPos,
 
         input wire [3:0] i_Red, input wire [3:0] i_Green, input wire [3:0] i_Blue,
@@ -23,14 +23,14 @@ module VGA
         framecount<=0;
     end
 
-    always @(posedge clk25175KHz) begin
+    always @(posedge clk_25125KHz) begin
         
                     // Updates counts and only then gets sync. If you check sync before counter, you get wrong results!
                     hcount<=(hcount == PIXELS_PER_LINE-1)? 0 :hcount+1;
                     framecount<=(framecount == PIXELS_PER_FRAME-1)?0:framecount+1;
 
                     // Selects sync. Do not put this before updating counter!
-                   
+
                 
     end
     assign hSync=(hcount > PIXELS_PER_LINE -96)? 0: 1;
