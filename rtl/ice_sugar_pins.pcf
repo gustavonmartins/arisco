@@ -2,55 +2,52 @@ set_io clk 35
 
 
 
-set_io PMOD1_D[0] 9
-set_io PMOD1_D[1] 4
-set_io PMOD1_D[2] 2
-set_io PMOD1_D[3] 47
-set_io PMOD1_D[4] 10
-set_io PMOD1_D[5] 6
-set_io PMOD1_D[6] 3
-set_io PMOD1_D[7] 48
+set_io -nowarn PMOD1_D[0] 9
+set_io -nowarn PMOD1_D[1] 4
+set_io -nowarn PMOD1_D[2] 2
+set_io -nowarn PMOD1_D[3] 47
+set_io -nowarn PMOD1_D[4] 10
+set_io -nowarn PMOD1_D[5] 6
+set_io -nowarn PMOD1_D[6] 3
+set_io -nowarn PMOD1_D[7] 48
 
 
 
-set_io PMOD2_D[0] 45
-set_io PMOD2_D[1] 43
-set_io PMOD2_D[2] 38
-set_io PMOD2_D[3] 36
-set_io PMOD2_D[4] 46
-set_io PMOD2_D[5] 44
-set_io PMOD2_D[6] 42
-set_io PMOD2_D[7] 37
+set_io -nowarn PMOD2_D[0] 45
+set_io -nowarn PMOD2_D[1] 43
+set_io -nowarn PMOD2_D[2] 38
+set_io -nowarn PMOD2_D[3] 36
+set_io -nowarn PMOD2_D[4] 46
+set_io -nowarn PMOD2_D[5] 44
+set_io -nowarn PMOD2_D[6] 42
+set_io -nowarn PMOD2_D[7] 37
 
 
 
-set_io PMOD3_D[0] 32
-set_io PMOD3_D[1] 28
-set_io PMOD3_D[2] 26
-set_io PMOD3_D[3] 23
-set_io PMOD3_D[4] 34
-set_io PMOD3_D[5] 31
-set_io PMOD3_D[6] 27
-set_io PMOD3_D[7] 25
+set_io -nowarn PMOD3_D[0] 32
+set_io -nowarn PMOD3_D[1] 28
+set_io -nowarn PMOD3_D[2] 26
+set_io -nowarn PMOD3_D[3] 23
+set_io -nowarn PMOD3_D[4] 34
+set_io -nowarn PMOD3_D[5] 31
+set_io -nowarn PMOD3_D[6] 27
+set_io -nowarn PMOD3_D[7] 25
 
+#VGA MOD
+set_io -nowarn VGAMOD_R[0] 45
+set_io -nowarn VGAMOD_R[1] 43
+set_io -nowarn VGAMOD_R[2] 38
+set_io -nowarn VGAMOD_R[3] 36
 
+set_io -nowarn VGAMOD_B[0] 46
+set_io -nowarn VGAMOD_B[1] 44
+set_io -nowarn VGAMOD_B[2] 42
+set_io -nowarn VGAMOD_B[3] 37
 
-set_io VGAMOD_R[0] 45
-set_io VGAMOD_R[1] 43
-set_io VGAMOD_R[2] 38
-set_io VGAMOD_R[3] 36
+set_io -nowarn VGAMOD_G[0] 32
+set_io -nowarn VGAMOD_G[1] 28
+set_io -nowarn VGAMOD_G[2] 26
+set_io -nowarn VGAMOD_G[3] 23
 
-set_io VGAMOD_B[0] 46
-set_io VGAMOD_B[1] 44
-set_io VGAMOD_B[2] 42
-set_io VGAMOD_B[3] 37
-
-set_io VGAMOD_G[0] 32
-set_io VGAMOD_G[1] 28
-set_io VGAMOD_G[2] 26
-set_io VGAMOD_G[3] 23
-
-set_io VGAMOD_VS   34
-set_io VGAMOD_HS   31
-set_io VGAMOD_NC   27
-set_io VGAMOD_NC   25
+set_io -nowarn VGAMOD_VS   34
+set_io -nowarn VGAMOD_HS   31

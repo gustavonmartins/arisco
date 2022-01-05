@@ -58,7 +58,7 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 	icepack $*.asc $*.bin
 
 %.asc: %.json $(PCF_FILE)
-	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf $(PCF_FILE) --freq 48 --opt-timing --asc $*.asc
+	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf $(PCF_FILE) --freq 48 -q --opt-timing --asc $*.asc
 	icetime -mit $*.asc -d up5k
 
 %.svg: $(SOURCES)

@@ -11,7 +11,7 @@
 
 module sysmgr (
 	input  wire clk_in,
-	output wire clk_4x,
+	output wire clk_24Mhz,
 	output wire rst
 );
 
@@ -21,7 +21,7 @@ module sysmgr (
 		.FEEDBACK_PATH("SIMPLE"),
 		.DIVR(4'b0000),
 		.DIVF(7'b1000010),
-		.DIVQ(3'b011),
+		.DIVQ(3'b101),
 		.FILTER_RANGE(3'b001),
 		.DELAY_ADJUSTMENT_MODE_RELATIVE("DYNAMIC"),
 		.FDA_RELATIVE(15),
@@ -32,7 +32,7 @@ module sysmgr (
 		.PACKAGEPIN    (clk_in),
 		.DYNAMICDELAY  (8'h0),
 		.PLLOUTGLOBALA (),
-		.PLLOUTGLOBALB (clk_4x),
+		.PLLOUTGLOBALB (clk_24Mhz),
 		.RESETB        (1'b1),
 		.LOCK          (pll_lock)
 	);
