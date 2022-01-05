@@ -23,7 +23,7 @@ module CPU (
     SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
     .bus_address(o_bus_address),.bus_wr_data(o_bus_wr_data),.bus_read_data(i_bus_read_data),.bus_write_length(o_bus_write_length),.bus_wr_enable(o_bus_wr_enable));
 
-    PCTotal pcNext(.i_in (pc),.i_instruction(instruction), .o_pc_next (pc_next),.i_pcPlusFour (pc_next), .i_pcSourceControl (pcSourceControl), .o_pcResult (pc_in));
+    PCGenerator pcNext(.i_in (pc),.i_instruction(instruction), .o_pc_next (pc_next),.i_pcPlusFour (pc_next), .i_pcSourceControl (pcSourceControl), .o_pcResult (pc_in));
 
     PCControl pcControl(.opcode (opcode), .instruction(instruction),.aluResult(aluResult), .pcSourceControl (pcSourceControl));
 
@@ -70,7 +70,7 @@ module PCControl(
     end
 endmodule
 
-module PCTotal(
+module PCGenerator(
     input [31:0] i_in,
     input [31:0] i_instruction, 
     output [31:0] o_pc_next,
@@ -97,3 +97,27 @@ module PCTotal(
 
 endmodule
 
+module ProgramCounter (
+    clk,
+    reset,
+    pc_in,
+    pc_out
+);
+    input clk;
+
+    input reset;
+    input [31:0] pc_in;
+    output [31:0] pc_out;
+
+    reg [31:0] memory;
+
+    always @ (negedge clk or posedge reset) begin
+            if (reset)
+                memory<=0;
+            else 
+                memory<=pc_in;
+    end
+
+    assign pc_out = memory;
+
+endmodule
