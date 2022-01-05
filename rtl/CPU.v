@@ -3,18 +3,17 @@
 `include "rtl/parameters.vh"
 
 module CPU (
-    clk, i_reset,
-    o_bus_address,o_bus_wr_data,i_bus_read_data,o_bus_write_length,o_bus_wr_enable);
-
-    output wire [31:0]  o_bus_address;
-    output wire [31:0]  o_bus_wr_data;
-    input wire [31:0]   i_bus_read_data;
-    output wire [2:0]   o_bus_write_length;
-    output wire         o_bus_wr_enable;
+    input wire clk, 
+    input wire i_reset,
+    output wire [31:0]  o_bus_address,
+    output wire [31:0]  o_bus_wr_data,
+    input wire [31:0]   i_bus_read_data,
+    output wire [2:0]   o_bus_write_length,
+    output wire         o_bus_wr_enable);
 
     //localparam PROGRAM_MEMORY_SIZE=64;
 
-    input clk, i_reset;
+    
     reg [31:0] program_memory[PROGRAM_MEMORY_SIZE_WORDS-1:0];
     
     ProgramCounter programCounter(.clk (clk), .pc_in (pc_in), .pc_out (pc), .reset (i_reset));
@@ -43,18 +42,14 @@ module CPU (
 
     //CPU cpu(.clk,.bus_address,.bus_wr_data,.bus_read_data,.bus_write_length,.bus_wr_enable);
 
- 
-    
-
-  
 
 endmodule
 
-module PCControl(opcode, instruction, aluResult,pcSourceControl);
-	input wire [6:0] opcode;
-    input wire [31:0] instruction;
-    input wire [31:0] aluResult;
-	output reg [PC_SOURCE_LENGHT-1:0] pcSourceControl;
+module PCControl(
+    input wire [6:0] opcode, 
+    input wire [31:0] instruction, 
+    input wire [31:0] aluResult,
+    output reg [PC_SOURCE_LENGHT-1:0] pcSourceControl);
 
     wire [2:0] funct3=instruction[14:12];
 	//assign pcSourceControl=(opcode === 7'b 1101111)? PC_SOURCE_JAL: PC_SOURCE_PC_PLUS_FOUR;
@@ -73,12 +68,13 @@ module PCControl(opcode, instruction, aluResult,pcSourceControl);
     end
 endmodule
 
-module PCNext(in,instruction, pc_next, pcPlusJal, pcPlusBOffset);
-	input [31:0] in;
-    input [31:0] instruction;
-	output [31:0] pc_next;
-    output [31:0] pcPlusJal;
-    output [31:0] pcPlusBOffset;
+module PCNext(
+    input [31:0] in,
+    input [31:0] instruction, 
+    output [31:0] pc_next, 
+    output [31:0] pcPlusJal, 
+    output [31:0] pcPlusBOffset
+    );
 
 	assign pc_next=in+4;
     assign pcPlusJal =      {{12{instruction[31]}},instruction[31:12]}+in;
@@ -86,11 +82,13 @@ module PCNext(in,instruction, pc_next, pcPlusJal, pcPlusBOffset);
     
 endmodule
 
-module PCSource (pcPlusFour, pcPlusJal,pcPlusBOffset, pcSourceControl, pcResult);
-	input [31:0] pcPlusFour, pcPlusJal;
-	input [PC_SOURCE_LENGHT-1:0] pcSourceControl;
-    input [31:0] pcPlusBOffset;
-	output reg [31:0] pcResult;
+module PCSource (
+    input [31:0] pcPlusFour, 
+    input [31:0] pcPlusJal,
+    input [31:0] pcPlusBOffset, 
+    input [PC_SOURCE_LENGHT-1:0] pcSourceControl, 
+    output reg [31:0] pcResult
+    );
 	
 	//assign pcResult=(pcSourceControl === PC_SOURCE_PC_PLUS_FOUR)? pcPlusFour : (pcSourceControl === PC_SOURCE_JAL? pcPlusJal : pcPlusBOffset);
     always @(*) begin

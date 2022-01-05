@@ -2,20 +2,17 @@
 
 `include "rtl/parameters.vh"
 
-module SingleInstruction (clk, instruction, pcNext,aluResult, 
-bus_address,bus_wr_data,bus_read_data,bus_write_length,bus_wr_enable);
-    input clk;
-    input wire [31:0] instruction, pcNext;
-    output wire [31:0] aluResult;
-
-    output wire [31:0]  bus_address;
-    output wire [31:0]  bus_wr_data;
-    input wire [31:0]   bus_read_data;
-    output wire [2:0]   bus_write_length;
-    output wire         bus_wr_enable;
-
-    
-
+module SingleInstruction (
+    input clk, 
+    input wire [31:0] instruction, 
+    input wire [31:0] pcNext,
+    output wire [31:0] aluResult, 
+    output wire [31:0]  bus_address,
+    output wire [31:0]  bus_wr_data,
+    input wire [31:0]   bus_read_data,
+    output wire [2:0]   bus_write_length,
+    output wire         bus_wr_enable
+    );
     
     // Control Unit
     ControlUnit controlUnit(.instruction(instruction), 
@@ -101,11 +98,15 @@ bus_address,bus_wr_data,bus_read_data,bus_write_length,bus_wr_enable);
 
 endmodule
 
-module MuxRegisterWriteDataSource(sourceSelection, aluResult, upperImmediateSignExtended, pcNext, mainMemory, resultValue);
-	input [1:0] sourceSelection;
-	input [31:0] aluResult, pcNext;
-	input [31:0] upperImmediateSignExtended, mainMemory;
-	output [31:0] resultValue;
+module MuxRegisterWriteDataSource(
+    input [1:0] sourceSelection, 
+    input [31:0] aluResult, 
+    input [31:0] upperImmediateSignExtended, 
+    input [31:0] pcNext, 
+    input [31:0] mainMemory, 
+    output [31:0] resultValue
+    );
+
 	reg [31:0] internal;
 
 	always @(*) begin
@@ -122,24 +123,23 @@ module MuxRegisterWriteDataSource(sourceSelection, aluResult, upperImmediateSign
 
 endmodule
 
-module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRightInputSourceControl,
-    registerWriteSourceControl, 
-    mem_write, mem_write_mode,register_write_pattern);
-    input [31:0] instruction;
-    output wire register_write_enable;
-    output wire [2:0] register_write_pattern;
-    output wire [ALU_OP_LENGTH-1:0] aluOperationCode;
-    output reg aluRightInputSourceControl;
-    output wire [1:0] registerWriteSourceControl;
+module ControlUnit(
+    input [31:0] instruction,
+    output wire register_write_enable, 
+    output wire [ALU_OP_LENGTH-1:0] aluOperationCode, 
+    output reg aluRightInputSourceControl,
+    output wire [1:0] registerWriteSourceControl, 
+    output wire mem_write, 
+    output wire [2:0] mem_write_mode,
+    output wire [2:0] register_write_pattern
+    );
+    
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
     wire [6:0] funct7;
     assign funct7=instruction[31:25];
     
     // Memory control
-    output wire mem_write;
-    output wire [2:0] mem_write_mode;
-
     reg [10+ALU_OP_LENGTH:0] control;
     assign {aluOperationCode, mem_write, mem_write_mode,register_write_pattern,register_write_enable,aluRightInputSourceControl, registerWriteSourceControl} = control;
 
@@ -162,31 +162,46 @@ module ControlUnit(instruction, register_write_enable, aluOperationCode, aluRigh
     end
 endmodule
 
-module ALURightInputSource(sourceSelection,immediateSource, registerSource, resultValue );
-    input sourceSelection;
-    input [31:0] immediateSource, registerSource;
-    output [31:0] resultValue;
+module ALURightInputSource(
+    input wire sourceSelection,
+    input wire [31:0] immediateSource, 
+    input wire [31:0] registerSource, 
+    output wire [31:0] resultValue
+    );
+
+    reg [31:0] internal_result;
 
     // Selects source to feed ALU right input
-    assign resultValue =   (sourceSelection === ALU_SOURCE_IMMEDIATE)? immediateSource : 
-                    ((sourceSelection === ALU_SOURCE_REGISTER)? registerSource: 32'h 0);
+    always @(*) begin
+        case (sourceSelection)
+            ALU_SOURCE_IMMEDIATE    : internal_result<=immediateSource;
+            ALU_SOURCE_REGISTER     : internal_result<=registerSource;
+        endcase
+    end
+
+    assign resultValue = internal_result;
 endmodule
 
-module ImmediateExtractor(instruction, result);
-    input [31:0] instruction;
-    output reg [31:0] result;
+module ImmediateExtractor(
+    input [31:0] instruction, 
+    output wire [31:0] result
+    );
 
     wire[6:0] opcode = instruction[6:0];
     wire[4:0] shamt = instruction[24:20];
     wire[6:0] funct7 = instruction[31:25];
+
+    reg [31:0] result_internal;
     
     always @(*) begin
         casez ({funct7,opcode})
-            14'b 0100000_0010011     :   result  =   {27'b 0,shamt};
-            14'b ???????_0010011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
-            14'b ???????_0100011     :   result  =   {{20{instruction[31]}}, instruction[31:25],instruction[11:7]};
-            14'b ???????_0000011     :   result  =   {{20{instruction[31]}}, instruction[31:20]};
-            default         :   result  =   32'b 0;
+            14'b 0100000_0010011     :   result_internal  <=   {27'b 0,shamt};
+            14'b ???????_0010011     :   result_internal  <=   {{20{instruction[31]}}, instruction[31:20]};
+            14'b ???????_0100011     :   result_internal  <=   {{20{instruction[31]}}, instruction[31:25],instruction[11:7]};
+            14'b ???????_0000011     :   result_internal  <=   {{20{instruction[31]}}, instruction[31:20]};
+            default                  :   result_internal  <=   32'b 0;
         endcase
     end
+
+    assign result = result_internal;
 endmodule
