@@ -23,9 +23,7 @@ module CPU (
     SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
     .bus_address(o_bus_address),.bus_wr_data(o_bus_wr_data),.bus_read_data(i_bus_read_data),.bus_write_length(o_bus_write_length),.bus_wr_enable(o_bus_wr_enable));
 
-    PCNext pcNext(.in (pc),.instruction(instruction), .pc_next (pc_next),.pcPlusJal(pcPlusJal),.pcPlusBOffset(pcPlusBOffset));
-
-    PCSource pcSource(.pcPlusFour (pc_next), .pcPlusJal (pcPlusJal),.pcPlusBOffset(pcPlusBOffset),  .pcSourceControl (pcSourceControl), .pcResult (pc_in));
+    PCTotal pcNext(.i_in (pc),.i_instruction(instruction), .o_pc_next (pc_next),.i_pcPlusFour (pc_next), .i_pcSourceControl (pcSourceControl), .o_pcResult (pc_in));
 
     PCControl pcControl(.opcode (opcode), .instruction(instruction),.aluResult(aluResult), .pcSourceControl (pcSourceControl));
 
@@ -72,35 +70,27 @@ module PCControl(
     end
 endmodule
 
-module PCNext(
-    input [31:0] in,
-    input [31:0] instruction, 
-    output [31:0] pc_next, 
-    output [31:0] pcPlusJal, 
-    output [31:0] pcPlusBOffset
+module PCTotal(
+    input [31:0] i_in,
+    input [31:0] i_instruction, 
+    output [31:0] o_pc_next,
+    input [31:0] i_pcPlusFour,
+    input [PC_SOURCE_LENGHT-1:0] i_pcSourceControl, 
+    output reg [31:0] o_pcResult
     );
 
-	assign pc_next=in+4;
-    assign pcPlusJal =      {{12{instruction[31]}},instruction[31:12]}+in;
-    assign pcPlusBOffset=in+{{19{instruction[31]}},instruction[31],instruction[7],instruction[30:25],instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
-    
-endmodule
 
-module PCSource (
-    input [31:0] pcPlusFour, 
-    input [31:0] pcPlusJal,
-    input [31:0] pcPlusBOffset, 
-    input [PC_SOURCE_LENGHT-1:0] pcSourceControl, 
-    output reg [31:0] pcResult
-    );
+
+	assign o_pc_next=i_in+4;
+
 	
 	//assign pcResult=(pcSourceControl === PC_SOURCE_PC_PLUS_FOUR)? pcPlusFour : (pcSourceControl === PC_SOURCE_JAL? pcPlusJal : pcPlusBOffset);
     always @(*) begin
-        casez (pcSourceControl)
-            PC_SOURCE_PC_PLUS_FOUR  :   pcResult=pcPlusFour;
-            PC_SOURCE_JAL           :   pcResult = pcPlusJal;
-            PC_SOURCE_B_OFFSET      :   pcResult    =   pcPlusBOffset;
-            default                 :   pcResult  = 32'd 0;
+        casez (i_pcSourceControl)
+            PC_SOURCE_PC_PLUS_FOUR  :   o_pcResult=     i_pcPlusFour;
+            PC_SOURCE_JAL           :   o_pcResult =    {{12{i_instruction[31]}},i_instruction[31:12]}+i_in;
+            PC_SOURCE_B_OFFSET      :   o_pcResult =    i_in+{{19{i_instruction[31]}},i_instruction[31],i_instruction[7],i_instruction[30:25],i_instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
+            default                 :   o_pcResult  = 32'd 0;
 
         endcase
     end
