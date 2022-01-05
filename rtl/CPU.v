@@ -5,16 +5,18 @@
 module CPU (
     input wire clk, 
     input wire i_reset,
+    input wire [31:0]   i_bus_read_data,
+    input wire [31:0]   i_bus_rom_read_data,
+
+    output wire [2:0]   o_bus_write_length,
+    output wire         o_bus_wr_enable,
     output wire [31:0]  o_bus_address,
     output wire [31:0]  o_bus_wr_data,
-    input wire [31:0]   i_bus_read_data,
-    output wire [2:0]   o_bus_write_length,
-    output wire         o_bus_wr_enable);
+    output wire [31:0]  o_bus_rom_address
+
+    );
 
     //localparam PROGRAM_MEMORY_SIZE=64;
-
-    
-    reg [31:0] program_memory[PROGRAM_MEMORY_SIZE_WORDS-1:0];
     
     ProgramCounter programCounter(.clk (clk), .pc_in (pc_in), .pc_out (pc), .reset (i_reset));
     
@@ -34,7 +36,9 @@ module CPU (
     wire [31:0] pcPlusBOffset;
     wire [31:0] aluResult;
 
-    assign instruction=program_memory[(pc>>2)];
+    assign o_bus_rom_address = pc>>2;
+    assign instruction=i_bus_rom_read_data;
+    
     
     wire [6:0] opcode = instruction[6:0];
 
