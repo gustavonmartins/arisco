@@ -11,9 +11,9 @@ ASM_TEST_SOURCES       	:= $(shell find tests/03_assembly -name '*.v')
 INCLUDES       			:= $(shell find rtl/ -name '*.vh')
 PCF_FILE				:= $(shell find rtl/ -name '*.pcf')
 
-FPGA_ARCH	= hx8k	#up5k
-FPGA_PACKAGE= ct256	#sg48
-FPGA_MHZ = 16
+FPGA_ARCH	= up5k	#  hx8k
+FPGA_PACKAGE= sg48	# ct256
+FPGA_MHZ = 1
 
 .PHONY: test
 test: verilog_component_test verilog_system_test assembly_test
@@ -23,7 +23,6 @@ test: verilog_component_test verilog_system_test assembly_test
 verilog_component_test:
 	@echo 	================ VERILOG COMPONENT TESTS ================
 	$(VLOG) $(SOURCES) $(COMP_TEST_SOURCES) -I $(INCLUDES)  -o register_memory_out.o                       -s register_memory_tb       	&&    vvp register_memory_out.o
-	$(VLOG) $(SOURCES) $(COMP_TEST_SOURCES) -I $(INCLUDES)  -o pc_out.o                                    -s program_counter_tb                   	&&    vvp pc_out.o
 	$(VLOG) $(SOURCES) $(COMP_TEST_SOURCES) -I $(INCLUDES)  -o alu_out.o                                   -s tb_alu                   	&&    vvp alu_out.o
 	$(VLOG) $(SOURCES) $(COMP_TEST_SOURCES) -I $(INCLUDES)  -o mem_out.o                                   -s memory_tb               	&&    vvp mem_out.o
 	
@@ -56,7 +55,7 @@ assembly_test:
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
 %.json: $(SOURCES)
-	yosys -p "synth_ice40 -json $*.json -top $*" -q $(SOURCES)
+	yosys -p "synth_ice40 -json $*.json -top $*" -q $(SOURCES) -DSYNTH
 
 %.bin: %.asc 
 	icepack $*.asc $*.bin

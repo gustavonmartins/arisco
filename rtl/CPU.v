@@ -104,7 +104,7 @@ module ProgramCounter (
 );
     reg [31:0] memory;
 
-    always @ (negedge i_clk or posedge i_reset) begin
+    always @ (posedge i_clk or posedge i_reset) begin
             if (i_reset)
                 memory<=0;
             else 
