@@ -11,7 +11,7 @@ module memory_tb ();
 
 
 
-Memory mut (
+RAM mut (
   .clk (clk),
   .address (address),
   .wr_data (wr_data),
@@ -30,11 +30,11 @@ end
 
 initial
 begin
-    $info("Memory test");
-    $dumpfile("Memory.vcd");
+    $info("RAM test");
+    $dumpfile("RAM.vcd");
     $dumpvars(0,mut);
     #1; wr_enable=0; address=32'd 0; wr_data=32'h 89ABCDEF; write_mode=3'd 1;
-    @(posedge clk) `assertCaseNotEqual(mut.read_data, 32'h 89ABCDEF, "Memory should not write");
+    @(posedge clk) `assertCaseNotEqual(mut.read_data, 32'h 89ABCDEF, "RAM should not write");
  
     // Test: Write full word at once
     #1; wr_enable=1;address=32'd 5; wr_data=32'h 12345678; write_mode=3'd 2;

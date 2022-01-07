@@ -23,7 +23,7 @@ module SoC (
 
 
     // Main memory
-    Memory mainMemory (.clk (clk), .address (bus_address), 
+    RAM mainMemory (.clk (clk), .address (bus_address), 
         .wr_data (bus_wr_data), .read_data (bus_read_data), 
         .wr_enable (bus_wr_enable), .write_length (bus_write_length));
 

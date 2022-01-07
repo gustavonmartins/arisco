@@ -139,7 +139,7 @@ module ControlUnit(
     wire [6:0] funct7;
     assign funct7=instruction[31:25];
     
-    // Memory control
+    // RAM control
     reg [10+ALU_OP_LENGTH:0] control;
     assign {aluOperationCode, mem_write, mem_write_mode,register_write_pattern,register_write_enable,aluRightInputSourceControl, registerWriteSourceControl} = control;
 

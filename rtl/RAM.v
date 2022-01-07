@@ -1,7 +1,7 @@
 `default_nettype none
 `include "rtl/parameters.vh"
 
-module Memory 
+module RAM 
 #(parameter MEMORY_SIZE_BYTES = 8192)
 (clk, address, wr_data, read_data, wr_enable, write_length);
     input wire clk;
