@@ -1,5 +1,5 @@
-set_frequency clk 12
-set_io clk 35
+#set_frequency clk 12
+#set_io clk 35
 
 
 

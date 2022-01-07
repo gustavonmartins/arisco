@@ -1,6 +1,6 @@
 SHELL=/bin/bash -euo pipefail
 
-VLOG=iverilog -Wall -g2012
+VLOG=iverilog -Wall -g2012 -D_iverilog_
 
 CC=clang --target=riscv32 -march=rv32i -Wall
 
@@ -10,6 +10,10 @@ SYSTEM_TEST_SOURCES		:= $(shell find tests/02_system -name '*.v')
 ASM_TEST_SOURCES       	:= $(shell find tests/03_assembly -name '*.v')
 INCLUDES       			:= $(shell find rtl/ -name '*.vh')
 PCF_FILE				:= $(shell find rtl/ -name '*.pcf')
+
+FPGA_ARCH	= hx8k	#up5k
+FPGA_PACKAGE= ct256	#sg48
+FPGA_MHZ = 16
 
 .PHONY: test
 test: verilog_component_test verilog_system_test assembly_test
@@ -58,8 +62,8 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 	icepack $*.asc $*.bin
 
 %.asc: %.json $(PCF_FILE)
-	nextpnr-ice40 --up5k --package sg48 --json $*.json --pcf $(PCF_FILE) --freq 48 -q --opt-timing --asc $*.asc
-	icetime -mit $*.asc -d up5k
+	nextpnr-ice40 --$(FPGA_ARCH) --package $(FPGA_PACKAGE) --json $*.json --pcf $(PCF_FILE) --freq $(FPGA_MHZ) -q --opt-timing --asc $*.asc --pcf-allow-unconstrained
+	icetime -mit $*.asc -d $(FPGA_ARCH)
 
 %.svg: $(SOURCES)
 	yosys -p "prep -top $*; write_json $*.diagram.json" -q $(SOURCES)
