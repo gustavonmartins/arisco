@@ -12,6 +12,14 @@ SingleInstruction mut (
     .instruction (instruction)
 );
 
+initial begin
+  clk=0;
+end
+
+always begin 
+  #5;clk=~clk;
+end
+
 initial
 begin
     $dumpfile("single_instruction_out.vcd");
@@ -20,16 +28,18 @@ begin
 
     //ADDI: Puts 12 on x5
     //imm[11:0] rs1 000 rd 0010011 I addi
-    instruction={12'd12, 5'd0, 3'b000, 5'd5, 7'b0010011};
-    `assertCaseNotEqual(mut.reg_mem.memory[5], 32'd12,"Register only updates on clock up");
-    clk=1;#1;clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.reg_mem.memory[5], 32'd12,"Register 5 should contain 12");
+    @(posedge clk) #1;
+    instruction={12'd 12, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};
+    @(negedge clk) #1;
+    `assertCaseNotEqual(mut.reg_mem.memory[5], 32'd 12,"Register only updates on clock up");
+    @(posedge clk) #1;
+    `assertCaseEqual(mut.reg_mem.memory[5], 32'd 12,"Register 5 should contain 12");
 
     //ADDI: Puts 20 on x5
     //imm[11:0] rs1 000 rd 0010011 I addi
-    instruction={12'd20, 5'd0, 3'b000, 5'd5, 7'b0010011};
-    clk=1;#1;clk=0;#1;clk=1;#1;
-    `assertCaseEqual(mut.reg_mem.memory[5], 32'd20,"Register 5 should contain 20");
+    instruction={12'd 20, 5'd 0, 3'b 000, 5'd 5, 7'b 0010011};
+    @(posedge clk) #1;
+    `assertCaseEqual(mut.reg_mem.memory[5], 32'd 20,"Register 5 should contain 20");
 
     #1;
     $display("Simulation finished");
