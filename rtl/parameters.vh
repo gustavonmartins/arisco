@@ -30,7 +30,7 @@
 
     // ALU operation codes
     localparam ALU_LENGTH    = 4;
-    localparam ALU_ADD       = 4'd 0000;
+    localparam ALU_ADD       = 4'b 0000;
     localparam ALU_SUB       = 4'b 1000;
     localparam ALU_SLL       = 4'b 0001;
     localparam ALU_SLT       = 4'b 0010;
@@ -41,6 +41,7 @@
     localparam ALU_OR        = 4'b 0110;
     localparam ALU_AND       = 4'b 0111;
     localparam ALU_EQ        = 4'b 1001;
+    localparam ALU_NOOP      = 4'b 1111;
 
     //PC controls
     localparam PC_SRC_LENGHT =       2;
