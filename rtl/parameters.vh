@@ -50,7 +50,11 @@
     localparam PC_SRC_B_OFFSET =     2'd 2;
 
     // RAM control
+    localparam RAM_WRITE_ON = 1'b 1;
+    localparam RAM_WRITE_OFF = 1'b 0;
+    
     localparam RAM_WORD = 3'b 010;
     localparam RAM_HALFWORD = 3'b 001;
     localparam RAM_BYTE = 3'b 000;
+    localparam RAM_NA = 3'b 111;
 `endif

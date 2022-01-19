@@ -145,19 +145,19 @@ module ControlUnit(
 
     always @(*) begin 
 	    casez ({funct7,funct3,opcode})
-		    17'b ???????_???_0110111 	: 	control = {{1'b 0, funct3}       ,ALU_SRC_IMMEDIATE     , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_WORD   , REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED};
-		    17'b ???????_???_1101111 	: 	control = {{1'b 0, funct3}       ,ALU_SRC_IMMEDIATE     , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_WORD   , REG_SRC_PC_NEXT};
-            17'b ???????_100_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE  , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_BYTE_UNSIGNED   , REG_SRC_MAIN_MEMORY};   // LBU
-            17'b ???????_000_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE  , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_BYTE_SIGNED         , REG_SRC_MAIN_MEMORY};   // LB
-            17'b ???????_???_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE  , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_WORD                , REG_SRC_MAIN_MEMORY};   // 
-            17'b ?1?????_101_0010011    :   control = {{1'b 1, funct3}      ,ALU_SRC_IMMEDIATE     , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_WORD   , REG_SRC_ALU_RESULT};    //I-Type. Read from immediate
-            17'b ???????_???_0010011    :   control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE     , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_WORD    , REG_SRC_ALU_RESULT};    //I-Type. Read from immediate
-            17'b ???????_???_0110011    :   control = {{funct7[5], funct3} ,ALU_SRC_REGISTER , 1'b 0, funct3, REG_WRITE_ENABLE_ON, REG_WRITE_WORD     , REG_SRC_ALU_RESULT};    //R-type. Read from register
-		    17'b ???????_???_0100011    :   control = {ALU_ADD          ,1'b 0 , 1'b 1, funct3, REG_WRITE_ENABLE_OFF, REG_WRITE_WORD                  , 2'b 0}; //SB, SH, SW
-            17'b ???????_00?_1100011    :   control = {ALU_EQ            ,ALU_SRC_REGISTER, 1'b 0, funct3, REG_WRITE_ENABLE_OFF, REG_WRITE_NA    , REG_SRC_ALU_RESULT}; // BEQ/BNE
-            17'b ???????_10?_1100011    :   control = {ALU_SLT          ,ALU_SRC_REGISTER , 1'b 0, funct3, REG_WRITE_ENABLE_OFF, REG_WRITE_NA    , REG_SRC_ALU_RESULT}; // BLT
-            17'b ???????_11?_1100011    :   control = {ALU_SLTU         ,ALU_SRC_REGISTER , 1'b 0, funct3, REG_WRITE_ENABLE_OFF, REG_WRITE_NA    , REG_SRC_ALU_RESULT}; // BLTU
-            default 		            : 	control = {{1'b 0, funct3}  ,ALU_SRC_IMMEDIATE    , 1'b 0, funct3, REG_WRITE_ENABLE_ON,REG_WRITE_WORD   , REG_SRC_ALU_RESULT};
+		    17'b ???????_???_0110111 	: 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED};
+		    17'b ???????_???_1101111 	: 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_PC_NEXT                       };
+            17'b ???????_100_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_BYTE_UNSIGNED   , REG_SRC_MAIN_MEMORY                   };   // LBU
+            17'b ???????_000_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_BYTE_SIGNED     , REG_SRC_MAIN_MEMORY                   };   // LB
+            17'b ???????_???_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_MAIN_MEMORY                   };   // 
+            17'b ?1?????_101_0010011    :   control = {{1'b 1, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_ALU_RESULT                    };    //I-Type. Read from immediate
+            17'b ???????_???_0010011    :   control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_ALU_RESULT                    };    //I-Type. Read from immediate
+            17'b ???????_???_0110011    :   control = {{funct7[5], funct3}  ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_ALU_RESULT                    };    //R-type. Read from register
+		    17'b ???????_???_0100011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_ON  , funct3, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; //SB, SH, SW
+            17'b ???????_00?_1100011    :   control = {ALU_EQ               ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; // BEQ/BNE
+            17'b ???????_10?_1100011    :   control = {ALU_SLT              ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; // BLT
+            17'b ???????_11?_1100011    :   control = {ALU_SLTU             ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; // BLTU
+            default 		            : 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , 2'b 0                                 };
 	    endcase
     end
 endmodule
