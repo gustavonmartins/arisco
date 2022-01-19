@@ -47,4 +47,9 @@
     localparam PC_SOURCE_PC_PLUS_FOUR = 2'd 0;
     localparam PC_SOURCE_JAL =          2'd 1;
     localparam PC_SOURCE_B_OFFSET =     2'd 2;
+
+    // RAM control
+    localparam RAM_WORD = 3'b 010;
+    localparam RAM_HALFWORD = 3'b 001;
+    localparam RAM_BYTE = 3'b 000;
 `endif
