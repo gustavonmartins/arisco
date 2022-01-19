@@ -40,7 +40,7 @@ module CPU (
     
     wire [6:0] opcode = instruction[6:0];
 
-    wire [PC_SOURCE_LENGHT-1:0] pcSourceControl;
+    wire [PC_SRC_LENGHT-1:0] pcSourceControl;
 
     //CPU cpu(.clk,.bus_address,.bus_wr_data,.bus_read_data,.bus_write_length,.bus_wr_enable);
 
@@ -50,21 +50,21 @@ endmodule
 module PCControl(
     input wire [31:0] instruction, 
     input wire [31:0] aluResult,
-    output reg [PC_SOURCE_LENGHT-1:0] pcSourceControl);
+    output reg [PC_SRC_LENGHT-1:0] pcSourceControl);
 
     wire [2:0] funct3=instruction[14:12];
     wire [6:0] opcode=instruction[6:0];
-	//assign pcSourceControl=(opcode === 7'b 1101111)? PC_SOURCE_JAL: PC_SOURCE_PC_PLUS_FOUR;
+	//assign pcSourceControl=(opcode === 7'b 1101111)? PC_SRC_JAL: PC_SRC_PC_PLUS_FOUR;
     always @(*) begin
         casez ({opcode,funct3,aluResult[0]})
-            11'b 1101111_???_?           :   pcSourceControl = PC_SOURCE_JAL;
-            11'b 1100011_000_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BEQ
-            11'b 1100011_001_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BNE
-            11'b 1100011_100_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BLT
-            11'b 1100011_101_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BGE
-            11'b 1100011_110_1      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BLTU
-            11'b 1100011_111_0      :   pcSourceControl    =   PC_SOURCE_B_OFFSET; //BGEU
-            default  :   pcSourceControl=PC_SOURCE_PC_PLUS_FOUR;
+            11'b 1101111_???_?           :   pcSourceControl = PC_SRC_JAL;
+            11'b 1100011_000_1      :   pcSourceControl    =   PC_SRC_B_OFFSET; //BEQ
+            11'b 1100011_001_0      :   pcSourceControl    =   PC_SRC_B_OFFSET; //BNE
+            11'b 1100011_100_1      :   pcSourceControl    =   PC_SRC_B_OFFSET; //BLT
+            11'b 1100011_101_0      :   pcSourceControl    =   PC_SRC_B_OFFSET; //BGE
+            11'b 1100011_110_1      :   pcSourceControl    =   PC_SRC_B_OFFSET; //BLTU
+            11'b 1100011_111_0      :   pcSourceControl    =   PC_SRC_B_OFFSET; //BGEU
+            default  :   pcSourceControl=PC_SRC_PC_PLUS_FOUR;
 
         endcase
     end
@@ -74,7 +74,7 @@ module PCGenerator(
     input [31:0] i_pc,
     input [31:0] i_instruction, 
     output [31:0] o_pc_next,
-    input [PC_SOURCE_LENGHT-1:0] i_pcSourceControl, 
+    input [PC_SRC_LENGHT-1:0] i_pcSourceControl, 
     output reg [31:0] o_pcResult
     );
 
@@ -83,12 +83,12 @@ module PCGenerator(
 	assign o_pc_next=i_pc+4;
 
 	
-	//assign pcResult=(pcSourceControl === PC_SOURCE_PC_PLUS_FOUR)? pcPlusFour : (pcSourceControl === PC_SOURCE_JAL? pcPlusJal : pcPlusBOffset);
+	//assign pcResult=(pcSourceControl === PC_SRC_PC_PLUS_FOUR)? pcPlusFour : (pcSourceControl === PC_SRC_JAL? pcPlusJal : pcPlusBOffset);
     always @(*) begin
         casez (i_pcSourceControl)
-            PC_SOURCE_PC_PLUS_FOUR  :   o_pcResult=     o_pc_next;
-            PC_SOURCE_JAL           :   o_pcResult =    {{12{i_instruction[31]}},i_instruction[31:12]}+i_pc;
-            PC_SOURCE_B_OFFSET      :   o_pcResult =    i_pc+{{19{i_instruction[31]}},i_instruction[31],i_instruction[7],i_instruction[30:25],i_instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
+            PC_SRC_PC_PLUS_FOUR  :   o_pcResult=     o_pc_next;
+            PC_SRC_JAL           :   o_pcResult =    {{12{i_instruction[31]}},i_instruction[31:12]}+i_pc;
+            PC_SRC_B_OFFSET      :   o_pcResult =    i_pc+{{19{i_instruction[31]}},i_instruction[31],i_instruction[7],i_instruction[30:25],i_instruction[11:8],1'b 0}; // Mistakes here dont always break tests. Be careful!
             default                 :   o_pcResult  = 32'd 0;
 
         endcase
