@@ -17,8 +17,10 @@ module CPU (
     );
 
     //localparam PROGRAM_MEMORY_SIZE=64;
+
+    wire pcWrite=1'b 1;
     
-    ProgramCounter programCounter(.i_clk (clk), .i_pc (pc_in), .o_pc (pc), .i_reset (i_reset));
+    ProgramCounter programCounter(.i_clk (clk), .i_pc (pc_in), .i_write(pcWrite), .o_pc (pc), .i_reset (i_reset));
     
     SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
     .bus_address(o_bus_address),.bus_wr_data(o_bus_wr_data),.bus_read_data(i_bus_read_data),.bus_write_length(o_bus_write_length),.bus_wr_enable(o_bus_wr_enable));
@@ -99,6 +101,7 @@ endmodule
 module ProgramCounter (
     input i_clk,
     input i_reset,
+    input i_write,
     input [31:0] i_pc,
     output [31:0] o_pc
 );
@@ -107,7 +110,7 @@ module ProgramCounter (
     always @ (posedge i_clk or posedge i_reset) begin
             if (i_reset)
                 memory<=0;
-            else 
+            else if (i_write)
                 memory<=i_pc;
     end
 
