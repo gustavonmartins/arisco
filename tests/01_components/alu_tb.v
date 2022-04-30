@@ -4,13 +4,13 @@
 
 module tb_alu ();
 
-reg [ALU_OP_LENGTH-1:0] opcode;
+reg [ALU_LENGTH-1:0] opcode;
 reg [31:0] left;
 reg [31:0] right;
 wire [31:0] result;
 
 task enforce_result;
-    input [ALU_OP_LENGTH-1:0] opcode_;
+    input [ALU_LENGTH-1:0] opcode_;
     input [31:0] left_, right_, result_should;
      
     begin
@@ -44,9 +44,9 @@ begin
     //$monitor("%2t,opcode=%d,left=%d,right=%d,result=%d",$time,opcode,left,right,result);
 
     $info("ALU unit test");
-    enforce_result(ALU_OP_ADD,32'h4,32'h3,32'h7); //ADD
-    enforce_result(ALU_OP_AND,32'b1100,32'b1010,32'b1000); //AND
-    enforce_result(ALU_OP_SUB,32'd 7,32'd 3,32'd 4); //SUB
+    enforce_result(ALU_ADD,32'h4,32'h3,32'h7); //ADD
+    enforce_result(ALU_AND,32'b1100,32'b1010,32'b1000); //AND
+    enforce_result(ALU_SUB,32'd 7,32'd 3,32'd 4); //SUB
 
     #1;
     $display("Simulation finished");

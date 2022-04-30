@@ -67,7 +67,7 @@ module SingleInstruction (
     assign {funct7,rs2,rs1,funct3,rd,opcode}=instruction;
 
     // ALU -> General
-    wire [ALU_OP_LENGTH-1:0] alu_opcode;
+    wire [ALU_LENGTH-1:0] alu_opcode;
     wire [31:0]  aluLeftInput,aluRightInput;
 
     ImmediateExtractor immediateExtractor(.instruction (instruction), .result (imm));
@@ -111,10 +111,10 @@ module MuxRegisterWriteDataSource(
 
 	always @(*) begin
 		case (sourceSelection)
-			REGISTER_SOURCE_ALU_RESULT 	: internal=aluResult;
-			REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED	: internal=upperImmediateSignExtended;
-			REGISTER_SOURCE_PC_NEXT 	: internal=pcNext;
-            REGISTER_SOURCE_MAIN_MEMORY  : internal = mainMemory;
+			REG_SRC_ALU_RESULT 	: internal=aluResult;
+			REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED	: internal=upperImmediateSignExtended;
+			REG_SRC_PC_NEXT 	: internal=pcNext;
+            REG_SRC_MAIN_MEMORY  : internal = mainMemory;
 			default : internal = 32'b 0; 
 		endcase
 	end
@@ -126,7 +126,7 @@ endmodule
 module ControlUnit(
     input [31:0] instruction,
     output wire register_write_enable, 
-    output wire [ALU_OP_LENGTH-1:0] aluOperationCode, 
+    output wire [ALU_LENGTH-1:0] aluOperationCode, 
     output reg aluRightInputSourceControl,
     output wire [1:0] registerWriteSourceControl, 
     output wire mem_write, 
@@ -140,24 +140,24 @@ module ControlUnit(
     assign funct7=instruction[31:25];
     
     // RAM control
-    reg [10+ALU_OP_LENGTH:0] control;
-    assign {aluOperationCode, mem_write, mem_write_mode,register_write_pattern,register_write_enable,aluRightInputSourceControl, registerWriteSourceControl} = control;
+    reg [10+ALU_LENGTH:0] control;
+    assign {aluOperationCode, aluRightInputSourceControl,mem_write, mem_write_mode,register_write_enable,register_write_pattern, registerWriteSourceControl} = control;
 
     always @(*) begin 
 	    casez ({funct7,funct3,opcode})
-		    17'b ???????_???_0110111 	: 	control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_UPPER_IMMEDIATED_SIGN_EXTENDED};
-		    17'b ???????_???_1101111 	: 	control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_PC_NEXT};
-            17'b ???????_100_0000011    :   control = {ALU_OP_ADD           , 1'b 0, funct3, REGISTER_WRITE_BYTE_UNSIGNED,    REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LBU
-            17'b ???????_000_0000011    :   control = {ALU_OP_ADD           , 1'b 0, funct3, REGISTER_WRITE_BYTE_SIGNED,      REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // LB
-            17'b ???????_???_0000011    :   control = {ALU_OP_ADD           , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_MAIN_MEMORY};   // 
-            17'b ?1?????_101_0010011    :   control = {{1'b 1, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
-            17'b ???????_???_0010011    :   control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};    //I-Type. Read from immediate
-            17'b ???????_???_0110011    :   control = {{funct7[5], funct3}  , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT};    //R-type. Read from register
-		    17'b ???????_???_0100011    :   control = {ALU_OP_ADD           , 1'b 1, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_OFF,1'b 0                  , 2'b 0};
-            17'b ???????_00?_1100011    :   control = {ALU_OP_EQ            , 1'b 0, funct3, REGISTER_WRITE_NA,               REGISTER_WRITE_ENABLE_OFF,ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT}; // BEQ/BNE
-            17'b ???????_10?_1100011    :   control = {ALU_OP_SLT           , 1'b 0, funct3, REGISTER_WRITE_NA,               REGISTER_WRITE_ENABLE_OFF,ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT}; // BLT
-            17'b ???????_11?_1100011    :   control = {ALU_OP_SLTU          , 1'b 0, funct3, REGISTER_WRITE_NA,               REGISTER_WRITE_ENABLE_OFF,ALU_SOURCE_REGISTER    , REGISTER_SOURCE_ALU_RESULT}; // BLTU
-            default 		            : 	control = {{1'b 0, funct3}      , 1'b 0, funct3, REGISTER_WRITE_WORD,             REGISTER_WRITE_ENABLE_ON, ALU_SOURCE_IMMEDIATE   , REGISTER_SOURCE_ALU_RESULT};
+		    17'b ???????_???_0110111 	: 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED};
+		    17'b ???????_???_1101111 	: 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_PC_NEXT                       };
+            17'b ???????_100_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_BYTE_UNSIGNED   , REG_SRC_MAIN_MEMORY                   };   // LBU
+            17'b ???????_000_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_BYTE_SIGNED     , REG_SRC_MAIN_MEMORY                   };   // LB
+            17'b ???????_???_0000011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_MAIN_MEMORY                   };   // 
+            17'b ?1?????_101_0010011    :   control = {{1'b 1, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_ALU_RESULT                    };    //I-Type. Read from immediate
+            17'b ???????_???_0010011    :   control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_ALU_RESULT                    };    //I-Type. Read from immediate
+            17'b ???????_???_0110011    :   control = {{funct7[5], funct3}  ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , REG_SRC_ALU_RESULT                    };    //R-type. Read from register
+		    17'b ???????_???_0100011    :   control = {ALU_ADD              ,ALU_SRC_IMMEDIATE      , RAM_WRITE_ON  , funct3, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; //SB, SH, SW
+            17'b ???????_00?_1100011    :   control = {ALU_EQ               ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; // BEQ/BNE
+            17'b ???????_10?_1100011    :   control = {ALU_SLT              ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; // BLT
+            17'b ???????_11?_1100011    :   control = {ALU_SLTU             ,ALU_SRC_REGISTER       , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_OFF   , REG_WRITE_NA              , 2'b 0                                 }; // BLTU
+            default 		            : 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , 2'b 0                                 };
 	    endcase
     end
 endmodule
@@ -174,8 +174,8 @@ module ALURightInputSource(
     // Selects source to feed ALU right input
     always @(*) begin
         case (sourceSelection)
-            ALU_SOURCE_IMMEDIATE    : internal_result<=immediateSource;
-            ALU_SOURCE_REGISTER     : internal_result<=registerSource;
+            ALU_SRC_IMMEDIATE    : internal_result<=immediateSource;
+            ALU_SRC_REGISTER     : internal_result<=registerSource;
         endcase
     end
 

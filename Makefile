@@ -11,9 +11,16 @@ ASM_TEST_SOURCES       	:= $(shell find tests/03_assembly -name '*.v')
 INCLUDES       			:= $(shell find rtl/ -name '*.vh')
 PCF_FILE				:= $(shell find rtl/ -name '*.pcf')
 
-FPGA_ARCH	= up5k	#  hx8k
-FPGA_PACKAGE= sg48	# ct256
+FPGA_ARCH	= hx8k	#  up5k
+FPGA_PACKAGE= ct256	# sg48
 FPGA_MHZ = 1
+
+DOCKER=docker
+PWD = $(shell pwd)
+DOCKERARGS = run --rm -v $(PWD):/src -w /src
+
+YOSYS     = $(DOCKER) $(DOCKERARGS) hdlc/yosys yosys
+NEXTPNR   = $(DOCKER) $(DOCKERARGS) hdlc/nextpnr:ice40 nextpnr-ice40
 
 .PHONY: test
 test: verilog_component_test verilog_system_test assembly_test
@@ -55,17 +62,17 @@ assembly_test:
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
 %.json: $(SOURCES)
-	yosys -p "synth_ice40 -json $*.json -top $*" -q $(SOURCES) -DSYNTH
+	$(YOSYS) -p "synth_ice40 -json $*.json -top $*" $(SOURCES) -DSYNTH
 
 %.bin: %.asc 
 	icepack $*.asc $*.bin
 
 %.asc: %.json $(PCF_FILE)
-	nextpnr-ice40 --$(FPGA_ARCH) --package $(FPGA_PACKAGE) --json $*.json --pcf $(PCF_FILE) --freq $(FPGA_MHZ) -q --opt-timing --asc $*.asc --pcf-allow-unconstrained
+	$(NEXTPNR) --$(FPGA_ARCH) --package $(FPGA_PACKAGE) --json $*.json --pcf $(PCF_FILE) --freq $(FPGA_MHZ) -q --opt-timing --asc $*.asc --pcf-allow-unconstrained
 	icetime -mit $*.asc -d $(FPGA_ARCH)
 
 %.svg: $(SOURCES)
-	yosys -p "prep -top $*; write_json $*.diagram.json" -q $(SOURCES)
+	$(YOSYS) -p "prep -top $*; write_json $*.diagram.json" -q $(SOURCES)
 	npx netlistsvg $*.diagram.json -o $*.svg
 	
 

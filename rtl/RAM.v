@@ -15,13 +15,13 @@ module RAM
 
     always @ (posedge clk) begin
             casez ({wr_enable, write_length})
-                {1'd 1, 3'd 0}   :   internal[address]       <= wr_data[7:0];  //Write byte
-                {1'd 1, 3'd 1}   :   begin                                       
+                {1'd 1, RAM_BYTE}   :   internal[address]       <= wr_data[7:0];  //Write byte
+                {1'd 1, RAM_HALFWORD}   :   begin                                       
                             // Write half word, following the goal of SH instruction (read ISA SPEC!). Little-indian
                                 internal[address+1] <= wr_data[15:8]; 
                                 internal[address+0] <= wr_data[7:0]; 
                             end
-                {1'd 1, 3'd 2}   :   begin                                       
+                {1'd 1, RAM_WORD}   :   begin                                       
                             // Write word 
                                 internal[address+3] <= wr_data[31:24];
                                 internal[address+2] <= wr_data[23:16];
