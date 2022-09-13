@@ -40,24 +40,24 @@ verilog_system_test:
 	$(VLOG) $(SOURCES) $(SYSTEM_TEST_SOURCES) -I $(INCLUDES) -o single_instruction_out.o                    -s single_instruction_tb        	&&    vvp single_instruction_out.o
 	$(VLOG) $(SOURCES) $(SYSTEM_TEST_SOURCES) -I $(INCLUDES) -o instructions_i_out.o                        -s instructions_i_tb           	&&    vvp instructions_i_out.o
 	$(VLOG) $(SOURCES) $(SYSTEM_TEST_SOURCES) -I $(INCLUDES) -o consecutive_instructions_out.o              -s consecutive_instructions_tb	&&    vvp consecutive_instructions_out.o
-	$(VLOG) $(SOURCES) $(SYSTEM_TEST_SOURCES) -I $(INCLUDES) -o branch_instructions_out.o                   -s branch_instructions_tb			&&    vvp branch_instructions_out.o
+	#$(VLOG) $(SOURCES) $(SYSTEM_TEST_SOURCES) -I $(INCLUDES) -o branch_instructions_out.o                   -s branch_instructions_tb			&&    vvp branch_instructions_out.o
 
 .PHONY: assembly_test
 assembly_test:
 	@echo 	================ ASSEMBLY TESTS ================
-	$(CC) tests/03_assembly/test_addi.S						-c -o test_addi.o       && llvm-objcopy -O binary test_addi.o	--only-section .text\* test_addi.bin	&& hexdump -ve '1/4 "%08x\n"' test_addi.bin		>   test_addi.mem
-	$(CC) tests/03_assembly/test_sw_lw.S					-c -o test_sw_lw.o      && llvm-objcopy -O binary test_sw_lw.o	--only-section .text\* test_sw_lw.bin	&& hexdump -ve '1/4 "%08x\n"' test_sw_lw.bin	>   test_sw_lw.mem
-	$(CC) tests/03_assembly/test_lbu.S						-c -o test_lbu.o		&& llvm-objcopy -O binary test_lbu.o	--only-section .text\* test_lbu.bin		&& hexdump -ve '1/4 "%08x\n"' test_lbu.bin		>   test_lbu.mem
-	$(CC) tests/03_assembly/test_r_inst.S					-c -o test_r_inst.o		&& llvm-objcopy -O binary test_r_inst.o	--only-section .text\* test_r_inst.bin	&& hexdump -ve '1/4 "%08x\n"' test_r_inst.bin	>   test_r_inst.mem
-	$(CC) tests/03_assembly/test_i_inst.S					-c -o test_i_inst.o		&& llvm-objcopy -O binary test_i_inst.o	--only-section .text\* test_i_inst.bin	&& hexdump -ve '1/4 "%08x\n"' test_i_inst.bin	>   test_i_inst.mem
-	$(CC) tests/03_assembly/test_b_inst.S					-c -o test_b_inst.o		&& llvm-objcopy -O binary test_b_inst.o	--only-section .text\* test_b_inst.bin	&& hexdump -ve '1/4 "%08x\n"' test_b_inst.bin	>   test_b_inst.mem
+	$(CC) tests/03_assembly/test_00_addi_add_lui.S			-c -o test_00_addi_add_lui.o   	&& llvm-objcopy -O binary test_00_addi_add_lui.o	--only-section .text\* test_00_addi_add_lui.bin	&& hexdump -ve '1/4 "%08x\n"' test_00_addi_add_lui.bin		>   test_00_addi_add_lui.mem
+	$(CC) tests/03_assembly/test_sw_lw.S					-c -o test_sw_lw.o      		&& llvm-objcopy -O binary test_sw_lw.o				--only-section .text\* test_sw_lw.bin			&& hexdump -ve '1/4 "%08x\n"' test_sw_lw.bin				>   test_sw_lw.mem
+	$(CC) tests/03_assembly/test_lbu.S						-c -o test_lbu.o				&& llvm-objcopy -O binary test_lbu.o				--only-section .text\* test_lbu.bin				&& hexdump -ve '1/4 "%08x\n"' test_lbu.bin					>   test_lbu.mem
+	$(CC) tests/03_assembly/test_r_inst.S					-c -o test_r_inst.o				&& llvm-objcopy -O binary test_r_inst.o				--only-section .text\* test_r_inst.bin			&& hexdump -ve '1/4 "%08x\n"' test_r_inst.bin				>   test_r_inst.mem
+	$(CC) tests/03_assembly/test_i_inst.S					-c -o test_i_inst.o				&& llvm-objcopy -O binary test_i_inst.o				--only-section .text\* test_i_inst.bin			&& hexdump -ve '1/4 "%08x\n"' test_i_inst.bin				>   test_i_inst.mem
+	$(CC) tests/03_assembly/test_b_inst.S					-c -o test_b_inst.o				&& llvm-objcopy -O binary test_b_inst.o				--only-section .text\* test_b_inst.bin			&& hexdump -ve '1/4 "%08x\n"' test_b_inst.bin				>   test_b_inst.mem
 	
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_out.o                	-s assembly_instructions_memory_lbu_tb -DMEMFILEPATH=\"test_addi.mem\"	-DVCDFILEPATH=\"test_addi.vcd\"		&& vvp assembly_instructions_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_memory_out.o         	-s assembly_instructions_memory_lbu_tb -DMEMFILEPATH=\"test_sw_lw.mem\"	-DVCDFILEPATH=\"test_sw_lw.vcd\"	&& vvp assembly_instructions_memory_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_memory_lbu_out.o     	-s assembly_instructions_memory_lbu_tb -DMEMFILEPATH=\"test_lbu.mem\"		-DVCDFILEPATH=\"test_lbu.vcd\"		&& vvp assembly_instructions_memory_lbu_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_r_out.o      		-s assembly_instructions_memory_lbu_new_tb -DMEMFILEPATH=\"test_r_inst.mem\"	-DVCDFILEPATH=\"test_r_inst.vcd\"	&& vvp assembly_instructions_type_r_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_i_out.o      		-s assembly_instructions_memory_lbu_new_tb -DMEMFILEPATH=\"test_i_inst.mem\"	-DVCDFILEPATH=\"test_i_inst.vcd\"	&& vvp assembly_instructions_type_i_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_b_out.o      		-s assembly_instructions_memory_lbu_new_tb -DMEMFILEPATH=\"test_b_inst.mem\"	-DVCDFILEPATH=\"test_b_inst.vcd\"	&& vvp assembly_instructions_type_b_out.o
+	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_out.o                	-s assembly_instructions_memory_lbu_tb 		-DMEMFILEPATH=\"test_00_addi_add_lui.mem\"	-DVCDFILEPATH=\"test_00_addi_add_lui.vcd\"		&& vvp assembly_instructions_out.o
+	#$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_memory_out.o         	-s assembly_instructions_memory_lbu_tb 		-DMEMFILEPATH=\"test_sw_lw.mem\"			-DVCDFILEPATH=\"test_sw_lw.vcd\"				&& vvp assembly_instructions_memory_out.o
+	#$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_memory_lbu_out.o     	-s assembly_instructions_memory_lbu_tb 		-DMEMFILEPATH=\"test_lbu.mem\"				-DVCDFILEPATH=\"test_lbu.vcd\"					&& vvp assembly_instructions_memory_lbu_out.o
+	#$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_r_out.o      		-s assembly_instructions_memory_lbu_new_tb 	-DMEMFILEPATH=\"test_r_inst.mem\"			-DVCDFILEPATH=\"test_r_inst.vcd\"				&& vvp assembly_instructions_type_r_out.o
+	#$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_i_out.o      		-s assembly_instructions_memory_lbu_new_tb 	-DMEMFILEPATH=\"test_i_inst.mem\"			-DVCDFILEPATH=\"test_i_inst.vcd\"				&& vvp assembly_instructions_type_i_out.o
+	#$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_b_out.o      		-s assembly_instructions_memory_lbu_new_tb 	-DMEMFILEPATH=\"test_b_inst.mem\"			-DVCDFILEPATH=\"test_b_inst.vcd\"				&& vvp assembly_instructions_type_b_out.o
 
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
@@ -78,7 +78,7 @@ https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
 
 .PHONY: lint
 lint: $(SOURCES)
-	verilator --lint-only -Wall -Wno-EOFNEWLINE $(SOURCES) 
+	verilator --lint-only -Wall -Wno-EOFNEWLINE -Wno-DECLFILENAME $(SOURCES) 
 
 .PHONY : clean
 clean:

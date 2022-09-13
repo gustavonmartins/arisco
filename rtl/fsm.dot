@@ -7,27 +7,31 @@ digraph FSM {
     S_READ_INST[label="{{S_READ_INST \n ROM read}| romSelect}"];
     ///SReadInstr[label="{{Analyse Instr \n SReadInstr}|}"];
 
+    ANY_STATE -> S_RESET_0[label="posedge, reset=1"];
+    
     S_RESET_0;
-    S_RESET_0 -> S_RESET_1;
+    S_RESET_0 -> S_RESET_1[label="posedge, reset=0"];
 
-    S_RESET_1 -> S_READ_INST[label="pos"]
+    S_RESET_1 -> S_READ_INST[label="posedge"]
 
 
     S_ADDI_0[label="S_ADDI_0 \n Reg Read"];
     S_ADDI_1[label="S_ADDI_1 \n ALU \n Reg Write \n PC Write"];
-    S_ADDI_0 -> S_ADDI_1[label="pos"]
+    S_ADDI_0 -> S_ADDI_1[label="posedge"]
 
-    S_ADD_0 -> S_ADD_1[label="pos"]
+    S_ADD_0 -> S_ADD_1[label="posedge"]
     S_ADD_1 -> S_READ_INST
 
     S_ADD_0[label="S_ADD_0 \n Reg Read (x2)"];
     S_ADD_1[label="S_ADD_1 \n ALU \nReg Write \n pcWrite"];
 
-    S_READ_INST -> S_ADDI_0[label="pos \n ADDI"];
-    S_READ_INST -> S_ADD_0[label="pos \n ADD"]
+    S_READ_INST -> S_ADDI_0[label="posedge \n ADDI"];
+    S_READ_INST -> S_ADD_0[label="posedge \n ADD"]
 
     
-    S_ADDI_1 -> S_READ_INST[label="pos"];
+    S_ADDI_1 -> S_READ_INST[label="posedge"];
+
+    Legend[label="{{STATE_NAME \n What will happen on next transition}| activateSytemFlags}"];
 
     //S_READ_INST -> SReadInstr[label="negedge" constraint=false];
     }

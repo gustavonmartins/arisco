@@ -12,18 +12,20 @@ module CPU (
     output wire         o_bus_wr_enable,
     output wire [31:0]  o_bus_address,
     output wire [31:0]  o_bus_wr_data,
-    output wire [31:0]  o_bus_rom_pc
+    output wire [31:0]  o_bus_rom_pc,
+    output wire         o_bus_rom_select
 
     );
 
     //localparam PROGRAM_MEMORY_SIZE=64;
 
-    wire pcWrite=1'b 1;
+    wire pcWrite;
     
     ProgramCounter programCounter(.i_clk (clk), .i_pc (pc_in), .i_write(pcWrite), .o_pc (pc), .i_reset (i_reset));
     
-    SingleInstruction single_instr (.clk (clk), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
-    .bus_address(o_bus_address),.bus_wr_data(o_bus_wr_data),.bus_read_data(i_bus_read_data),.bus_write_length(o_bus_write_length),.bus_wr_enable(o_bus_wr_enable));
+    SingleInstruction single_instr (.clk (clk),.reset(i_reset), .instruction (instruction), .pcNext (pc_next), .aluResult(aluResult),
+    .bus_address(o_bus_address),.bus_wr_data(o_bus_wr_data),.bus_read_data(i_bus_read_data),.bus_write_length(o_bus_write_length),.bus_wr_enable(o_bus_wr_enable),
+    .romSelect(o_bus_rom_select), .pcWrite(pcWrite));
 
     PCGenerator pcNext(.i_pc (pc),.i_instruction(instruction), .o_pc_next (pc_next), .i_pcSourceControl (pcSourceControl), .o_pcResult (pc_in));
 

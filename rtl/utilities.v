@@ -19,3 +19,13 @@
                 $fatal(); \
             end
 `endif
+
+`ifndef fullFSMInstructionCycle
+    `define fullFSMInstructionCycle\
+            @(negedge clk);@(negedge clk);@(negedge clk); // Just finished instruction
+`endif
+
+`ifndef resetFSMAndReadInstruction
+    `define resetFSMAndReadInstruction \
+            reset=0;@(posedge clk);@(negedge clk); @(negedge clk);// Resetted FSM, then Read instruction
+`endif

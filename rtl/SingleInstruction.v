@@ -4,6 +4,7 @@
 
 module SingleInstruction (
     input clk, 
+    input reset,
     input wire [31:0] instruction, 
     input wire [31:0] pcNext,
     output wire [31:0] aluResult, 
@@ -11,18 +12,27 @@ module SingleInstruction (
     output wire [31:0]  bus_wr_data,
     input wire [31:0]   bus_read_data,
     output wire [2:0]   bus_write_length,
-    output wire         bus_wr_enable
+    output wire         bus_wr_enable,
+    output wire         romSelect,
+    output wire         pcWrite,
+    output wire [$clog2(6)-1:0] fsm_state
     );
     
     // Control Unit
-    ControlUnit controlUnit(.instruction(instruction), 
+    ControlUnit controlUnit(
+        .clk(clk),
+        .reset(reset),
+        .fsm_state(fsm_state),
+    .instruction(instruction), 
     .register_write_enable(registerWriteEnable), 
     .aluOperationCode(alu_opcode), 
     .aluRightInputSourceControl (aluRightInputSourceControl), 
     .registerWriteSourceControl(registerWriteSourceControl),
     .mem_write(mem_write_enable),
     .mem_write_mode(mem_write_mode),
-    .register_write_pattern(register_write_pattern));
+    .register_write_pattern(register_write_pattern),
+    .romSelect(romSelect),
+    .pcWrite(pcWrite));
 
     // Register memory
     wire registerWriteEnable;
@@ -124,6 +134,8 @@ module MuxRegisterWriteDataSource(
 endmodule
 
 module ControlUnit(
+    input clk,
+    input reset,
     input [31:0] instruction,
     output wire register_write_enable, 
     output wire [ALU_LENGTH-1:0] aluOperationCode, 
@@ -131,9 +143,69 @@ module ControlUnit(
     output wire [1:0] registerWriteSourceControl, 
     output wire mem_write, 
     output wire [2:0] mem_write_mode,
-    output wire [2:0] register_write_pattern
+    output wire [2:0] register_write_pattern,
+    output wire romSelect,
+    output wire pcWrite,
+    output wire [$clog2(6)-1:0] fsm_state
     );
-    
+
+    localparam AMOUNT_OF_STATES = 6; // Be careful. this has to be compatible with fsm_state above
+    localparam AMOUNT_OF_STATES_LOG = $clog2(AMOUNT_OF_STATES);
+    localparam S_RESET_0 =        3'd 0;
+    localparam S_RESET_1 =        3'd 1;
+    localparam S_READ_INST =    3'd 2;
+    localparam S_READ =       3'd 3;
+    localparam S_WRITE =       3'd 4;
+    localparam S_ERROR =        3'd 5;
+
+    localparam CONTROLS_LENGTH = 13+ALU_LENGTH;
+
+    reg [AMOUNT_OF_STATES_LOG-1:0] state;
+    assign fsm_state=state;
+
+    reg [CONTROLS_LENGTH-1:0] control;
+    assign {pcWrite, romSelect, aluOperationCode, aluRightInputSourceControl,mem_write, mem_write_mode,register_write_enable,register_write_pattern, registerWriteSourceControl} = control;
+    wire [2:0] funct3=instruction[14:12];
+    wire [6:0] opcode=instruction[6:0];
+    wire [6:0] funct7=instruction[31:25];
+
+    initial begin
+        state <= S_RESET_0;
+    end
+
+    always @(posedge clk) begin
+        casez ({reset,state})
+            {1'b 0, S_RESET_0 }:                      state <= S_RESET_1;
+            {1'b 0, S_RESET_1 }:                      state <= S_READ_INST;
+            {1'b 0, S_READ_INST }:                  state <= S_READ;
+
+            {1'b 0, S_READ    }:                  state <= S_WRITE;
+            {1'b 0, S_WRITE    }:                  state <= S_READ_INST;
+
+
+            {1'b 1, {AMOUNT_OF_STATES_LOG{1'b ?}}}: state <= S_RESET_0;
+            default:                                state <= S_ERROR;
+        endcase
+    end
+
+    always @(*) begin
+        casez ({state,funct7,funct3,opcode})
+            {S_RESET_0    ,   7'b ???????,3'b ???,7'b ???????}    :       control = {{CONTROLS_LENGTH{1'b 0}}};
+            {S_RESET_1    ,   7'b ???????,3'b ???,7'b ???????}    :       control = {{CONTROLS_LENGTH{1'b 0}}};
+            {S_READ_INST,   7'b ???????,3'b ???,7'b ???????}    :       control = {1'b 0, 1'b 1, {CONTROLS_LENGTH-2{1'b 0}}};
+            {S_READ   ,     7'b ???????,3'b ???,7'b ???????}    :       control = {1'b 0, 1'b 0, ALU_NOOP,              1'b 0,      RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_OFF,   REG_WRITE_NA,   2'b 0};
+            {S_WRITE   ,    7'b ???????,3'b ???,7'b 0010011}    :       control = {1'b 1, 1'b 0, {1'b 0, funct3} ,      opcode[5],  RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_ALU_RESULT}; //I-Type, only logic+arith, no mem
+            {S_WRITE   ,    7'b ???????,3'b ???,7'b 0110011}    :       control = {1'b 1, 1'b 0, {funct7[5], funct3} ,  opcode[5],  RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_ALU_RESULT}; // R-Type
+            {S_WRITE   ,    7'b ???????,3'b ???,7'b 0110111}  :         control = {1'b 1, 1'b 0, {1'b 0, funct3},ALU_SRC_IMMEDIATE, RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED}; //LUI
+            `ifdef SYNTH
+            `else
+            default:        $fatal(1);
+            `endif
+        endcase
+    end
+
+    /// Old stuff
+    /*
     wire [6:0] opcode=instruction[6:0];
     wire [2:0] funct3=instruction[14:12];
     wire [6:0] funct7;
@@ -160,6 +232,7 @@ module ControlUnit(
             default 		            : 	control = {{1'b 0, funct3}      ,ALU_SRC_IMMEDIATE      , RAM_WRITE_OFF , RAM_NA, REG_WRITE_ENABLE_ON    , REG_WRITE_WORD            , 2'b 0                                 };
 	    endcase
     end
+    */
 endmodule
 
 module ALURightInputSource(

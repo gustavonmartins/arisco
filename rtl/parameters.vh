@@ -10,8 +10,8 @@
     localparam PROGRAM_MEMORY_SIZE_WORDS = 1000;
 
     // Registers' control parameters
-    localparam REG_WRITE_ENABLE_ON=    1'b 1;
-    localparam REG_WRITE_ENABLE_OFF=   1'b 0;
+    localparam REG_WRITE_ENABLE_ON=        1'b 1;
+    localparam REG_WRITE_ENABLE_OFF=       1'b 0;
 
     localparam REG_WRITE_BYTE_UNSIGNED =   3'b 100;
     localparam REG_WRITE_BYTE_SIGNED =     3'b 101;
@@ -50,11 +50,14 @@
     localparam PC_SRC_B_OFFSET =     2'd 2;
 
     // RAM control
-    localparam RAM_WRITE_ON = 1'b 1;
-    localparam RAM_WRITE_OFF = 1'b 0;
+    localparam RAM_WRITE_ON =   1'b 1;
+    localparam RAM_WRITE_OFF =  1'b 0;
     
-    localparam RAM_WORD = 3'b 010;
-    localparam RAM_HALFWORD = 3'b 001;
-    localparam RAM_BYTE = 3'b 000;
-    localparam RAM_NA = 3'b 111;
+    localparam RAM_WORD =       3'b 010;
+    localparam RAM_HALFWORD =   3'b 001;
+    localparam RAM_BYTE =       3'b 000;
+    localparam RAM_NA =             3'b 111;
+
+    // Control unit
+    `define LOOP_INSTRUCTION_CYCLES "@(negedge clk);@(negedge clk);@(negedge clk);"
 `endif

@@ -15,7 +15,9 @@ module assembly_instructions_memory_lbu_tb ();
 reg clk;
 reg reset;
 
-SoC mut (
+SoC 
+#(.SOC_MEMFILEPATH(`MEMFILEPATH))
+mut (
     .clk (clk), .reset (reset)
 );
 initial begin
@@ -34,24 +36,32 @@ begin
     $info("Testing memory behaviour from assembly file. x31 is probed for pass, must always be zero!!!");
     $dumpfile(`VCDFILEPATH);
     $dumpvars(0,mut);
-    //$monitor("%2t,reset=%b,clk=%b,pc=%d,current instruction=%h, x1=%h, x10=%h,x11=%h, x31=%h",$time,reset,clk,mut.cpu.pc,mut.cpu.instruction,mut.cpu.single_instr.reg_mem.memory[1],mut.cpu.single_instr.reg_mem.memory[10],mut.cpu.single_instr.reg_mem.memory[11],mut.cpu.single_instr.reg_mem.memory[31]);
+    $monitor("test #%d, inst=%h, rom add=%d",mut.cpu.single_instr.reg_mem.memory[1],mut.cpu.instruction,mut.rom_address);
 
-    $readmemh(`MEMFILEPATH, mut.rom.program_memory,0,PROGRAM_MEMORY_SIZE_WORDS-1);
 
     reset=1;#20;
 
     @(negedge clk) #1; reset=0;
     i=0;
-    while (i < PROGRAM_MEMORY_SIZE_WORDS &&  !(mut.cpu.instruction === 32'h xxxxxxxx)) begin // Stops on invalid instruction or end of memory
-
+    @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
+    while (i < PROGRAM_MEMORY_SIZE_WORDS-1 && mut.rom.program_memory[i] != 32'h 00000013) begin // Stops on invalid instruction or end of memory
+        //$display("State is %d, i is %d", mut.cpu.single_instr.controlUnit.state, i);
+        #1; `assertCaseEqual(mut.cpu.instruction, mut.rom.program_memory[i], {"Instruction read doesnt match memory. Possible cause is control unit missing treating an instruction in its state or comb.logic from state"});
+        
+        @(negedge clk); // just read rom
+        //$display("PC is %d, instruction: %h, state: %d", mut.cpu.pc, mut.cpu.instruction, mut.cpu.single_instr.controlUnit.state);
+        @(negedge clk); // just read mem/reg
+        @(negedge clk); // just wrote mem/reg and 
+        /*
         current_test=mut.cpu.single_instr.reg_mem.memory[1];
         if(current_test!==last_test) begin
             last_test=current_test;
         $display("Running sub-test number: %d",current_test);
         end
-
-	    $display("PC is %d, instruction: %h", mut.cpu.pc, mut.cpu.instruction);
-	    @(posedge clk) #1; `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[31],32'd 0, {"x31 register has to be zero"});
+        */
+	    #1; `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[31],32'd 0, {"x31 register has to be zero"});
 
         i+=1;
     end

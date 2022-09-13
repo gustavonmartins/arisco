@@ -31,24 +31,31 @@ begin
     reset=1;
     mut.rom.program_memory[0]={12'd3, 5'd0, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
     mut.rom.program_memory[1]={12'd4, 5'd5, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    @(negedge clk) #1;reset=0;
-    @(posedge clk) #1;
+    @(negedge clk) #1;
+    
+    `resetFSMAndReadInstruction; // Resets FSM and reads first instruction2
+
+    `fullFSMInstructionCycle // Just finished instruction
     `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[5], 32'd 3,"Register 5 should contain 3");
-    @(posedge clk)#1;
+    
+    `fullFSMInstructionCycle // Just finished instruction
     `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[5], 32'd 7,"Register 5 should contain 7");
 
     //Two ADDI instructions, using different registers
     //$info("ADDI instructions with no overflow, using different registers");
     reset=1;#1;
-    mut.rom.program_memory[0]={12'd3, 5'd0, 3'b000, 5'd5, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    mut.rom.program_memory[1]={12'd4, 5'd5, 3'b000, 5'd9, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
-    @(negedge clk) #1;reset=0;
-    @(posedge clk) #1;
-    `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[5], 32'd 3,"Register 5 should contain 3");
-    @(posedge clk) #1;
-    `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[9], 32'd 7,"Register 5 should contain 7");
+    mut.rom.program_memory[0]={12'd 13, 5'd 0, 3'b000, 5'd 6, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
+    mut.rom.program_memory[1]={12'd 14,  5'd 6, 3'b000, 5'd 9, 7'b0010011};//imm[11:0] rs1 000 rd 0010011 I addi
+    @(negedge clk) #1;
+    
+    `resetFSMAndReadInstruction; // Finished resetting and read instruction
 
 
+    `fullFSMInstructionCycle // Just finished instruction
+    `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[6], 32'd 13,"Register 6 should contain 13");
+    
+    `fullFSMInstructionCycle // Just finished instruction
+    `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[9], 32'd 27,"Register 9 should contain 27");
 
     #1;
     $display("Simulation finished");

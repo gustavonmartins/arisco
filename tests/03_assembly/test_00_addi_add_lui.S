@@ -1,4 +1,5 @@
 addi x31,x0,0           // STARTUP: Any test should pass if and only if x31 is zero
+
 addi x1,x0,1            // Sub-test number
 ADDI x21, x0, 123       // BEGIN:   Test ADDI start, setting expected value
 ADDI x20, x0, 123
@@ -21,3 +22,5 @@ sub x31,x5,x2           // END:     Control variable: X31 has to be zero when 40
 addi x1,x1,1            // Sub-test number
 ADDI x5,x0,2047         // BEGIN:   Test negative numbers on ADDI
 ADDI x31,x5,-2047       // END:     Control variable: X31 should be zero
+
+nop

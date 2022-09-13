@@ -2,7 +2,9 @@
 
 `include "rtl/parameters.vh"
 
-module SoC (
+module SoC 
+#(parameter SOC_MEMFILEPATH="")
+    (
     input wire clk, 
     input wire reset,
     output wire [7:0] dummy
@@ -12,15 +14,17 @@ module SoC (
         .o_bus_address(bus_address),.o_bus_wr_data(bus_wr_data),.o_bus_write_length(bus_write_length),.o_bus_wr_enable(bus_wr_enable),
         .i_bus_read_data(bus_read_data),
         .o_bus_rom_pc(rom_address),
-        .i_instruction(rom_read_data));
+        .i_instruction(rom_read_data),
+        .o_bus_rom_select(romChipSelect));
 
 
     wire [31:0] rom_address,rom_read_data;
+    wire romChipSelect;
 
 
     assign dummy=rom_address[7:0];
 
-    ROM rom(.clk(clk), .rom_address(rom_address), .inst_buffer(rom_read_data));
+    ROM #(.MEMFILEPATH (SOC_MEMFILEPATH)) rom(.clk(clk), .rom_address(rom_address), .inst_buffer(rom_read_data), .chipSelect(romChipSelect));
 
     // Main memory
     RAM mainMemory (.clk (clk), .address (bus_address), 
