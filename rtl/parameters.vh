@@ -27,6 +27,7 @@
     // ALU's control parameters
     localparam ALU_SRC_IMMEDIATE=1'b 0;
     localparam ALU_SRC_REGISTER= 1'b 1;
+    localparam ALU_SRC_NA = 1'b 0;
 
     // ALU operation codes
     localparam ALU_LENGTH    = 4;

@@ -83,6 +83,29 @@ begin
     `fullFSMInstructionCycle // Just finished instruction
     `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[6], 32'd 0,"SUB: Register 6 should contain 0 = 2047 - 2 ($10 - $11)");
 
+
+    //R-Type instructions
+    $info("Assure R vs I instructions are not mixed");
+    reset=1;#1;
+
+    // Register 1 will be read, or number one will be read. If instructions are not interpreted correcly, this will be detected
+    mut.rom.program_memory[0]={            12'd 666,            5'd 0, 3'b 000,    5'd 1,  7'b 0010011};   //   imm[11:0] rs1 000 rd  0010011  I addi
+
+    mut.rom.program_memory[1]={            12'd 1,              5'd 0, 3'b 000,    5'd 30, 7'b 0010011};   //   imm[11:0] rs1 000 rd  0010011  I addi
+    mut.rom.program_memory[2]={7'b 0,       5'd 1,              5'd 0, 3'b 000,    5'd 31, 7'b 0110011};  //0000000   rs2 rs1 000 rd  0110011  R add
+    
+    
+    @(negedge clk); @(negedge clk) #1; 
+    
+    reset=0;@(negedge clk);@(negedge clk);
+
+    `fullFSMInstructionCycle // Just finished instruction
+    `fullFSMInstructionCycle // Just finished instruction
+    `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[30], 32'd 1,"ADDI: Register 30 should contain 1");
+
+    `fullFSMInstructionCycle // Just finished instruction
+    `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[31], 32'd 666,"ADDR: Register 31 should contain 666");
+
     #20;
     $display("Simulation finished");
     $finish;
