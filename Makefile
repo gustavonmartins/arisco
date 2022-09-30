@@ -55,8 +55,8 @@ assembly_test:
 	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_out.o                	-s assembly_instructions_tb 				-DMEMFILEPATH=\"test_00_addi_add_lui.mem\"	-DVCDFILEPATH=\"test_00_addi_add_lui.vcd\"		&& vvp assembly_instructions_out.o
 	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_memory_out.o         	-s assembly_instructions_tb 				-DMEMFILEPATH=\"test_sw_lw.mem\"			-DVCDFILEPATH=\"test_sw_lw.vcd\"				&& vvp assembly_instructions_memory_out.o
 	#$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_memory_lbu_out.o     	-s assembly_instructions_tb 				-DMEMFILEPATH=\"test_lbu.mem\"				-DVCDFILEPATH=\"test_lbu.vcd\"					&& vvp assembly_instructions_memory_lbu_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_r_out.o      		-s assembly_instructions_memory_lbu_new_tb 	-DMEMFILEPATH=\"test_r_inst.mem\"			-DVCDFILEPATH=\"test_r_inst.vcd\"				&& vvp assembly_instructions_type_r_out.o
-	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_i_out.o      		-s assembly_instructions_memory_lbu_new_tb 	-DMEMFILEPATH=\"test_i_inst.mem\"			-DVCDFILEPATH=\"test_i_inst.vcd\"				&& vvp assembly_instructions_type_i_out.o
+	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_r_out.o      		-s assembly_instructions_tb 				-DMEMFILEPATH=\"test_r_inst.mem\"			-DVCDFILEPATH=\"test_r_inst.vcd\"				&& vvp assembly_instructions_type_r_out.o
+	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_i_out.o      		-s assembly_instructions_tb 				-DMEMFILEPATH=\"test_i_inst.mem\"			-DVCDFILEPATH=\"test_i_inst.vcd\"				&& vvp assembly_instructions_type_i_out.o
 	$(VLOG) $(SOURCES) $(ASM_TEST_SOURCES) -I $(INCLUDES) -o assembly_instructions_type_b_out.o      		-s assembly_instructions_memory_lbu_new_tb 	-DMEMFILEPATH=\"test_b_inst.mem\"			-DVCDFILEPATH=\"test_b_inst.vcd\"				&& vvp assembly_instructions_type_b_out.o
 
 https://www.sas.upenn.edu/~jesusfv/Chapter_HPC_6_Make.pdf
