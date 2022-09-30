@@ -2,7 +2,7 @@
 `include "rtl/utilities.v"
 `include "rtl/parameters.vh"
 
-module assembly_instructions_memory_lbu_tb ();
+module assembly_instructions_tb ();
 //Tests memory behaviour. Is separated from rest because on the future 
 //it might spend more than one cycle to coplete each instruction
 

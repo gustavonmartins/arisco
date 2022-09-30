@@ -190,13 +190,17 @@ module ControlUnit(
 
     always @(*) begin
         casez ({state,funct7,funct3,opcode})
-            {S_RESET_0    ,   7'b ???????,3'b ???,7'b ???????}    :       control = {{CONTROLS_LENGTH{1'b 0}}};
-            {S_RESET_1    ,   7'b ???????,3'b ???,7'b ???????}    :       control = {{CONTROLS_LENGTH{1'b 0}}};
+            {S_RESET_0    , 7'b ???????,3'b ???,7'b ???????}    :       control = {{CONTROLS_LENGTH{1'b 0}}};
+            {S_RESET_1    , 7'b ???????,3'b ???,7'b ???????}    :       control = {{CONTROLS_LENGTH{1'b 0}}};
             {S_READ_INST,   7'b ???????,3'b ???,7'b ???????}    :       control = {1'b 0, 1'b 1, {CONTROLS_LENGTH-2{1'b 0}}};
-            {S_READ   ,     7'b ???????,3'b ???,7'b ???????}    :       control = {1'b 0, 1'b 0, ALU_NOOP,              ALU_SRC_NA, RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_OFF,   REG_WRITE_NA,   2'b 0}; // Setting alu source to imm or reg has no impact on the next posedge, but two posedge after.
+            
+            {S_READ   ,     7'b ???????,3'b ???,7'b ???????}    :       control = {1'b 0, 1'b 0, ALU_NOOP,              ALU_SRC_NA,         RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_OFF,   REG_WRITE_NA,   2'b 0}; // Setting alu source to imm or reg has no impact on the next posedge, but two posedge after.
+            
+            {S_WRITE   ,    7'b ???????,3'b 010,7'b 0000011}    :       control = {1'b 1, 1'b 0, ALU_ADD,               ALU_SRC_NA,         RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_MAIN_MEMORY}; // Load Word
             {S_WRITE   ,    7'b ???????,3'b ???,7'b 0010011}    :       control = {1'b 1, 1'b 0, {1'b 0,    funct3} ,           opcode[5],  RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_ALU_RESULT}; //I-Type, only logic+arith, no mem
             {S_WRITE   ,    7'b ???????,3'b ???,7'b 0110011}    :       control = {1'b 1, 1'b 0, {funct7[5], funct3} ,          opcode[5],  RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_ALU_RESULT}; // R-Type
             {S_WRITE   ,    7'b ???????,3'b ???,7'b 0110111}  :         control = {1'b 1, 1'b 0, {1'b 0, funct3},       ALU_SRC_IMMEDIATE,  RAM_WRITE_OFF, RAM_NA,  REG_WRITE_ENABLE_ON,    REG_WRITE_WORD, REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED}; //LUI
+            {S_WRITE   ,    7'b ???????,3'b 010,7'b 0100011}  :         control = {1'b 1, 1'b 0, ALU_ADD,               ALU_SRC_IMMEDIATE,  RAM_WRITE_ON,  RAM_WORD,REG_WRITE_ENABLE_OFF,   REG_WRITE_NA,   REG_SRC_NA}; //Store Word
             `ifdef SYNTH
             `else
             default:        $fatal(1);

@@ -31,16 +31,6 @@
     li x30, expected_result;                                                            \
     li x31, test_id;
 
-#define TEST_SW_LW(test_id, content, store_base, store_offset, load_base, load_offset) \
-    li x31, 0;                                                                         \
-    li x1, test_id;                                                                    \
-    li x2, content;                                                                    \
-    li x3, store_base;                                                                 \
-    li x4, load_base;                                                                  \
-    SW x2, store_offset(x3);                                                           \
-    LW x29, load_offset(x4);                                                           \
-    li x30, content;                                                                   \
-    li x31, test_id;
 /***
 i1
 i2 should jump to m1 now
@@ -66,5 +56,21 @@ i7: if reaches this instead of jumping back, fail.
     addi x29, zero, 1;                                                              \
     instruction x2, x3, -12;                                                        \
     addi x31, zero, test_id;
+
+/***
+ * For this, test is passed when x31 is zero, as its the difference between expected and actual values
+ *
+ */
+//
+
+#define TEST_SW_LW(test_id, content, store_base, store_offset, load_base, load_offset) \
+    li x31, 0;                                                                         \
+    li x1, test_id;                                                                    \
+    li x2, content;                                                                    \
+    li x3, store_base;                                                                 \
+    li x4, load_base;                                                                  \
+    SW x2, store_offset(x3);                                                           \
+    LW x29, load_offset(x4);                                                           \
+    sub x31, x29, x2;
 
 #endif

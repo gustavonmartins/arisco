@@ -23,6 +23,7 @@
     localparam REG_SRC_PC_NEXT=                         2'd 2;
     localparam REG_SRC_MAIN_MEMORY=                     2'd 3 ;
     localparam REG_SRC_UPPER_IMMEDIATED_SIGN_EXTENDED=  2'd 1;
+    localparam REG_SRC_NA=                              2'd 0;
 
     // ALU's control parameters
     localparam ALU_SRC_IMMEDIATE=1'b 0;
