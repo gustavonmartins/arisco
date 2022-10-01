@@ -9,6 +9,18 @@
             end
 `endif
 
+`ifndef assertCaseEqualAssembly
+    `define assertCaseEqualAssembly(signal, value, expected, actual, message) \
+            if (signal !== value) begin \
+                $display("%c[1;31m",27);\
+                $display("ASSERTION FAILED assertCaseEqualAssembly in %s: %0d: ",`__FILE__, `__LINE__); \
+                $display("goal is: %d (decimal), %h (hexa), but got %d (decimal), %h(hexa)",expected,expected,actual,actual); \
+                $display("  Reason: %s ",message);\
+                $display("%c[0m",27);\
+                $fatal(); \
+            end
+`endif
+
 `ifndef assertCaseNotEqual
     `define assertCaseNotEqual(signal, value, message) \
             if (signal === value) begin \

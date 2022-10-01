@@ -61,7 +61,7 @@ begin
         $display("Running sub-test number: %d",current_test);
         end
         */
-	    #1; `assertCaseEqual(mut.cpu.single_instr.reg_mem.memory[31],32'd 0, {"x31 register has to be zero"});
+	    #1; `assertCaseEqualAssembly(mut.cpu.single_instr.reg_mem.memory[31],32'd 0,mut.cpu.single_instr.reg_mem.memory[2],mut.cpu.single_instr.reg_mem.memory[29], {"x29 register has to match x2"});
 
         i+=1;
     end

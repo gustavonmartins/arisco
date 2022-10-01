@@ -24,9 +24,16 @@ TEST_I(16   , SLLI   , -1, 2, -4);
 TEST_I(17   , SLLI   , -1, 31, -2147483648);
 
 TEST_I(18   , SRLI   , 16, 2, 4);
-TEST_I(19   , SRLI   , -1, 1, 2147483647);
-TEST_I(20   , SRLI   , -1, 31, 1);
+TEST_I(19   , SRLI   , 0xFFFFFFFF, 4, 0x0FFFFFFF);
+TEST_I(20   , SRLI   , 0x0FFFFFFF, 4, 0x00FFFFFF);
+TEST_I(21   , SRLI   , 0xFFFFFFFF, 1, 0x7FFFFFFF);
+TEST_I(22   , SRLI   , 0x8000004F, 4, 0x08000004);
+TEST_I(23   , SRLI   , -1, 1, 2147483647);
+TEST_I(24   , SRLI   , -1, 31, 1);
 
-TEST_I(21   , SRAI   , 64, 4, 4);
-TEST_I(22   , SRAI   , -1, 1, -1);
-TEST_I(23   , SRAI   , -32, 2, -8);
+TEST_I(25   , SRAI   , 0x0000004F, 4, 0x4);
+TEST_I(26   , SRAI   , 64, 1, 32);
+TEST_I(27   , SRAI   , -64, 1, -32);
+TEST_I(28   , SRAI   , 0x8000004F, 4, 0xF8000004);
+TEST_I(29   , SRAI   , 0xFFFFFFFF, 1, 0xFFFFFFFF);
+TEST_I(30   , SRAI   , -32, 2, -8);
